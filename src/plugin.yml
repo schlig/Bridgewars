@@ -1,0 +1,28 @@
+name: HypixelUHC
+version: 1.0
+author: Schlog
+main: uhc.Main
+description: Hypixel UHC Items and Crafting
+
+commands:
+  forceenchant:
+    aliases: [fe]
+    description: Forcibly enchants your held item.
+  gms:
+    aliases: [s]
+    description: Shortcut to toggle Survival mode.
+  gmc:
+    aliases: [c]
+    description: Shortcut to toggle Creative mode.
+  sethealth:
+    aliases: [sh]
+    description: Manually modify your maximum HP.
+  heal:
+    aliases: [h]
+    description: Fully restores health and saturation.
+  rename:
+    aliases: [r]
+    description: Renames your currently held item.
+  clearname:
+    aliases: [ccn]
+    description: Edits the lore of your currently held item.
