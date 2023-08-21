@@ -58,9 +58,6 @@ public class Game {
 			return;
 		}
 		
-		for(Player player : Bukkit.getOnlinePlayers())
-			cs.removePlayerFromTimer(player);
-		
 		Game.clearMap();
 		if(debugMessages)
 			p.sendMessage(Utils.chat("&7Cleared the map"));
@@ -79,6 +76,7 @@ public class Game {
 			p.sendMessage(Utils.chat("&7Placed spawn platforms"));
 		
 		for(Player player : Bukkit.getOnlinePlayers()) {
+			cs.removePlayerFromTimer(player);
 			Game.randomizeTeam(player, true);
 			Game.spawnPlayer(player);
 			Game.grantItems(player);

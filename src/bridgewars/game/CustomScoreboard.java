@@ -137,6 +137,17 @@ public class CustomScoreboard {
 			return false;
 	}
 	
+	public void clearTeams() {
+		for(String entry : scoreboard.getTeam("red").getEntries())
+			scoreboard.getTeam("red").removeEntry(entry);
+		for(String entry : scoreboard.getTeam("blue").getEntries())
+			scoreboard.getTeam("blue").removeEntry(entry);
+		for(String entry : scoreboard.getTeam("green").getEntries())
+			scoreboard.getTeam("green").removeEntry(entry);
+		for(String entry : scoreboard.getTeam("yellow").getEntries())
+			scoreboard.getTeam("yellow").removeEntry(entry);
+	}
+	
 	public Integer getTeamSize(String s) {
 		team = scoreboard.getTeam(s);
 		return team.getEntries().size();

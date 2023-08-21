@@ -94,7 +94,7 @@ public class Main extends JavaPlugin {
 		
 		//game
 		new Game();
-		new CustomScoreboard();
+		new CustomScoreboard().clearTeams();
 		new Kills(this);
 		new Timer(this);
 		
