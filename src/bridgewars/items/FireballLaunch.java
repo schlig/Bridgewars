@@ -78,7 +78,7 @@ public class FireballLaunch implements Listener {
 			if(cs.getTeam(p) == cs.getTeam((Player) fb.getShooter()) && p != (Player) fb.getShooter())
 				e.setCancelled(true);
 			else {
-				Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("bridgewars"), () -> p.setVelocity(p.getVelocity().multiply(2)), 1L);
+				Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("bridgewars"), () -> p.setVelocity(p.getVelocity().multiply(3).setY(2)), 1L);
 				e.setDamage(8);
 			}
 		}

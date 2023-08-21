@@ -38,7 +38,7 @@ public class LeaveGame implements CommandExecutor {
 			return false;
 		}
 			
-		Game.joinGame(p);
+		Game.leaveGame(p);
 		p.sendMessage(Utils.chat("&cYou left the game."));
 		
 		return false;

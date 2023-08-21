@@ -107,7 +107,7 @@ public class Game {
 		cs.resetTime(p);
 		if(p.getGameMode() != GameMode.CREATIVE) {
 			p.getInventory().clear();
-			p.teleport(p);
+			p.teleport(new Location(Bukkit.getWorld("world"), 1062.5, 52, 88.5, -90, 10));
 		}
 	}
 	
@@ -262,7 +262,7 @@ public class Game {
 					p.getInventory().setArmorContents(null);
 					p.setGameMode(GameMode.ADVENTURE);
 					if(!forced)
-						Utils.sendTitle(p, Utils.chat("&6&lGAME OVER"), Utils.chat("&l" + cs.getTeam(p).substring(0, 1).toUpperCase() + cs.getTeam(p).substring(1, cs.getTeam(p).length()) + " team wins!"), 5, 20, 5);
+						Utils.sendTitle(p, Utils.chat("&6&lGAME OVER"), Utils.chat("&l" + cs.getTeam(winner).substring(0, 1).toUpperCase() + cs.getTeam(winner).substring(1, cs.getTeam(winner).length()) + " team wins!"), 5, 20, 5);
 				}
 			}
 			if(forced)

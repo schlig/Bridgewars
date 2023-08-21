@@ -13,6 +13,7 @@ import bridgewars.behavior.DisableWeather;
 import bridgewars.behavior.IndestructibleSpawnPlatforms;
 import bridgewars.behavior.InfiniteBlocks;
 import bridgewars.behavior.InstantVoidKill;
+import bridgewars.behavior.PreventAnnoyingBowUse;
 import bridgewars.behavior.Saturation;
 import bridgewars.commands.ClearMap;
 import bridgewars.commands.DeleteMap;
@@ -68,6 +69,7 @@ public class Main extends JavaPlugin {
 		new InstantVoidKill(this);
 		new Saturation(this);
 		new DisableFriendlyFire(this);
+		new PreventAnnoyingBowUse(this);
 		
 		//commands
 		new Menu(this);
