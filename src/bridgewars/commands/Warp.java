@@ -23,7 +23,7 @@ public class Warp implements CommandExecutor {
 			return true;
 		
 		Player p = (Player) sender;
-		p.sendMessage(cmd.getLabel());
+		p.sendMessage(label);
 		
 		if(GameState.isState(GameState.ACTIVE)
 		&& !p.isOp()) {
