@@ -14,18 +14,25 @@ import org.bukkit.util.Vector;
 
 import bridgewars.Main;
 import bridgewars.items.Items;
+import bridgewars.settings.Blocks;
 import bridgewars.settings.Bows;
+import bridgewars.settings.DigWars;
+import bridgewars.settings.GigaDrill;
+import bridgewars.settings.HotbarLayout;
+import bridgewars.settings.Shears;
 import bridgewars.settings.Swords;
 
 public class InstantRespawn implements Listener {
 	
 	private CustomScoreboard cs;
+	private HotbarLayout hotbar;
 	private Items items;
 	
 	public InstantRespawn(Main plugin) {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 		cs = new CustomScoreboard();
 		items = new Items();
+		hotbar = new HotbarLayout();
 	}
 
 	@EventHandler
@@ -44,16 +51,36 @@ public class InstantRespawn implements Listener {
 			if(cs.hasTeam(p)) {
 				Game.spawnPlayer(p);
 				p.playSound(p.getLocation(), Sound.HURT_FLESH, 1F, 1F);
+				//base equipment
 				if(!p.getInventory().contains(Material.GOLD_SWORD) && Swords.getState().isEnabled())
 					p.getInventory().addItem(items.getSword(p, cs.getTeam(p)));
+				if(!p.getInventory().contains(Material.SHEARS) && Shears.getState().isEnabled() && !GigaDrill.getState().isEnabled())
+					p.getInventory().addItem(items.getShears());
+				if(!p.getInventory().contains(Material.WOOL) && Blocks.getState().isEnabled())
+					p.getInventory().addItem(items.getBlocks(p, cs.getTeam(p)));
+				
+				//bows
 				if(!p.getInventory().contains(Material.BOW) && Bows.getState().isEnabled())
 					p.getInventory().addItem(items.getBow(p, cs.getTeam(p)));
 				if(!p.getInventory().contains(Material.ARROW) && Bows.getState().isEnabled())
 					p.getInventory().addItem(new ItemStack(Material.ARROW, 1));
-				if(!p.getInventory().contains(Material.SHEARS))
-					p.getInventory().addItem(items.getShears(p));
-				if(!p.getInventory().contains(Material.WOOL))
-					p.getInventory().addItem(items.getBlocks(p, cs.getTeam(p)));
+				
+				//giga shears
+				if(!p.getInventory().contains(Material.SHEARS) && GigaDrill.getState().isEnabled())
+					p.getInventory().addItem(items.getGigaShears());
+				
+				//digwars stuff
+				if(DigWars.getState().isEnabled()) {
+					p.getInventory().remove(Material.WOOD);
+					if(p.getInventory().getItem(hotbar.getWoodSlot(p)) == null)
+						p.getInventory().setItem(hotbar.getWoodSlot(p), new ItemStack(Material.WOOD, 64));
+					else
+						p.getInventory().addItem(new ItemStack(Material.WOOD, 64));
+				}
+				if(!p.getInventory().contains(Material.STONE_AXE) && DigWars.getState().isEnabled())
+					p.getInventory().addItem(items.getAxe(p));
+				
+				//give armor back if it's missing
 				if(!p.getInventory().contains(Material.LEATHER_HELMET))
 					p.getInventory().setHelmet((items.getHelm(p, cs.getTeam(p))));
 				if(!p.getInventory().contains(Material.LEATHER_CHESTPLATE))

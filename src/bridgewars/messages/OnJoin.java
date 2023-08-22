@@ -9,7 +9,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import bridgewars.Main;
+import bridgewars.commands.Fly;
 import bridgewars.game.CustomScoreboard;
+import bridgewars.settings.DoubleHealth;
 import bridgewars.utils.Utils;
 
 public class OnJoin implements Listener {
@@ -28,6 +30,18 @@ public class OnJoin implements Listener {
 		p.setLevel(0);
 		p.sendMessage(Utils.chat("Welcome to &6Bridgewars&r! Type &c/menu&r to get started."));
 		cs.removePlayerFromTimer(p);
+		if(Fly.allowFlight.contains(p))
+			Fly.allowFlight.remove(p);
+		
+		if(DoubleHealth.getState().isEnabled()) {
+			p.setMaxHealth(40);
+			p.setHealth(40);
+		}
+		else {
+			p.setHealth(20);
+			p.setMaxHealth(20);
+		}
+			
 		if(p.getGameMode() != GameMode.CREATIVE) {
 			p.setAllowFlight(false);
 			p.setFlying(false);

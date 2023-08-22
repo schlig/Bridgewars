@@ -33,7 +33,6 @@ import bridgewars.commands.StartGame;
 import bridgewars.commands.Warp;
 import bridgewars.effects.DoubleJumpEffect;
 import bridgewars.game.CustomScoreboard;
-import bridgewars.game.Game;
 import bridgewars.game.GameState;
 import bridgewars.game.InstantRespawn;
 import bridgewars.game.Kills;
@@ -93,7 +92,6 @@ public class Main extends JavaPlugin {
 		new DoubleJumpEffect(this);
 		
 		//game
-		new Game();
 		new CustomScoreboard().clearTeams();
 		new Kills(this);
 		new Timer(this);

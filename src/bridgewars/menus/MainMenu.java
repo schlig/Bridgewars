@@ -90,6 +90,9 @@ public class MainMenu {
 			p.getOpenInventory().setItem(i + 18, new ItemStack(Material.GOLD_SWORD));
 			p.getOpenInventory().setItem(hotbar.getShearsSlot(p) + 18, new ItemStack(Material.SHEARS));
 			p.getOpenInventory().setItem(hotbar.getWoolSlot(p) + 18, new ItemStack(Material.WOOL));
+			p.getOpenInventory().setItem(hotbar.getBowSlot(p) + 18, new ItemStack(Material.BOW));
+			p.getOpenInventory().setItem(hotbar.getWoodSlot(p) + 18, new ItemStack(Material.WOOD));
+			p.getOpenInventory().setItem(hotbar.getAxeSlot(p) + 18, new ItemStack(Material.STONE_AXE));
 			break;
 			
 		case IRON_SWORD:

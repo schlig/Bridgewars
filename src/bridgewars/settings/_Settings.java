@@ -19,10 +19,15 @@ public class _Settings {
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 
 			swords(Boolean.parseBoolean(br.readLine()));
-			bows(Boolean.parseBoolean(br.readLine()));
+			blocks(Boolean.parseBoolean(br.readLine()));
+			shears(Boolean.parseBoolean(br.readLine()));
 			killstreakRewards(Boolean.parseBoolean(br.readLine()));
-			pacifistRewards(Boolean.parseBoolean(br.readLine()));
+			bows(Boolean.parseBoolean(br.readLine()));
+			
+			doubleHealth(Boolean.parseBoolean(br.readLine()));
 			doubleJump(Boolean.parseBoolean(br.readLine()));
+			gigaDrill(Boolean.parseBoolean(br.readLine()));
+			digWars(Boolean.parseBoolean(br.readLine()));
 			
 			br.close();
 		} catch (IOException e) { }
@@ -36,13 +41,23 @@ public class _Settings {
 			
 			bw.write(Swords.getState().isEnabled().toString());
 			bw.newLine();
-			bw.write(Bows.getState().isEnabled().toString());
+			bw.write(Blocks.getState().isEnabled().toString());
+			bw.newLine();
+			bw.write(Shears.getState().isEnabled().toString());
 			bw.newLine();
 			bw.write(KillstreakRewards.getState().isEnabled().toString());
 			bw.newLine();
-			bw.write(PacifistRewards.getState().isEnabled().toString());
+			bw.write(Bows.getState().isEnabled().toString());
+			bw.newLine();
+			
+			bw.write(DoubleHealth.getState().isEnabled().toString());
 			bw.newLine();
 			bw.write(DoubleJump.getState().isEnabled().toString());
+			bw.newLine();
+			bw.write(GigaDrill.getState().isEnabled().toString());
+			bw.newLine();
+			bw.write(DigWars.getState().isEnabled().toString());
+			bw.newLine();
 			
 			bw.flush();
 			bw.close();
@@ -56,11 +71,18 @@ public class _Settings {
 			Swords.setState(Swords.DISABLED);
 	}
 	
-	private static void bows(boolean value) {
+	private static void blocks(boolean value) {
 		if(value)
-			Bows.setState(Bows.ENABLED);
+			Blocks.setState(Blocks.ENABLED);
 		else
-			Bows.setState(Bows.DISABLED);
+			Blocks.setState(Blocks.DISABLED);
+	}
+	
+	private static void shears(boolean value) {
+		if(value)
+			Shears.setState(Shears.ENABLED);
+		else
+			Shears.setState(Shears.DISABLED);
 	}
 	
 	private static void killstreakRewards(boolean value) {
@@ -70,11 +92,18 @@ public class _Settings {
 			KillstreakRewards.setState(KillstreakRewards.DISABLED);
 	}
 	
-	private static void pacifistRewards(boolean value) {
+	private static void bows(boolean value) {
 		if(value)
-			PacifistRewards.setState(PacifistRewards.ENABLED);
+			Bows.setState(Bows.ENABLED);
 		else
-			PacifistRewards.setState(PacifistRewards.DISABLED);
+			Bows.setState(Bows.DISABLED);
+	}
+	
+	private static void doubleHealth(boolean value) {
+		if(value)
+			DoubleHealth.setState(DoubleHealth.ENABLED);
+		else
+			DoubleHealth.setState(DoubleHealth.DISABLED);
 	}
 	
 	private static void doubleJump(boolean value) {
@@ -82,5 +111,19 @@ public class _Settings {
 			DoubleJump.setState(DoubleJump.ENABLED);
 		else
 			DoubleJump.setState(DoubleJump.DISABLED);
+	}
+	
+	private static void gigaDrill(boolean value) {
+		if(value)
+			GigaDrill.setState(GigaDrill.ENABLED);
+		else
+			GigaDrill.setState(GigaDrill.DISABLED);
+	}
+	
+	private static void digWars(boolean value) {
+		if(value)
+			DigWars.setState(DigWars.ENABLED);
+		else
+			DigWars.setState(DigWars.DISABLED);
 	}
 }

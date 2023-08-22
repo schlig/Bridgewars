@@ -23,7 +23,6 @@ public class Warp implements CommandExecutor {
 			return true;
 		
 		Player p = (Player) sender;
-		p.sendMessage(label);
 		
 		if(GameState.isState(GameState.ACTIVE)
 		&& !p.isOp()) {
@@ -31,16 +30,25 @@ public class Warp implements CommandExecutor {
 			return true;
 		}
 		
-		if(args[0].toLowerCase().contains("observatory")
-		|| args[0].toLowerCase().contains("map")) {
-			p.teleport(new Location(Bukkit.getWorld("world"), 0.5, 46.0, 6.5, 180, 10));
-			p.sendMessage(Utils.chat("&7Teleported to the Observatory"));
+		if(args.length < 1)
+			args = new String[] {"none"};
+		
+		if(args[0] == "none"
+		&& !label.contains("hub")) {
+			p.sendMessage(Utils.chat("&7Available locations&7: &6spawn&7|&6hub&7,&6 observatory&7|&6map"));
+			return true;
 		}
 		
 		else if(args[0].toLowerCase().contains("spawn")
-		|| label == "hub") {
+		|| label.contains("hub")) {
 			p.teleport(new Location(Bukkit.getWorld("world"), 1062.5, 52, 88.5, -90, 10));
 			p.sendMessage(Utils.chat("&7Teleported to Spawn"));
+		}
+		
+		else if(args[0].toLowerCase().contains("observatory")
+		|| args[0].toLowerCase().contains("map")) {
+			p.teleport(new Location(Bukkit.getWorld("world"), 0.5, 46.0, 6.5, 180, 10));
+			p.sendMessage(Utils.chat("&7Teleported to the Observatory"));
 		}
 		
 		return false;

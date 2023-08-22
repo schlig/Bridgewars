@@ -27,25 +27,24 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import bridgewars.commands.Fly;
 import bridgewars.items.Items;
+import bridgewars.settings.Blocks;
 import bridgewars.settings.Bows;
+import bridgewars.settings.DigWars;
+import bridgewars.settings.GigaDrill;
 import bridgewars.settings.HotbarLayout;
+import bridgewars.settings.Shears;
 import bridgewars.settings.Swords;
 import bridgewars.utils.Utils;
 
 public class Game {
 	
-	private static Items items;
-	private static CustomScoreboard cs;
-	private static HotbarLayout hotbar;
+	private static Items items = new Items();
+	private static CustomScoreboard cs = new CustomScoreboard();
+	private static HotbarLayout hotbar = new HotbarLayout();
 	
 	private static String filepath = "./plugins/bridgewars/maps/";
-	
-	public Game (){
-		items = new Items();
-		cs = new CustomScoreboard();
-		hotbar = new HotbarLayout();
-	}
 	
 	public static void startGame(Player p, boolean debugMessages) {
 		
@@ -76,6 +75,7 @@ public class Game {
 			p.sendMessage(Utils.chat("&7Placed spawn platforms"));
 		
 		for(Player player : Bukkit.getOnlinePlayers()) {
+			Fly.allowFlight.remove(player);
 			cs.removePlayerFromTimer(player);
 			Game.randomizeTeam(player, true);
 			Game.spawnPlayer(player);
@@ -102,7 +102,7 @@ public class Game {
 	
 	public static void leaveGame(Player p) {
 		cs.resetTeam(p, false);
-		cs.resetTime(p);
+		cs.removePlayerFromTimer(p);
 		if(p.getGameMode() != GameMode.CREATIVE) {
 			p.getInventory().clear();
 			p.teleport(new Location(Bukkit.getWorld("world"), 1062.5, 52, 88.5, -90, 10));
@@ -282,6 +282,10 @@ public class Game {
 			}
 		}
 		
+		else if(winner == null) {
+			Bukkit.broadcastMessage("There were no players left, so the game has ended.");
+		}
+		
 		if(!forced)
 			new BukkitRunnable() {
 				int amount = 0;
@@ -393,11 +397,21 @@ public class Game {
 		p.getInventory().setBoots(items.getBoots(p, s));
 		if(Swords.isState(Swords.ENABLED))
 			p.getInventory().setItem(hotbar.getSwordSlot(p), items.getSword(p, s));
-		p.getInventory().setItem(hotbar.getShearsSlot(p), items.getShears(p));;
-		p.getInventory().setItem(hotbar.getWoolSlot(p), items.getBlocks(p, s));
+		if(Shears.isState(Shears.ENABLED) && !GigaDrill.getState().isEnabled())
+			p.getInventory().setItem(hotbar.getShearsSlot(p), items.getShears());
+		if(Blocks.isState(Blocks.ENABLED))
+			p.getInventory().setItem(hotbar.getWoolSlot(p), items.getBlocks(p, s));
+		
+		if(GigaDrill.isState(GigaDrill.ENABLED))
+			p.getInventory().setItem(hotbar.getShearsSlot(p), items.getGigaShears());
+		
 		if(Bows.isState(Bows.ENABLED)) {
 			p.getInventory().addItem(items.getBow(p, s));
-			p.getInventory().addItem(new ItemStack(Material.ARROW, 1));
+			p.getInventory().setItem(9, new ItemStack(Material.ARROW, 1));;
+		}
+		if(DigWars.getState().isEnabled()) {
+			p.getInventory().setItem(hotbar.getAxeSlot(p), items.getAxe(p));
+			p.getInventory().setItem(hotbar.getWoodSlot(p), new ItemStack(Material.WOOD, 64));
 		}
 		p.getInventory().addItem(items.getBridgeEgg(1, false));
 		p.setGameMode(GameMode.SURVIVAL);

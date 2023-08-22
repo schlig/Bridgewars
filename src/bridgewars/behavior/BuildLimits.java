@@ -20,9 +20,9 @@ public class BuildLimits implements Listener {
 
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent e) {
+		Location loc = e.getBlockPlaced().getLocation();
 		if(GameState.isState(GameState.ACTIVE)) {
-			Location loc = e.getBlockPlaced().getLocation();
-			if(Utils.checkBounds(loc, 22, 24, 22)) {
+			if(Utils.isOutOfBounds(loc, 22, 24, 22)) {
 				if(e.getPlayer().getGameMode() == GameMode.CREATIVE)
 					return;
 				e.setCancelled(true);
@@ -32,8 +32,7 @@ public class BuildLimits implements Listener {
 		
 		if(GameState.isState(GameState.EDIT)
 		&& !e.getPlayer().isOp()) {
-			Location loc = e.getBlockPlaced().getLocation();
-			if(Utils.checkBounds(loc, 22, 24, 22)) {
+			if(Utils.isOutOfBounds(loc, 22, 24, 22)) {
 				if(e.getPlayer().getGameMode() == GameMode.CREATIVE)
 					return;
 				e.setCancelled(true);

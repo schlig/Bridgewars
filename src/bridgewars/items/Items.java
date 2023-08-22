@@ -30,14 +30,15 @@ public class Items {
 	private ItemStack sword;
 	private ItemStack shears;
 	private ItemStack blocks;
+	
 	private ItemStack bow;
+	private ItemStack axe;
+	private ItemStack gigaShears;
 
 	private ItemStack bridgeEgg;
 	private ItemStack portableDoinkHut;
-	
 	private ItemStack fireball;
 	private ItemStack homeRunBat;
-	
 	private ItemStack lifeforcePotion;
 	private ItemStack blackHole;
 	
@@ -65,12 +66,20 @@ public class Items {
 		shears = new ItemStack(Material.SHEARS, 1);
 		shears.addEnchantment(Enchantment.DIG_SPEED, 3);
 		setUnbreakable(shears, true);
+
+		gigaShears = new ItemStack(Material.SHEARS, 1);
+		gigaShears.addEnchantment(Enchantment.DIG_SPEED, 5);
+		setUnbreakable(gigaShears, true);
 		
 		blocks = new ItemStack(Material.WOOL, 64);
 
 		bow = new ItemStack(Material.BOW, 1);
 		bow.addEnchantment(Enchantment.ARROW_INFINITE, 1);
 		setUnbreakable(bow, true);
+		
+		axe = new ItemStack(Material.STONE_AXE, 1);
+		axe.addEnchantment(Enchantment.DIG_SPEED, 5);
+		setUnbreakable(axe,true);
 		
 		//killstreak rewards
 		bridgeEgg = new ItemStack(Material.EGG, 1);
@@ -206,8 +215,12 @@ public class Items {
 		return item;
 	}
 	
-	public ItemStack getShears(Player p) {
+	public ItemStack getShears() {
 		return shears;
+	}
+	
+	public ItemStack getGigaShears() {
+		return gigaShears;
 	}
 	
 	public ItemStack getBlocks(Player p, String s) {
@@ -227,6 +240,10 @@ public class Items {
 			break;
 		}
 		return item;
+	}
+	
+	public ItemStack getAxe(Player p) {
+		return axe;
 	}
 	
 	public ItemStack getBow(Player p, String s) {

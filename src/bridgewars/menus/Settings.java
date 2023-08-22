@@ -1,8 +1,9 @@
 package bridgewars.menus;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
@@ -11,10 +12,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import bridgewars.settings.Blocks;
 import bridgewars.settings.Bows;
+import bridgewars.settings.DigWars;
+import bridgewars.settings.DoubleHealth;
 import bridgewars.settings.DoubleJump;
+import bridgewars.settings.GigaDrill;
 import bridgewars.settings.KillstreakRewards;
-import bridgewars.settings.PacifistRewards;
+import bridgewars.settings.Shears;
 import bridgewars.settings.Swords;
 import bridgewars.settings.TimeLimit;
 import bridgewars.settings._Settings;
@@ -63,18 +68,33 @@ public class Settings {
 				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
 			}
 			break;
-			
-		case BOW:
-			if(Bows.isState(Bows.ENABLED)) {
-				Bows.setState(Bows.DISABLED);
-				p.sendMessage(Utils.chat("Bows are now disabled"));
+		
+		case WOOL:
+			if(Blocks.isState(Blocks.ENABLED)) {
+				Blocks.setState(Blocks.DISABLED);
+				p.sendMessage(Utils.chat("Blocks are now disabled"));
 				modifyButton(p.getOpenInventory().getItem(13), false);
 				p.playSound(p.getLocation(), Sound.CLICK, .8F, 1F);
 			}
 			else {
-				Bows.setState(Bows.ENABLED);
-				p.sendMessage(Utils.chat("Bows are now enabled"));
+				Blocks.setState(Blocks.ENABLED);
+				p.sendMessage(Utils.chat("Blocks are now enabled"));
 				modifyButton(p.getOpenInventory().getItem(13), true);
+				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+			}
+			break;
+			
+		case SHEARS:
+			if(Shears.isState(Shears.ENABLED)) {
+				Shears.setState(Shears.DISABLED);
+				p.sendMessage(Utils.chat("Shears are now disabled"));
+				modifyButton(p.getOpenInventory().getItem(14), false);
+				p.playSound(p.getLocation(), Sound.CLICK, .8F, 1F);
+			}
+			else {
+				Shears.setState(Shears.ENABLED);
+				p.sendMessage(Utils.chat("Shears are now enabled"));
+				modifyButton(p.getOpenInventory().getItem(14), true);
 				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
 			}
 			break;
@@ -83,43 +103,96 @@ public class Settings {
 			if(KillstreakRewards.isState(KillstreakRewards.ENABLED)) {
 				KillstreakRewards.setState(KillstreakRewards.DISABLED);
 				p.sendMessage(Utils.chat("Killstreak Rewards are now disabled"));
-				modifyButton(p.getOpenInventory().getItem(14), false);
+				modifyButton(p.getOpenInventory().getItem(15), false);
 				p.playSound(p.getLocation(), Sound.CLICK, .8F, 1F);
 			}
 			else {
 				KillstreakRewards.setState(KillstreakRewards.ENABLED);
 				p.sendMessage(Utils.chat("Killstreak Rewards are now enabled"));
-				modifyButton(p.getOpenInventory().getItem(14), true);
+				modifyButton(p.getOpenInventory().getItem(15), true);
 				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
 			}
 			break;
 			
-		case FEATHER:
-			if(PacifistRewards.isState(PacifistRewards.ENABLED)) {
-				PacifistRewards.setState(PacifistRewards.DISABLED);
-				p.sendMessage(Utils.chat("Pacifist Rewards are now disabled"));
-				modifyButton(p.getOpenInventory().getItem(15), false);
+		case BOW:
+			if(Bows.isState(Bows.ENABLED)) {
+				Bows.setState(Bows.DISABLED);
+				p.sendMessage(Utils.chat("Bows are now disabled"));
+				modifyButton(p.getOpenInventory().getItem(16), false);
 				p.playSound(p.getLocation(), Sound.CLICK, .8F, 1F);
 			}
 			else {
-				PacifistRewards.setState(PacifistRewards.ENABLED);
-				p.sendMessage(Utils.chat("Pacifist Rewards are now enabled"));
-				modifyButton(p.getOpenInventory().getItem(15), true);
+				Bows.setState(Bows.ENABLED);
+				p.sendMessage(Utils.chat("Bows are now enabled"));
+				modifyButton(p.getOpenInventory().getItem(16), true);
 				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+			}
+			break;
+			
+		case GOLDEN_APPLE:
+			if(DoubleHealth.isState(DoubleHealth.ENABLED)) {
+				DoubleHealth.setState(DoubleHealth.DISABLED);
+				p.sendMessage(Utils.chat("Double Health now disabled"));
+				modifyButton(p.getOpenInventory().getItem(19), false);
+				p.playSound(p.getLocation(), Sound.CLICK, .8F, 1F);
+				for(Player player : Bukkit.getOnlinePlayers()) {
+					player.setHealth(20);
+					player.setMaxHealth(20);
+				}
+			}
+			else {
+				DoubleHealth.setState(DoubleHealth.ENABLED);
+				p.sendMessage(Utils.chat("Double Health is now enabled"));
+				modifyButton(p.getOpenInventory().getItem(19), true);
+				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+				for(Player player : Bukkit.getOnlinePlayers()) {
+					player.setMaxHealth(40);
+					player.setHealth(40);
+				}
 			}
 			break;
 			
 		case RABBIT_FOOT:
 			if(DoubleJump.isState(DoubleJump.ENABLED)) {
 				DoubleJump.setState(DoubleJump.DISABLED);
-				p.sendMessage(Utils.chat("Double Jumping is now disabled"));
-				modifyButton(p.getOpenInventory().getItem(16), false);
+				p.sendMessage(Utils.chat("Double Jump is now disabled"));
+				modifyButton(p.getOpenInventory().getItem(20), false);
 				p.playSound(p.getLocation(), Sound.CLICK, .8F, 1F);
 			}
 			else {
 				DoubleJump.setState(DoubleJump.ENABLED);
-				p.sendMessage(Utils.chat("Double Jumping is now enabled"));
-				modifyButton(p.getOpenInventory().getItem(16), true);
+				p.sendMessage(Utils.chat("Double Jump is now enabled"));
+				modifyButton(p.getOpenInventory().getItem(20), true);
+				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+			}
+			break;
+			
+		case DIAMOND_PICKAXE:
+			if(GigaDrill.isState(GigaDrill.ENABLED)) {
+				GigaDrill.setState(GigaDrill.DISABLED);
+				p.sendMessage(Utils.chat("Giga Drill is now disabled"));
+				modifyButton(p.getOpenInventory().getItem(21), false);
+				p.playSound(p.getLocation(), Sound.CLICK, .8F, 1F);
+			}
+			else {
+				GigaDrill.setState(GigaDrill.ENABLED);
+				p.sendMessage(Utils.chat("Giga Drill is now enabled"));
+				modifyButton(p.getOpenInventory().getItem(21), true);
+				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+			}
+			break;
+			
+		case WOOD:
+			if(DigWars.isState(DigWars.ENABLED)) {
+				DigWars.setState(DigWars.DISABLED);
+				p.sendMessage(Utils.chat("Dig Wars is now disabled"));
+				modifyButton(p.getOpenInventory().getItem(22), false);
+				p.playSound(p.getLocation(), Sound.CLICK, .8F, 1F);
+			}
+			else {
+				DigWars.setState(DigWars.ENABLED);
+				p.sendMessage(Utils.chat("Dig Wars is now enabled"));
+				modifyButton(p.getOpenInventory().getItem(22), true);
 				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
 			}
 			break;
@@ -133,19 +206,19 @@ public class Settings {
 	
 	private static void modifyButton(ItemStack button, boolean state) {
 		ItemMeta meta = button.getItemMeta();
-		String tag = "";
+		List<String> text = meta.getLore();
 		
-		if(state) {
-			button.addUnsafeEnchantment(Enchantment.LURE, 1);
-			tag = "&aEnabled";
-		}
-		else {
-			button.removeEnchantment(Enchantment.LURE);
-			tag = "&cDisabled";
-		}
-		
-		meta.setLore(Arrays.asList(Utils.chat(tag)));
+		if(state)
+			text.set(0,  Utils.chat("&aEnabled"));
+		else
+			text.set(0, Utils.chat("&cDisabled"));
+		meta.setLore(text);
 		button.setItemMeta(meta);
+		
+		if(state)
+			button.addUnsafeEnchantment(Enchantment.LURE, 1);
+		else
+			button.removeEnchantment(Enchantment.LURE);
 	}
 	
 	public static void loadSettings(Player p) throws IOException {
@@ -157,13 +230,22 @@ public class Settings {
 		
 		if(Swords.isState(Swords.ENABLED))
 			modifyButton(p.getOpenInventory().getItem(12), true);
-		if(Bows.isState(Bows.ENABLED))
+		if(Blocks.isState(Blocks.ENABLED))
 			modifyButton(p.getOpenInventory().getItem(13), true);
-		if(KillstreakRewards.isState(KillstreakRewards.ENABLED))
+		if(Shears.isState(Shears.ENABLED))
 			modifyButton(p.getOpenInventory().getItem(14), true);
-		if(PacifistRewards.isState(PacifistRewards.ENABLED))
+		if(KillstreakRewards.isState(KillstreakRewards.ENABLED))
 			modifyButton(p.getOpenInventory().getItem(15), true);
-		if(DoubleJump.isState(DoubleJump.ENABLED))
+		if(Bows.isState(Bows.ENABLED))
 			modifyButton(p.getOpenInventory().getItem(16), true);
+		
+		if(DoubleHealth.isState(DoubleHealth.ENABLED))
+			modifyButton(p.getOpenInventory().getItem(19), true);
+		if(DoubleJump.isState(DoubleJump.ENABLED))
+			modifyButton(p.getOpenInventory().getItem(20), true);
+		if(GigaDrill.isState(GigaDrill.ENABLED))
+			modifyButton(p.getOpenInventory().getItem(21), true);
+		if(DigWars.isState(DigWars.ENABLED))
+			modifyButton(p.getOpenInventory().getItem(22), true);
 	}
 }

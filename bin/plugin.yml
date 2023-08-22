@@ -47,8 +47,8 @@ commands:
   editmode:
     aliases: [edit]
     description: Toggles Edit Mode.
-  leavegame:
-    aliases: [leave]
+  leave:
+    aliases: [l]
     description: Leave the Bridgewars game.
   fly:
     description: Toggle flight.

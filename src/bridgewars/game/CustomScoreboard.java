@@ -2,6 +2,7 @@ package bridgewars.game;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -31,15 +32,6 @@ public class CustomScoreboard {
 			time.setDisplayName(Utils.chat("&6Time"));
 		}
 		
-		if(scoreboard.getTeam("red") == null)
-			scoreboard.registerNewTeam("red");
-		if(scoreboard.getTeam("blue") == null)
-			scoreboard.registerNewTeam("blue");
-		if(scoreboard.getTeam("green") == null)
-			scoreboard.registerNewTeam("green");
-		if(scoreboard.getTeam("yellow") == null)
-			scoreboard.registerNewTeam("yellow");
-		
 		teamSetup("red", "&c", "&r");
 		teamSetup("blue", "&b", "&r");
 		teamSetup("green", "&a", "&r");
@@ -49,6 +41,8 @@ public class CustomScoreboard {
 	}
 	
 	private void teamSetup(String team, String prefix, String suffix) {
+		if(scoreboard.getTeam(team) == null)
+			scoreboard.registerNewTeam(team);
 		this.team = scoreboard.getTeam(team);
 		this.team.setAllowFriendlyFire(true);
 		this.team.setCanSeeFriendlyInvisibles(true);
@@ -61,27 +55,37 @@ public class CustomScoreboard {
 	}
 	
 	public void updateTime(int TimeLimit) {
+		boolean isActive = false;
 		time.setDisplaySlot(DisplaySlot.SIDEBAR);
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			if(hasTeam(p)) {
+				isActive = true;
 				p.setScoreboard(scoreboard);
 				score = time.getScore(p.getName());
 				if(p.getLocation().getY() <= 30
 						&& !p.getGameMode().equals(GameMode.CREATIVE)
 						&& score.getScore() < TimeLimit)
 					score.setScore(score.getScore() + 1);
-				if(score.getScore() == TimeLimit - 60 && TimeLimit - 60 > 0)
+				if(score.getScore() == TimeLimit - 60 && TimeLimit - 60 > 0) {
 					Bukkit.broadcastMessage(Utils.chat("&l" + p.getDisplayName() + " &rhas &l&e60&r seconds remaining!"));
-				else if(score.getScore() == TimeLimit - 30 && TimeLimit - 30 > 0)
+					p.playSound(p.getLocation(), Sound.NOTE_PLING, 1F, 1F);
+				}
+				else if(score.getScore() == TimeLimit - 30 && TimeLimit - 30 > 0) {
 					Bukkit.broadcastMessage(Utils.chat("&l" + p.getDisplayName() + " &rhas &l&630&r seconds remaining!"));
-				else if(score.getScore() == TimeLimit - 15 && TimeLimit - 15 > 0)
+					p.playSound(p.getLocation(), Sound.NOTE_PLING, 1F, 1F);
+				}
+				else if(score.getScore() == TimeLimit - 15 && TimeLimit - 15 > 0) {
 					Bukkit.broadcastMessage(Utils.chat("&l" + p.getDisplayName() + " &rhas &l&c15&r seconds remaining! Their location has been revealed!"));
+					p.playSound(p.getLocation(), Sound.NOTE_PLING, 1F, 1F);
+				}
 				if(score.getScore() >= TimeLimit) {
 					Game.endGame(p, false);
 					break;
 				}
 			}
 		}
+		if(!isActive)
+			Game.endGame(null, true);
 	}
 	
 	public int getTime(Player p) {

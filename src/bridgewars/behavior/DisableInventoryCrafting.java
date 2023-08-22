@@ -7,6 +7,7 @@ import org.bukkit.event.inventory.CraftItemEvent;
 
 import bridgewars.Main;
 import bridgewars.game.GameState;
+import bridgewars.settings.DigWars;
 
 public class DisableInventoryCrafting implements Listener {
 	
@@ -16,7 +17,8 @@ public class DisableInventoryCrafting implements Listener {
 	
 	@EventHandler
 	public void onCraft(CraftItemEvent e) {
-		if(GameState.isState(GameState.ACTIVE))
+		if(GameState.isState(GameState.ACTIVE)
+		&& !DigWars.getState().isEnabled())
 			e.setCancelled(true);
 	}
 }

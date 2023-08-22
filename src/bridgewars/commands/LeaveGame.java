@@ -16,7 +16,7 @@ public class LeaveGame implements CommandExecutor {
 	private CustomScoreboard cs;
 	
 	public LeaveGame(Main plugin) {
-		plugin.getCommand("leavegame").setExecutor(this);
+		plugin.getCommand("leave").setExecutor(this);
 		cs = new CustomScoreboard();
 	}
 

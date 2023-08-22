@@ -3,6 +3,7 @@ package bridgewars.game;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -72,6 +73,10 @@ public class Kills implements Listener {
 			ct.setDamageCause(p, e.getCause());
 			if(e.getDamager() instanceof Player) {
 				Player k = (Player) e.getDamager();
+				ct.setAttacker(p, k);
+			}
+			else if(e.getDamager() instanceof Projectile) {
+				Player k = (Player) ((Projectile)e.getDamager()).getShooter();
 				ct.setAttacker(p, k);
 			}
 		}

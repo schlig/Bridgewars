@@ -42,6 +42,15 @@ public class HotbarEditor {
 				case WOOL:
 					hotbar.setWoolSlot(p, i);
 					break;
+				case STONE_AXE:
+					hotbar.setAxeSlot(p, i);
+					break;
+				case WOOD:
+					hotbar.setWoodSlot(p, i);
+					break;
+				case BOW:
+					hotbar.setBowSlot(p, i);
+					break;
 				default:
 				}
 			

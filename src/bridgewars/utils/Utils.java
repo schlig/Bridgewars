@@ -58,9 +58,17 @@ public class Utils {
         connection.sendPacket(subtitlePacket);
     }
 	
-	public static boolean checkBounds(Location loc, int x, int y, int z) {
-		if(Math.abs(loc.getBlockX()) < x || Math.abs(loc.getBlockY()) < y || Math.abs(loc.getBlockZ()) < z)
+	public static boolean isOutOfBounds(Location loc, int x, int y, int z) {
+		if(Math.abs(loc.getBlockX()) > x || loc.getBlockY() > y || Math.abs(loc.getBlockZ()) > z)
+			return true;
+		else
 			return false;
-		return true;
+	}
+	
+	public static boolean isOutOfBounds(Location loc, int x, int y, int z, int a, int b, int c) {
+		if(Math.abs(loc.getBlockX()) > x || loc.getBlockY() > y || Math.abs(loc.getBlockZ()) > z)
+			return true;
+		else
+			return false;
 	}
 }

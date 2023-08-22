@@ -6,21 +6,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import bridgewars.Main;
-import bridgewars.game.CustomScoreboard;
 import bridgewars.game.Game;
 import bridgewars.game.GameState;
 import bridgewars.utils.Utils;
 
 public class JoinGame implements CommandExecutor {
 	
-	private CustomScoreboard cs;
-	
 	public JoinGame(Main plugin) {
 		plugin.getCommand("joingame").setExecutor(this);
-		cs = new CustomScoreboard();
 	}
 
-	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(!(sender instanceof Player))
@@ -38,7 +33,7 @@ public class JoinGame implements CommandExecutor {
 			return false;
 		}
 		
-		if(cs.hasTeam(p)) {
+		if(!Utils.isOutOfBounds(p.getLocation(), 80, 40, 80)) {
 			p.sendMessage(Utils.chat("&cYou are already in a game."));
 			return false;
 		}
