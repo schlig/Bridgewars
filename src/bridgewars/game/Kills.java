@@ -68,8 +68,8 @@ public class Kills implements Listener {
 				else
 					k.playSound(k.getLocation(), Sound.LEVEL_UP, 1F, 1F);
 				
-				if(k.getHealth() + 7 > 20)
-					k.setHealth(20);
+				if(k.getHealth() + 7 > k.getMaxHealth())
+					k.setHealth(k.getMaxHealth());
 				else
 					k.setHealth(k.getHealth() + 7);
 				
