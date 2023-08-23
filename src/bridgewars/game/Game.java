@@ -19,9 +19,12 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -29,6 +32,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import bridgewars.commands.Fly;
 import bridgewars.items.Items;
+import bridgewars.items.SadRoom;
 import bridgewars.settings.Blocks;
 import bridgewars.settings.Bows;
 import bridgewars.settings.DigWars;
@@ -74,6 +78,8 @@ public class Game {
 		if(debugMessages)
 			p.sendMessage(Utils.chat("&7Placed spawn platforms"));
 		
+		SadRoom.clearSadRoom();
+		
 		for(Player player : Bukkit.getOnlinePlayers()) {
 			Fly.allowFlight.remove(player);
 			cs.removePlayerFromTimer(player);
@@ -117,6 +123,10 @@ public class Game {
 			for(int z = -22; z <= 22; z++)
 				for(int y = 0; y <= 24; y++)
 					Bukkit.getWorld("world").getBlockAt(x, y, z).setType(Material.AIR);
+		
+		for(Entity e : Bukkit.getWorld("world").getEntities())
+			if(e instanceof Item)
+				e.teleport(new Location(Bukkit.getWorld("world"), 0, -100, 0));
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -259,8 +269,13 @@ public class Game {
 					p.getInventory().clear();
 					p.getInventory().setArmorContents(null);
 					p.setGameMode(GameMode.ADVENTURE);
-					if(!forced)
+					if(!forced) {
 						Utils.sendTitle(p, Utils.chat("&6&lGAME OVER"), Utils.chat("&l" + cs.getTeam(winner).substring(0, 1).toUpperCase() + cs.getTeam(winner).substring(1, cs.getTeam(winner).length()) + " team wins!"), 5, 20, 5);
+						if(cs.getTeam(p) == cs.getTeam(winner))
+							p.playSound(p.getLocation(), Sound.LEVEL_UP, 1F, 1F);
+						else
+							p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+					}
 				}
 			}
 			if(forced)
@@ -326,6 +341,7 @@ public class Game {
 				}
 			}.runTaskTimer(Bukkit.getPluginManager().getPlugin("bridgewars"), 0L, 10L);
 		
+		SadRoom.clearSadRoom();
 		GameState.setState(GameState.INACTIVE);
 		cs.resetAllTimes();
 		deleteSpawns();

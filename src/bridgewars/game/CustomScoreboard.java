@@ -68,15 +68,20 @@ public class CustomScoreboard {
 					score.setScore(score.getScore() + 1);
 				if(score.getScore() == TimeLimit - 60 && TimeLimit - 60 > 0) {
 					Bukkit.broadcastMessage(Utils.chat("&l" + p.getDisplayName() + " &rhas &l&e60&r seconds remaining!"));
-					p.playSound(p.getLocation(), Sound.NOTE_PLING, 1F, 1F);
+					for(Player player : Bukkit.getOnlinePlayers())
+						player.playSound(player.getLocation(), Sound.NOTE_PLING, 1F, 1F);
 				}
 				else if(score.getScore() == TimeLimit - 30 && TimeLimit - 30 > 0) {
 					Bukkit.broadcastMessage(Utils.chat("&l" + p.getDisplayName() + " &rhas &l&630&r seconds remaining!"));
-					p.playSound(p.getLocation(), Sound.NOTE_PLING, 1F, 1F);
+					for(Player player : Bukkit.getOnlinePlayers())
+						player.playSound(player.getLocation(), Sound.NOTE_PLING, 1F, 1F);
 				}
-				else if(score.getScore() == TimeLimit - 15 && TimeLimit - 15 > 0) {
-					Bukkit.broadcastMessage(Utils.chat("&l" + p.getDisplayName() + " &rhas &l&c15&r seconds remaining! Their location has been revealed!"));
-					p.playSound(p.getLocation(), Sound.NOTE_PLING, 1F, 1F);
+				else if(score.getScore() >= TimeLimit - 15 && TimeLimit - 15 > 0) {
+					if(score.getScore() == TimeLimit - 15 && TimeLimit - 15 > 0)
+						Bukkit.broadcastMessage(Utils.chat("&l" + p.getDisplayName() + " &rhas &l&c15&r seconds remaining! Their location has been revealed!"));
+					if(score.getScore() == TimeLimit - 15 && TimeLimit - 15 > 0 || score.getScore() >= TimeLimit - 9 && TimeLimit - 15 > 0)
+						for(Player player : Bukkit.getOnlinePlayers())
+							player.playSound(player.getLocation(), Sound.NOTE_PLING, 1F, 1F);
 				}
 				if(score.getScore() >= TimeLimit) {
 					Game.endGame(p, false);

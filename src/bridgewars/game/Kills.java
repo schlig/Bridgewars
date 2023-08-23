@@ -13,11 +13,14 @@ import bridgewars.Main;
 import bridgewars.items.Items;
 import bridgewars.settings.ChosenKillstreaks;
 import bridgewars.settings.KillstreakRewards;
+import bridgewars.settings.TimeLimit;
 
 public class Kills implements Listener {
 	
 	private Items items;
 	private ChosenKillstreaks ks;
+	private CustomScoreboard cs;
+	private TimeLimit tl;
 	private CombatTagging ct;
 	
 	public Kills(Main plugin) {
@@ -25,42 +28,50 @@ public class Kills implements Listener {
 		items = new Items();
 		ks = new ChosenKillstreaks();
 		ct = new CombatTagging();
+		cs = new CustomScoreboard();
+		tl = new TimeLimit();
 	}
 	
 	@EventHandler
 	public void onKill(PlayerDeathEvent e) {
 		if(GameState.isState(GameState.ACTIVE))
 			if(e.getEntity().getKiller() instanceof Player) {
-				Player p = e.getEntity().getKiller();
-				if(ct.getAttacker((Player)e.getEntity()) != p)
+				
+				Player p = e.getEntity();
+				Player k = e.getEntity().getKiller();
+				
+				if(ct.getAttacker((Player)e.getEntity()) != k)
 					return;
 
 				
-				p.setLevel(p.getLevel() + 1);
+				k.setLevel(k.getLevel() + 1);
 				if(KillstreakRewards.getState().isEnabled()) {
-					if(p.getLevel() % 3 == 0)
-						if(ks.getThreeStreak(p) == 0)
-							p.getInventory().addItem(items.getBridgeEgg(2, false));
-						else if(ks.getThreeStreak(p) == 1)
-							p.getInventory().addItem(items.getPortableDoinkHut(1, false));
-					if(p.getLevel() % 5 == 0)
-						if(ks.getFiveStreak(p) == 0)
-							p.getInventory().addItem(items.getHomeRunBat(1, false));
-						else if(ks.getFiveStreak(p) == 1)
-							p.getInventory().addItem(items.getFireball(1, false));
-					if(p.getLevel() % 7 == 0)
-						if(ks.getSevenStreak(p) == 0)
-							p.getInventory().addItem(items.getLifeforcePotion(1, false));
-						else if(ks.getSevenStreak(p) == 1)
-							p.getInventory().addItem(items.getBlackHole(1, false));
+					if(k.getLevel() % 3 == 0)
+						if(ks.getThreeStreak(k) == 0)
+							k.getInventory().addItem(items.getBridgeEgg(2, false));
+						else if(ks.getThreeStreak(k) == 1)
+							k.getInventory().addItem(items.getPortableDoinkHut(1, false));
+					if(k.getLevel() % 5 == 0)
+						if(ks.getFiveStreak(k) == 0)
+							k.getInventory().addItem(items.getHomeRunBat(1, false));
+						else if(ks.getFiveStreak(k) == 1)
+							k.getInventory().addItem(items.getFireball(1, false));
+					if(k.getLevel() % 7 == 0)
+						if(ks.getSevenStreak(k) == 0)
+							k.getInventory().addItem(items.getLifeforcePotion(1, false));
+						else if(ks.getSevenStreak(k) == 1)
+							k.getInventory().addItem(items.getBlackHole(1, false));
 				}
 				
-				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
-				
-				if(p.getHealth() + 7 > 20)
-					p.setHealth(20);
+				if(cs.getTime(p) < tl.getLimit() - 15)
+					k.playSound(k.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
 				else
-					p.setHealth(p.getHealth() + 7);
+					k.playSound(k.getLocation(), Sound.LEVEL_UP, 1F, 1F);
+				
+				if(k.getHealth() + 7 > 20)
+					k.setHealth(20);
+				else
+					k.setHealth(k.getHealth() + 7);
 				
 				ct.setAttacker((Player)e.getEntity(), null);
 			}

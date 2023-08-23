@@ -43,6 +43,7 @@ import bridgewars.items.FireballLaunch;
 import bridgewars.items.ForceFieldGenerator;
 import bridgewars.items.HomeRunBat;
 import bridgewars.items.PortableDoinkHut;
+import bridgewars.items.SadRoom;
 import bridgewars.menus._MenuInput;
 import bridgewars.messages.DeathMessages;
 import bridgewars.messages.OnJoin;
@@ -106,6 +107,7 @@ public class Main extends JavaPlugin {
 		new PortableDoinkHut(this);
 		new ForceFieldGenerator(this);
 		new HomeRunBat(this);
+		new SadRoom(this);
 		
 		//messages
 		new DeathMessages(this);

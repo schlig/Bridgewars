@@ -24,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import bridgewars.Main;
 import bridgewars.game.CustomScoreboard;
 import bridgewars.game.GameState;
+import bridgewars.utils.Utils;
 
 public class FireballLaunch implements Listener {
 	
@@ -102,7 +103,7 @@ public class FireballLaunch implements Listener {
 			Iterator i = blocks.iterator();
 			while(i.hasNext()) {
 				Block block = (Block) i.next();
-				if(block.getType() == Material.STAINED_GLASS)
+				if(Utils.isOutOfBounds(block.getLocation(), 22, 24, 22))
 					i.remove();
 			}
 		}

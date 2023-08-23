@@ -3,6 +3,7 @@ package bridgewars.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,7 +30,8 @@ public class Fly implements CommandExecutor {
 		Player p = (Player) sender;
 		
 		if(GameState.isState(GameState.ACTIVE)
-		&& !Utils.isOutOfBounds(p.getLocation(), 200, 40, 200)) {
+		&& !Utils.isOutOfBounds(p.getLocation(), 200, 40, 200)
+		&& p.getGameMode() != GameMode.CREATIVE) {
 			p.sendMessage(Utils.chat("&cYou can't fly while in a game!"));
 		}
 		else {

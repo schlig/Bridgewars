@@ -19,6 +19,7 @@ import bridgewars.settings.DoubleHealth;
 import bridgewars.settings.DoubleJump;
 import bridgewars.settings.GigaDrill;
 import bridgewars.settings.KillstreakRewards;
+import bridgewars.settings.NaturalItemSpawning;
 import bridgewars.settings.Shears;
 import bridgewars.settings.Swords;
 import bridgewars.settings.TimeLimit;
@@ -197,6 +198,21 @@ public class Settings {
 			}
 			break;
 			
+		case DIAMOND:
+			if(NaturalItemSpawning.isState(NaturalItemSpawning.ENABLED)) {
+				NaturalItemSpawning.setState(NaturalItemSpawning.DISABLED);
+				p.sendMessage(Utils.chat("Natural Item Spawning is now disabled"));
+				modifyButton(p.getOpenInventory().getItem(23), false);
+				p.playSound(p.getLocation(), Sound.CLICK, .8F, 1F);
+			}
+			else {
+				NaturalItemSpawning.setState(NaturalItemSpawning.ENABLED);
+				p.sendMessage(Utils.chat("Natural Item Spawning is now enabled"));
+				modifyButton(p.getOpenInventory().getItem(23), true);
+				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+			}
+			break;
+			
 		default:
 			break;
 		}
@@ -247,5 +263,7 @@ public class Settings {
 			modifyButton(p.getOpenInventory().getItem(21), true);
 		if(DigWars.isState(DigWars.ENABLED))
 			modifyButton(p.getOpenInventory().getItem(22), true);
+		if(NaturalItemSpawning.isState(NaturalItemSpawning.ENABLED))
+			modifyButton(p.getOpenInventory().getItem(23), true);
 	}
 }

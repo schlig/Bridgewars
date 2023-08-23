@@ -50,5 +50,7 @@ public class OnJoin implements Listener {
 			p.getInventory().setArmorContents(null);
 			p.setGameMode(GameMode.ADVENTURE);
 		}
+		if(p.getGameMode() == GameMode.CREATIVE || p.getGameMode() == GameMode.SPECTATOR)
+			Fly.allowFlight.add(p);
 	}
 }

@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import bridgewars.Main;
 import bridgewars.game.CustomScoreboard;
 import bridgewars.game.GameState;
+import bridgewars.items.SadRoom;
 
 public class OnLeave implements Listener {
 	
@@ -24,6 +25,7 @@ public class OnLeave implements Listener {
 		Player p = e.getPlayer();
 		cs.resetTeam(p, false);
 		cs.removePlayerFromTimer(p);
+		SadRoom.removePlayerFromSadRoom(p);
 		if(Bukkit.getOnlinePlayers().size() == 0)
 			if(GameState.isState(GameState.EDIT))
 				GameState.setState(GameState.INACTIVE);

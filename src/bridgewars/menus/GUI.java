@@ -119,6 +119,11 @@ public class GUI {
 				Utils.chat("&7Start with 64 wood and a stone axe"),
 				Utils.chat("&7Wood is replenished on death"))));
 		
+		settings.setItem(23, item(Material.DIAMOND, 1, 0, "&r&6Natural Item Spawns", false, Arrays.asList(
+				Utils.chat("&r&cDisabled"),
+				Utils.chat("&7Items will randomly spawn anywhere"),
+				Utils.chat("&7on the map"))));
+		
 		settings.setItem(40, button(0));
 		
 		//build the timer menu

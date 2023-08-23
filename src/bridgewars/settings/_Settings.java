@@ -28,6 +28,7 @@ public class _Settings {
 			doubleJump(Boolean.parseBoolean(br.readLine()));
 			gigaDrill(Boolean.parseBoolean(br.readLine()));
 			digWars(Boolean.parseBoolean(br.readLine()));
+			naturalItemSpawns(Boolean.parseBoolean(br.readLine()));
 			
 			br.close();
 		} catch (IOException e) { }
@@ -57,6 +58,8 @@ public class _Settings {
 			bw.write(GigaDrill.getState().isEnabled().toString());
 			bw.newLine();
 			bw.write(DigWars.getState().isEnabled().toString());
+			bw.newLine();
+			bw.write(NaturalItemSpawning.getState().isEnabled().toString());
 			bw.newLine();
 			
 			bw.flush();
@@ -125,5 +128,12 @@ public class _Settings {
 			DigWars.setState(DigWars.ENABLED);
 		else
 			DigWars.setState(DigWars.DISABLED);
+	}
+	
+	private static void naturalItemSpawns(boolean value) {
+		if(value)
+			NaturalItemSpawning.setState(NaturalItemSpawning.ENABLED);
+		else
+			NaturalItemSpawning.setState(NaturalItemSpawning.DISABLED);
 	}
 }
