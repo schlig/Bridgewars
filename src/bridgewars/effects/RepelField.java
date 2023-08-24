@@ -10,7 +10,10 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import bridgewars.Main;
 import bridgewars.game.CustomScoreboard;
+import bridgewars.utils.Particle;
+import net.minecraft.server.v1_8_R3.EnumParticle;
 
 public class RepelField extends BukkitRunnable {
 	
@@ -21,12 +24,15 @@ public class RepelField extends BukkitRunnable {
     private double p; //this dictates the maximum power of the field's epicenter (y-intercept on a graph)
     private int t;    //duration
     
-    public RepelField(Player u, double d, double p, int t){
+    private Main plugin;
+    
+    public RepelField(Player u, double d, double p, int t, Main plugin){
         cs = new CustomScoreboard();
         this.u = u;
         this.d = d;
         this.t = t;
         this.p = p;
+        this.plugin = plugin;
     }
     
     @Override
@@ -52,7 +58,16 @@ public class RepelField extends BukkitRunnable {
             	continue;
             
             e.setVelocity(e.getVelocity().add(directionVector.multiply //put this formula into desmos to understand it lol
-            		( ((p * d) / (Math.pow(d, 3))) * Math.pow(d - magnitude, 2) )));
+            		( (p / (Math.pow(d, 4))) * Math.pow(d - magnitude, 4) )));
+        }
+
+        Vector particlePos;
+        for(int i = 0; i < 5; i++) {
+            particlePos = new Vector(Math.random() - .5f, Math.random() - .5f, Math.random() - .5f).normalize();
+            new Particle(u, EnumParticle.CRIT_MAGIC,
+                    (float) (particlePos.getX() * d), (float) (particlePos.getY() * d), (float) (particlePos.getZ() * d),
+                    0, 0, 0,
+                    0.05f, 5, 1000, false).runTask(plugin);
         }
         t--;
         if(t <= 0) {

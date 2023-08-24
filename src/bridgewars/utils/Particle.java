@@ -22,7 +22,7 @@ public class Particle extends BukkitRunnable {
 	
 	private float x, y, z;
 	private float targetXPos, targetYPos, targetZPos;
-	private float xOffset = 0, yOffset = 0, zOffset = 0;
+	private float xOffset, yOffset, zOffset;
 	private float speed;
 	private int duration;
 	private int amount;

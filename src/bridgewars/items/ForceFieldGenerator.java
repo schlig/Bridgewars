@@ -31,7 +31,7 @@ public class ForceFieldGenerator implements Listener {
         ItemStack item = p.getItemInHand();
         if(e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if(item.getType() == Material.DIAMOND) {
-                taskList.add(new RepelField(p, 5, 1, 100).runTaskTimer(plugin,0,1));
+                taskList.add(new RepelField(p, 5, 1, 100, plugin).runTaskTimer(plugin,0,1));
             }
         }
     }
