@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import bridgewars.Main;
 import bridgewars.game.Game;
-import bridgewars.utils.Utils;
+import bridgewars.utils.Message;
 
 public class ClearMap implements CommandExecutor {
 	
@@ -25,11 +25,11 @@ public class ClearMap implements CommandExecutor {
 		
 		if(p.isOp()) {
 			Game.clearMap();
-			p.sendMessage(Utils.chat("&7Cleared the map"));
+			p.sendMessage(Message.chat("&7Cleared the map"));
 		}
 		
 		else
-			p.sendMessage(Utils.chat("&cI'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is in error."));
+			p.sendMessage(Message.chat("&cI'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is in error."));
 		
 		return false;
 	}

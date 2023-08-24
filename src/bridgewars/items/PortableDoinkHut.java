@@ -17,7 +17,7 @@ import org.bukkit.util.Vector;
 
 import bridgewars.Main;
 import bridgewars.game.CustomScoreboard;
-import bridgewars.utils.Utils;
+import bridgewars.utils.Message;
 
 public class PortableDoinkHut implements Listener {
 	
@@ -83,12 +83,12 @@ public class PortableDoinkHut implements Listener {
 					v.setY(0);
 					p.setVelocity(v);
 					p.playSound(p.getLocation(), Sound.CHICKEN_EGG_POP, 1F, 1F);
-					p.sendMessage(Utils.chat("&6Doink!"));
+					p.sendMessage(Message.chat("&6Doink!"));
 					loc.setY(loc.getY() + 1.1);
 					p.teleport(loc);
 				}
 				else
-					p.sendMessage(Utils.chat("&cYou can't place this here!"));
+					p.sendMessage(Message.chat("&cYou can't place this here!"));
 			}
 		}
 	}

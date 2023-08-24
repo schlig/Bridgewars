@@ -11,27 +11,23 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import bridgewars.commands.Fly;
-import bridgewars.items.Items;
+import bridgewars.effects.Fireworks;
+import bridgewars.items.CustomItems;
 import bridgewars.items.SadRoom;
 import bridgewars.settings.Blocks;
 import bridgewars.settings.Bows;
@@ -40,11 +36,12 @@ import bridgewars.settings.GigaDrill;
 import bridgewars.settings.HotbarLayout;
 import bridgewars.settings.Shears;
 import bridgewars.settings.Swords;
+import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
 public class Game {
 	
-	private static Items items = new Items();
+	private static CustomItems items = new CustomItems();
 	private static CustomScoreboard cs = new CustomScoreboard();
 	private static HotbarLayout hotbar = new HotbarLayout();
 	
@@ -53,30 +50,30 @@ public class Game {
 	public static void startGame(Player p, boolean debugMessages) {
 		
 		if(GameState.isState(GameState.EDIT)) {
-			p.sendMessage(Utils.chat("&cYou can't start a game while Edit Mode is active."));
+			p.sendMessage(Message.chat("&cYou can't start a game while Edit Mode is active."));
 			return;
 		}
 		if(GameState.isState(GameState.ACTIVE)) {
-			p.sendMessage(Utils.chat("&cThere is already a game in progress."));
+			p.sendMessage(Message.chat("&cThere is already a game in progress."));
 			return;
 		}
 		
 		Game.clearMap();
 		if(debugMessages)
-			p.sendMessage(Utils.chat("&7Cleared the map"));
+			p.sendMessage(Message.chat("&7Cleared the map"));
 		
 		if(!(Game.buildMap(null, p, false)))
 			return;
 		if(debugMessages)
-			p.sendMessage(Utils.chat("&7Built the map"));
+			p.sendMessage(Message.chat("&7Built the map"));
 		
 		Timer.runTimer();
 		if(debugMessages)
-			p.sendMessage(Utils.chat("&7Started the timer"));
+			p.sendMessage(Message.chat("&7Started the timer"));
 		
 		Game.placeSpawns();
 		if(debugMessages)
-			p.sendMessage(Utils.chat("&7Placed spawn platforms"));
+			p.sendMessage(Message.chat("&7Placed spawn platforms"));
 		
 		SadRoom.clearSadRoom();
 		
@@ -90,9 +87,9 @@ public class Game {
 			player.setAllowFlight(false);
 		}
 		if(debugMessages) {
-			p.sendMessage(Utils.chat("&7Randomized teams"));
-			p.sendMessage(Utils.chat("&7Teleported players"));
-			p.sendMessage(Utils.chat("&7Granted starting items"));
+			p.sendMessage(Message.chat("&7Randomized teams"));
+			p.sendMessage(Message.chat("&7Teleported players"));
+			p.sendMessage(Message.chat("&7Granted starting items"));
 		}
 		
 		GameState.setState(GameState.ACTIVE);
@@ -151,10 +148,10 @@ public class Game {
 				
 			} catch (IOException e) { 
 				e.printStackTrace();
-				p.sendMessage(Utils.chat("&cFailed to load map \"&6" + map + "&c\""));
+				p.sendMessage(Message.chat("&cFailed to load map \"&6" + map + "&c\""));
 			}
 			if(mapList.size() == 0) {
-				Bukkit.broadcastMessage(Utils.chat("&cThere aren't any maps in rotation!"));
+				Bukkit.broadcastMessage(Message.chat("&cThere aren't any maps in rotation!"));
 				return false;
 			}
 			i = Utils.rand(mapList.size());
@@ -167,14 +164,14 @@ public class Game {
 			try {
 				map = file.getCanonicalFile().getName();
 			} catch (IOException e) {
-				p.sendMessage(Utils.chat("&cFailed to load map \"&6" + map + "&c\""));
+				p.sendMessage(Message.chat("&cFailed to load map \"&6" + map + "&c\""));
 				return false;
 			}
 		}
 		
 		try {
 			if(!(file.exists())) {
-				p.sendMessage(Utils.chat("&cFailed to load map \"&6" + map + "&c\" &7(try checking case sensitivity?)"));
+				p.sendMessage(Message.chat("&cFailed to load map \"&6" + map + "&c\" &7(try checking case sensitivity?)"));
 				return false;
 			}
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
@@ -197,7 +194,7 @@ public class Game {
 		}
 		map = map.substring(0, map.length() - 4);
 		for(Player player : Bukkit.getOnlinePlayers())
-			player.sendMessage(Utils.chat("&lMap: &6&l" + map));
+			player.sendMessage(Message.chat("&lMap: &6&l" + map));
 		return true;
 	}
 	
@@ -208,27 +205,24 @@ public class Game {
 		if(cs.hasTeam(p))
 			return;
 		
-		HashMap<Integer, String> teamSizes = new HashMap<>();
+		Map<String, Integer> teamSizes = new HashMap<>();
 		List<String> options = new ArrayList<>();
 		
-		teamSizes.put(cs.getTeamSize("red"), "red");
-		teamSizes.put(cs.getTeamSize("blue"), "blue");
-		teamSizes.put(cs.getTeamSize("green"), "green");
-		teamSizes.put(cs.getTeamSize("yellow"), "yellow");
+		teamSizes.put("red", (cs.getTeamSize("red")));
+		teamSizes.put("blue", (cs.getTeamSize("blue")));
+		teamSizes.put("green", (cs.getTeamSize("green")));
+		teamSizes.put("yellow", (cs.getTeamSize("yellow")));
 
-		options.addAll(teamSizes.values());
+		options.addAll(teamSizes.keySet());
 		
-		List<String> teams = options;
-		
-		int smallestTeam = Collections.min(teamSizes.keySet());
-		for(Entry<Integer, String> entry : teamSizes.entrySet())
-			if(smallestTeam != entry.getKey())
-				options.remove(entry.getValue());
+		int smallestTeam = Collections.min(teamSizes.values());
+		for(Entry<String,Integer> entry : teamSizes.entrySet())
+			if(smallestTeam != entry.getValue())
+				options.remove(entry.getKey());
 		
 		if(options.size() == 0)
-			cs.setTeam(p, teams.get(Utils.rand(0)));
-		else
-			cs.setTeam(p, options.get(Utils.rand(options.size())));
+			options.addAll(teamSizes.keySet());
+		cs.setTeam(p, options.get(Utils.rand(options.size())));
 	}
 	
 	public static void spawnPlayer(Player p) {
@@ -270,7 +264,7 @@ public class Game {
 					p.getInventory().setArmorContents(null);
 					p.setGameMode(GameMode.ADVENTURE);
 					if(!forced) {
-						Utils.sendTitle(p, Utils.chat("&6&lGAME OVER"), Utils.chat("&l" + cs.getTeam(winner).substring(0, 1).toUpperCase() + cs.getTeam(winner).substring(1, cs.getTeam(winner).length()) + " team wins!"), 5, 20, 5);
+						Message.sendTitle(p, Message.chat("&6&lGAME OVER"), Message.chat("&l" + cs.getTeam(winner).substring(0, 1).toUpperCase() + cs.getTeam(winner).substring(1, cs.getTeam(winner).length()) + " team wins!"), 5, 20, 5);
 						if(cs.getTeam(p) == cs.getTeam(winner))
 							p.playSound(p.getLocation(), Sound.LEVEL_UP, 1F, 1F);
 						else
@@ -297,49 +291,11 @@ public class Game {
 			}
 		}
 		
-		else if(winner == null) {
+		else if(winner == null)
 			Bukkit.broadcastMessage("There were no players left, so the game has ended.");
-		}
 		
 		if(!forced)
-			new BukkitRunnable() {
-				int amount = 0;
-				@Override
-				public void run() {
-					if(amount == 7) {
-						this.cancel();
-						return;
-					}
-					
-					int x = Utils.rand(5) - 2;
-					int z = Utils.rand(5) - 2;
-					
-					Firework firework = (Firework) Bukkit.getWorld("world").spawnEntity(new Location(Bukkit.getWorld("world"), x, 47, z), EntityType.FIREWORK);
-					FireworkMeta effects = firework.getFireworkMeta();
-					Color color = Color.ORANGE;
-					int i = Utils.rand(4);
-					switch(i) {
-					case 0:
-						color = Color.RED;
-						break;
-					case 1:
-						color = Color.AQUA;
-						break;
-					case 2:
-						color = Color.LIME;
-						break;
-					case 3:
-						color = Color.YELLOW;
-						break;
-					}
-					effects.setPower(0);
-					effects.addEffect(FireworkEffect.builder().withColor(color).build());
-					
-					firework.setFireworkMeta(effects);
-					
-					amount++;
-				}
-			}.runTaskTimer(Bukkit.getPluginManager().getPlugin("bridgewars"), 0L, 10L);
+			new Fireworks(7).runTaskTimer(Bukkit.getPluginManager().getPlugin("bridgewars"), 0L, 10L);
 		
 		SadRoom.clearSadRoom();
 		GameState.setState(GameState.INACTIVE);
@@ -406,30 +362,29 @@ public class Game {
 	
 	public static void grantItems(Player p) {
 		p.getInventory().clear();
-		String s = cs.getTeam(p);
-		p.getInventory().setHelmet(items.getHelm(p, s));
-		p.getInventory().setChestplate(items.getChest(p, s));;
-		p.getInventory().setLeggings(items.getLegs(p, s));;
-		p.getInventory().setBoots(items.getBoots(p, s));
+		p.getInventory().setHelmet(items.getItem(p, "helmet"));
+		p.getInventory().setChestplate(items.getItem(p, "chestplate"));;
+		p.getInventory().setLeggings(items.getItem(p, "leggings"));;
+		p.getInventory().setBoots(items.getItem(p, "boots"));
 		if(Swords.isState(Swords.ENABLED))
-			p.getInventory().setItem(hotbar.getSwordSlot(p), items.getSword(p, s));
+			p.getInventory().setItem(hotbar.getSwordSlot(p), items.getItem(p, "sword"));
 		if(Shears.isState(Shears.ENABLED) && !GigaDrill.getState().isEnabled())
-			p.getInventory().setItem(hotbar.getShearsSlot(p), items.getShears());
+			p.getInventory().setItem(hotbar.getShearsSlot(p), items.getItem(p, "shears"));
 		if(Blocks.isState(Blocks.ENABLED))
-			p.getInventory().setItem(hotbar.getWoolSlot(p), items.getBlocks(p, s));
+			p.getInventory().setItem(hotbar.getWoolSlot(p), items.getItem(p, "blocks", 64));
 		
 		if(GigaDrill.isState(GigaDrill.ENABLED))
-			p.getInventory().setItem(hotbar.getShearsSlot(p), items.getGigaShears());
+			p.getInventory().setItem(hotbar.getShearsSlot(p), items.getItem(p, "gigashears"));
 		
 		if(Bows.isState(Bows.ENABLED)) {
-			p.getInventory().addItem(items.getBow(p, s));
+			p.getInventory().addItem(items.getItem(p, "bow"));
 			p.getInventory().setItem(9, new ItemStack(Material.ARROW, 1));;
 		}
 		if(DigWars.getState().isEnabled()) {
-			p.getInventory().setItem(hotbar.getAxeSlot(p), items.getAxe(p));
+			p.getInventory().setItem(hotbar.getAxeSlot(p), items.getItem(p, "axe"));
 			p.getInventory().setItem(hotbar.getWoodSlot(p), new ItemStack(Material.WOOD, 64));
 		}
-		p.getInventory().addItem(items.getBridgeEgg(1, false));
+		p.getInventory().addItem(items.getItem(p, "be"));
 		p.setGameMode(GameMode.SURVIVAL);
 	}
 }

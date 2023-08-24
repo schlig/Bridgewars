@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import bridgewars.Main;
 import bridgewars.game.Game;
 import bridgewars.game.GameState;
+import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
 public class JoinGame implements CommandExecutor {
@@ -24,22 +25,22 @@ public class JoinGame implements CommandExecutor {
 		Player p = (Player) sender;
 		
 		if(GameState.isState(GameState.INACTIVE)) {
-			p.sendMessage(Utils.chat("&cThere is no game in progress."));
+			p.sendMessage(Message.chat("&cThere is no game in progress."));
 			return false;
 		}
 		
 		else if(GameState.isState(GameState.EDIT)) {
-			p.sendMessage(Utils.chat("&cThe game is currently in Edit mode."));
+			p.sendMessage(Message.chat("&cThe game is currently in Edit mode."));
 			return false;
 		}
 		
 		if(!Utils.isOutOfBounds(p.getLocation(), 80, 40, 80)) {
-			p.sendMessage(Utils.chat("&cYou are already in a game."));
+			p.sendMessage(Message.chat("&cYou are already in a game."));
 			return false;
 		}
 			
 		Game.joinGame(p);
-		p.sendMessage(Utils.chat("&6You joined the game."));
+		p.sendMessage(Message.chat("&6You joined the game."));
 		
 		return false;
 	}

@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import bridgewars.Main;
-import bridgewars.utils.Utils;
+import bridgewars.utils.Message;
 
 public class DeleteMap implements CommandExecutor {
 	
@@ -27,7 +27,7 @@ public class DeleteMap implements CommandExecutor {
 		
 		if(p.getUniqueId() == Bukkit.getPlayer("Schlog").getUniqueId()) {
 			if(args.length == 0) {
-				p.sendMessage(Utils.chat("&cYou must specify a map name."));
+				p.sendMessage(Message.chat("&cYou must specify a map name."));
 				return false;
 			}
 			
@@ -41,14 +41,14 @@ public class DeleteMap implements CommandExecutor {
 			File file = new File("./plugins/bridgewars/maps/" + mapName + ".map");
 			if(file.exists()) {
 				file.delete();
-				p.sendMessage(Utils.chat("&7Deleted map \"&6" + mapName + "&7\"."));
+				p.sendMessage(Message.chat("&7Deleted map \"&6" + mapName + "&7\"."));
 			}
 			else
-				p.sendMessage(Utils.chat("&cThat map does not exist!"));
+				p.sendMessage(Message.chat("&cThat map does not exist!"));
 		}
 		
 		else
-			p.sendMessage(Utils.chat("&cI'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is in error."));
+			p.sendMessage(Message.chat("&cI'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is in error."));
 		
 		return false;
 	}

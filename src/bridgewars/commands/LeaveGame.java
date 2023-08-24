@@ -9,7 +9,7 @@ import bridgewars.Main;
 import bridgewars.game.CustomScoreboard;
 import bridgewars.game.Game;
 import bridgewars.game.GameState;
-import bridgewars.utils.Utils;
+import bridgewars.utils.Message;
 
 public class LeaveGame implements CommandExecutor {
 	
@@ -29,17 +29,17 @@ public class LeaveGame implements CommandExecutor {
 		Player p = (Player) sender;
 		
 		if(!GameState.isState(GameState.ACTIVE)) {
-			p.sendMessage(Utils.chat("&cThere is no game in progress."));
+			p.sendMessage(Message.chat("&cThere is no game in progress."));
 			return false;
 		}
 		
 		if(!cs.hasTeam(p)) {
-			p.sendMessage(Utils.chat("&cYou are not in a game."));
+			p.sendMessage(Message.chat("&cYou are not in a game."));
 			return false;
 		}
 			
 		Game.leaveGame(p);
-		p.sendMessage(Utils.chat("&cYou left the game."));
+		p.sendMessage(Message.chat("&cYou left the game."));
 		
 		return false;
 	}

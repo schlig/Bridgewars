@@ -16,7 +16,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import bridgewars.Main;
 import bridgewars.game.Game;
 import bridgewars.game.GameState;
-import bridgewars.utils.Utils;
+import bridgewars.utils.Message;
 
 public class SadRoom implements Listener {
 	
@@ -83,7 +83,7 @@ public class SadRoom implements Listener {
 				}
 				
 				if(sadRoomed.contains(p)) {
-					k.sendMessage(Utils.chat("&cThat player is already in the Sad Room. You are too. L."));
+					k.sendMessage(Message.chat("&cThat player is already in the Sad Room. You are too. L."));
 					return;
 				}
 				
@@ -94,7 +94,7 @@ public class SadRoom implements Listener {
 				sadTear.setAmount(sadTear.getAmount() - 1);
 				k.setItemInHand(sadTear);
 
-				Bukkit.broadcastMessage(Utils.chat(p.getDisplayName() + Utils.chat(" &chas been banished to the Sad Room.")));
+				Bukkit.broadcastMessage(Message.chat(p.getDisplayName() + Message.chat(" &chas been banished to the Sad Room.")));
 				
 				new BukkitRunnable() {
 					@Override

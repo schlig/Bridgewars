@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import bridgewars.Main;
 import bridgewars.game.GameState;
+import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
 public class Fly implements CommandExecutor {
@@ -32,18 +33,18 @@ public class Fly implements CommandExecutor {
 		if(GameState.isState(GameState.ACTIVE)
 		&& !Utils.isOutOfBounds(p.getLocation(), 200, 40, 200)
 		&& p.getGameMode() != GameMode.CREATIVE) {
-			p.sendMessage(Utils.chat("&cYou can't fly while in a game!"));
+			p.sendMessage(Message.chat("&cYou can't fly while in a game!"));
 		}
 		else {
 			if(allowFlight.contains(p)) {
 				p.setAllowFlight(false);
 				p.setFlying(false);
-				p.sendMessage(Utils.chat("&6Turned off flight"));
+				p.sendMessage(Message.chat("&6Turned off flight"));
 				allowFlight.remove(p);
 			}
 			else {
 				p.setAllowFlight(true);
-				p.sendMessage(Utils.chat("&6Turned on flight"));
+				p.sendMessage(Message.chat("&6Turned on flight"));
 				allowFlight.add(p);
 			}
 		}

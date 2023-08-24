@@ -16,6 +16,7 @@ import bridgewars.behavior.InstantVoidKill;
 import bridgewars.behavior.PreventAnnoyingBowUse;
 import bridgewars.behavior.Saturation;
 import bridgewars.commands.ClearMap;
+import bridgewars.commands.Debug;
 import bridgewars.commands.DeleteMap;
 import bridgewars.commands.EditMode;
 import bridgewars.commands.EndGame;
@@ -37,8 +38,8 @@ import bridgewars.game.GameState;
 import bridgewars.game.InstantRespawn;
 import bridgewars.game.Kills;
 import bridgewars.game.Timer;
-import bridgewars.items.BlackHole;
-import bridgewars.items.BridgeEgg;
+import bridgewars.items.BlackHoleThrow;
+import bridgewars.items.BridgeEggThrow;
 import bridgewars.items.FireballLaunch;
 import bridgewars.items.ForceFieldGenerator;
 import bridgewars.items.HomeRunBat;
@@ -88,6 +89,7 @@ public class Main extends JavaPlugin {
 		new EditMode(this);
 		new LeaveGame(this);
 		new Fly(this);
+		new Debug(this);
 		
 		//effects
 		new DoubleJumpEffect(this);
@@ -101,8 +103,8 @@ public class Main extends JavaPlugin {
 		new _MenuInput(this);
 		
 		//items
-		new BlackHole(this);
-		new BridgeEgg(this);
+		new BlackHoleThrow(this);
+		new BridgeEggThrow(this);
 		new FireballLaunch(this);
 		new PortableDoinkHut(this);
 		new ForceFieldGenerator(this);

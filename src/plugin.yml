@@ -52,3 +52,5 @@ commands:
     description: Leave the Bridgewars game.
   fly:
     description: Toggle flight.
+  debug:
+    description: debug

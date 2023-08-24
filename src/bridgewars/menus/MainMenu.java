@@ -18,15 +18,15 @@ import org.bukkit.potion.PotionEffectType;
 import bridgewars.game.CustomScoreboard;
 import bridgewars.game.Game;
 import bridgewars.game.GameState;
-import bridgewars.items.Items;
+import bridgewars.items.CustomItems;
 import bridgewars.settings.ChosenKillstreaks;
 import bridgewars.settings.HotbarLayout;
-import bridgewars.utils.Utils;
+import bridgewars.utils.Message;
 
 public class MainMenu {
 
 	private static GUI menu = new GUI();
-	private static Items items = new Items();
+	private static CustomItems items = new CustomItems();
 	private static HotbarLayout hotbar = new HotbarLayout();
 	private static ChosenKillstreaks ks = new ChosenKillstreaks();
 	private static CustomScoreboard cs = new CustomScoreboard();
@@ -58,27 +58,27 @@ public class MainMenu {
 			if(p.isOp()) {
 				p.playSound(p.getLocation(), Sound.CLICK, 0.8F, 1F);
 				if(GameState.isState(GameState.INACTIVE)) {
-					p.sendMessage(Utils.chat("&cThere is no game in progress."));
+					p.sendMessage(Message.chat("&cThere is no game in progress."));
 					p.getOpenInventory().close();
 					return;
 				}
 				
 				Game.endGame(p, true);
-				p.sendMessage(Utils.chat("&7Ended the game"));
+				p.sendMessage(Message.chat("&7Ended the game"));
 			}
 			else
-				p.sendMessage(Utils.chat("&cYou do not have permission to do this."));
+				p.sendMessage(Message.chat("&cYou do not have permission to do this."));
 			break;
 			
 		case SADDLE:
 			p.playSound(p.getLocation(), Sound.CLICK, 0.8F, 1F);
 			if(GameState.isState(GameState.INACTIVE)) {
-				p.sendMessage(Utils.chat("&cThere is no game in progress."));
+				p.sendMessage(Message.chat("&cThere is no game in progress."));
 				p.getOpenInventory().close();
 				return;
 			}
 			Game.joinGame(p);
-			p.sendMessage(Utils.chat("&6You joined the game."));
+			p.sendMessage(Message.chat("&6You joined the game."));
 			break;
 			
 		case BOOK:
@@ -102,11 +102,11 @@ public class MainMenu {
 			p.openInventory(killstreakEditor);
 			
 			//main items
-			p.getOpenInventory().setItem(10, items.getBridgeEgg(3, true));
+			p.getOpenInventory().setItem(10, items.getItem(p, "be", 3, true));
 			if(ks.getThreeStreak(p) == 0)
 				p.getOpenInventory().getItem(10).addUnsafeEnchantment(Enchantment.LURE, 1);
 			
-			ItemStack bat = items.getHomeRunBat(5, true);
+			ItemStack bat = items.getItem(p, "hrb", 5, true);
 			bat.setDurability((short) 0);
 			bat.removeEnchantment(Enchantment.KNOCKBACK);
 			p.getOpenInventory().setItem(12, bat);
@@ -115,8 +115,8 @@ public class MainMenu {
 			
 			ItemStack potion = new ItemStack(Material.POTION, 7, (short) 8192);
 			ItemMeta meta = potion.getItemMeta();
-			meta.setDisplayName(items.getLifeforcePotion(1, true).getItemMeta().getDisplayName());
-			meta.setLore(items.getLifeforcePotion(1, true).getItemMeta().getLore());
+			meta.setDisplayName(items.getItem(p, "lp", 7, true).getItemMeta().getDisplayName());
+			meta.setLore(items.getItem(p, "lp", 7, true).getItemMeta().getLore());
 			meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 			potion.setItemMeta(meta);
 			p.getOpenInventory().setItem(14, potion);
@@ -127,15 +127,15 @@ public class MainMenu {
 			p.getOpenInventory().setItem(16, new ItemStack(Material.BARRIER, 1));
 			
 			//alt items
-			p.getOpenInventory().setItem(28, items.getPortableDoinkHut(3, true));
+			p.getOpenInventory().setItem(28, items.getItem(p, "pdh", 3, true));
 			if(ks.getThreeStreak(p) == 1)
 				p.getOpenInventory().getItem(28).addUnsafeEnchantment(Enchantment.LURE, 1);
 			
-			p.getOpenInventory().setItem(30, items.getFireball(5, true));
+			p.getOpenInventory().setItem(30, items.getItem(p, "fb", 5, true));
 			if(ks.getFiveStreak(p) == 1)
 				p.getOpenInventory().getItem(30).addUnsafeEnchantment(Enchantment.LURE, 1);
 			
-			p.getOpenInventory().setItem(32, items.getBlackHole(7, true));
+			p.getOpenInventory().setItem(32, items.getItem(p, "bh", 7, true));
 			if(ks.getSevenStreak(p) == 1)
 				p.getOpenInventory().getItem(32).addUnsafeEnchantment(Enchantment.LURE, 1);
 			

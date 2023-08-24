@@ -11,7 +11,7 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 
 import bridgewars.Main;
 import bridgewars.game.GameState;
-import bridgewars.utils.Utils;
+import bridgewars.utils.Message;
 
 public class PreventAnnoyingBowUse implements Listener {
 
@@ -27,7 +27,7 @@ public class PreventAnnoyingBowUse implements Listener {
 			if(p.getGameMode() != GameMode.CREATIVE) {
 				if(p.getLocation().getY() > 30) {
 					e.setCancelled(true);
-					p.sendMessage(Utils.chat("&cYou can't shoot arrows from spawn!"));
+					p.sendMessage(Message.chat("&cYou can't shoot arrows from spawn!"));
 				}
 			}
 		}

@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import bridgewars.utils.Utils;
+import bridgewars.utils.Message;
 
 public class GUI {
 	
@@ -51,9 +51,9 @@ public class GUI {
 		
 		//build main menu
 		main.setItem(10, item(Material.LADDER, 1, 0, "&6&lStart Game", false, null)); // Start Game button
-		main.setItem(12, item(Material.REDSTONE_COMPARATOR, 1, 0, "&r&lGame Settings", false, Arrays.asList(Utils.chat("&7Admin only")))); // Game Settings button
+		main.setItem(12, item(Material.REDSTONE_COMPARATOR, 1, 0, "&r&lGame Settings", false, Arrays.asList(Message.chat("&7Admin only")))); // Game Settings button
 		main.setItem(14, item(Material.MAP, 1, 0, "&e&lMap Rotation", false, null)); // Map Rotation button
-		main.setItem(16, item(Material.TNT, 1, 0, "&c&lEnd Game", false, Arrays.asList(Utils.chat("&7Admin only")))); // End Game button
+		main.setItem(16, item(Material.TNT, 1, 0, "&c&lEnd Game", false, Arrays.asList(Message.chat("&7Admin only")))); // End Game button
 		
 		main.setItem(29, item(Material.SADDLE, 1, 0, "&a&lJoin Game", false, null)); // Join Game button
 		main.setItem(31, item(Material.BOOK, 1, 0, "&b&lHotbar Layout", false, null)); // Hotbar Layout button
@@ -72,57 +72,57 @@ public class GUI {
 		//build the settings menu
 		settings.setItem(10, item(Material.WATCH, 1, 0, "&r&6Time Limit: ?", false, null));
 		settings.setItem(11, item(Material.COMPASS, 1, 0, "&r&6Timer Acceleration", false, Arrays.asList(
-				Utils.chat("&r0%"))));
+				Message.chat("&r0%"))));
 		
 		settings.setItem(12, item(Material.GOLD_SWORD, 1, 0, "&r&6Swords", false, Arrays.asList(
-				Utils.chat("&r&cDisabled"),
-				Utils.chat("&7Players have golden swords"))));
+				Message.chat("&r&cDisabled"),
+				Message.chat("&7Players have golden swords"))));
 		
 		settings.setItem(13, item(Material.WOOL, 1, 0, "&r&6Blocks", false, Arrays.asList(
-				Utils.chat("&r&cDisabled"),
-				Utils.chat("&7Players have infinite wool blocks"))));
+				Message.chat("&r&cDisabled"),
+				Message.chat("&7Players have infinite wool blocks"))));
 		
 		settings.setItem(14, item(Material.SHEARS, 1, 0, "&r&6Shears", false, Arrays.asList(
-				Utils.chat("&r&cDisabled"),
-				Utils.chat("&7Players have shears"),
-				Utils.chat("&7Efficiency III"),
-				Utils.chat("&7Unbreakable"))));
+				Message.chat("&r&cDisabled"),
+				Message.chat("&7Players have shears"),
+				Message.chat("&7Efficiency III"),
+				Message.chat("&7Unbreakable"))));
 		
 		settings.setItem(15, item(Material.IRON_SWORD, 1, 0, "&r&6Killstreak Bonuses", false, Arrays.asList(
-				Utils.chat("&r&cDisabled"),
-				Utils.chat("&7Determines whether players"),
-				Utils.chat("&7should receive items from"),
-				Utils.chat("&7killstreaks"))));
+				Message.chat("&r&cDisabled"),
+				Message.chat("&7Determines whether players"),
+				Message.chat("&7should receive items from"),
+				Message.chat("&7killstreaks"))));
 		
 		settings.setItem(16, item(Material.BOW, 1, 0, "&r&6Bows", false, Arrays.asList(
-				Utils.chat("&r&cDisabled"),
-				Utils.chat("&7Players have bows"),
-				Utils.chat("&7Cannot be shot at or from spawn"),
-				Utils.chat("&7Infinite arrows"))));
+				Message.chat("&r&cDisabled"),
+				Message.chat("&7Players have bows"),
+				Message.chat("&7Cannot be shot at or from spawn"),
+				Message.chat("&7Infinite arrows"))));
 		
 		settings.setItem(19, item(Material.GOLDEN_APPLE, 1, 0, "&r&6Double Health", false, Arrays.asList(
-				Utils.chat("&r&cDisabled"),
-				Utils.chat("&7Increase maximum health from"),
-				Utils.chat("&710 hearts to 20"))));
+				Message.chat("&r&cDisabled"),
+				Message.chat("&7Increase maximum health from"),
+				Message.chat("&710 hearts to 20"))));
 		
 		settings.setItem(20, item(Material.RABBIT_FOOT, 1, 0, "&r&6Double Jump", false, Arrays.asList(
-				Utils.chat("&r&cDisabled"),
-				Utils.chat("&7Players can jump midair once"))));
+				Message.chat("&r&cDisabled"),
+				Message.chat("&7Players can jump midair once"))));
 		
 		settings.setItem(21, item(Material.DIAMOND_PICKAXE, 1, 0, "&r&6Giga Drill", false, Arrays.asList(
-				Utils.chat("&r&cDisabled"),
-				Utils.chat("&7Shears have Efficiency V"))));
+				Message.chat("&r&cDisabled"),
+				Message.chat("&7Shears have Efficiency V"))));
 		
 		settings.setItem(22, item(Material.WOOD, 1, 0, "&r&6Dig Wars", false, Arrays.asList(
-				Utils.chat("&r&cDisabled"),
-				Utils.chat("&7All crafting recipes are enabled"),
-				Utils.chat("&7Start with 64 wood and a stone axe"),
-				Utils.chat("&7Wood is replenished on death"))));
+				Message.chat("&r&cDisabled"),
+				Message.chat("&7All crafting recipes are enabled"),
+				Message.chat("&7Start with 64 wood and a stone axe"),
+				Message.chat("&7Wood is replenished on death"))));
 		
 		settings.setItem(23, item(Material.DIAMOND, 1, 0, "&r&6Natural Item Spawns", false, Arrays.asList(
-				Utils.chat("&r&cDisabled"),
-				Utils.chat("&7Items will randomly spawn anywhere"),
-				Utils.chat("&7on the map"))));
+				Message.chat("&r&cDisabled"),
+				Message.chat("&7Items will randomly spawn anywhere"),
+				Message.chat("&7on the map"))));
 		
 		settings.setItem(40, button(0));
 		
@@ -161,7 +161,7 @@ public class GUI {
 	private ItemStack item(Material m, int amount, int damage, String name, Boolean hideFlags, List<String> tooltip) {
 		ItemStack item = new ItemStack(m, amount, (short) damage);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(Utils.chat(name));
+		meta.setDisplayName(Message.chat(name));
 		if(tooltip != null)
 			meta.setLore(tooltip);
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, 
@@ -199,7 +199,7 @@ public class GUI {
 				for(int i = 0; i < 7; i++) {
 					if(mapList.size() == 0)
 						break;
-					ItemStack map = item(Material.MAP, 1, 0, Utils.chat("&r&l") + mapList.get(0).substring(0, mapList.get(0).length() - 4), false, null);
+					ItemStack map = item(Material.MAP, 1, 0, Message.chat("&r&l") + mapList.get(0).substring(0, mapList.get(0).length() - 4), false, null);
 					map.addUnsafeEnchantment(Enchantment.LURE, 1);
 					page.setItem(i + j, map);
 					mapList.remove(0);

@@ -1,6 +1,5 @@
 package bridgewars.items;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -26,7 +25,7 @@ import bridgewars.game.CustomScoreboard;
 import bridgewars.game.GameState;
 import bridgewars.utils.Utils;
 
-public class FireballLaunch implements Listener {
+public class FireballLaunch extends CustomItems implements Listener {
 	
 	private CustomScoreboard cs = new CustomScoreboard();
 	
@@ -36,29 +35,27 @@ public class FireballLaunch implements Listener {
 	
 	@EventHandler
 	public void onThrow(PlayerInteractEvent e) {
-		if(e.getItem() != null) {
-			if(e.getAction() == Action.RIGHT_CLICK_AIR
-			|| e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-				if(e.getItem().getType() == Material.FIREBALL) {
-					if(GameState.isState(GameState.ACTIVE))
-						if(cs.getTime(e.getPlayer()) == 0) {
-							e.setCancelled(true);
-							return;
-						}
-					if(e.getAction() == Action.RIGHT_CLICK_AIR)
-						e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.GHAST_FIREBALL, 0.5F, 1F);
-				    Fireball fireball = e.getPlayer().launchProjectile(Fireball.class);
-				    fireball.setVelocity(fireball.getVelocity().multiply(4));
-				    fireball.setYield(4);
-				    fireball.setIsIncendiary(false);
-				    fireball.setShooter(e.getPlayer());
-				    if(e.getPlayer().getGameMode() != GameMode.CREATIVE) {
-					    if(e.getPlayer().getItemInHand().getAmount() == 1)
-					    	e.getPlayer().setItemInHand(new ItemStack(Material.AIR, 1));
-					    else
-					    	e.getPlayer().getItemInHand().setAmount(e.getPlayer().getItemInHand().getAmount() - 1);
-				    }	
-				}
+		if(e.getAction() == Action.RIGHT_CLICK_AIR
+		|| e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			if(matchItem(e.getItem(), "fb")) {
+				if(GameState.isState(GameState.ACTIVE))
+					if(cs.getTime(e.getPlayer()) == 0) {
+						e.setCancelled(true);
+						return;
+					}
+				if(e.getAction() == Action.RIGHT_CLICK_AIR)
+					e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.GHAST_FIREBALL, 0.5F, 1F);
+				Fireball fireball = e.getPlayer().launchProjectile(Fireball.class);
+				fireball.setVelocity(fireball.getVelocity().multiply(4));
+				fireball.setYield(4);
+				fireball.setIsIncendiary(false);
+				fireball.setShooter(e.getPlayer());
+				if(e.getPlayer().getGameMode() != GameMode.CREATIVE) {
+					if(e.getPlayer().getItemInHand().getAmount() == 1)
+						e.getPlayer().setItemInHand(new ItemStack(Material.AIR, 1));
+					else
+						e.getPlayer().getItemInHand().setAmount(e.getPlayer().getItemInHand().getAmount() - 1);
+				}	
 			}
 		}
 	}
@@ -66,7 +63,7 @@ public class FireballLaunch implements Listener {
 	@EventHandler
 	public void onPlaceAttempt(BlockPlaceEvent e) {
 		if(e.getBlock().getType() == Material.FIRE)
-			if(e.getItemInHand().getType() == Material.FIREBALL)
+			if(matchItem(e.getItemInHand(), "fb"))
 				e.setCancelled(true);
 	}
 	
@@ -95,17 +92,13 @@ public class FireballLaunch implements Listener {
 			}
 	}
 	
-	@SuppressWarnings("rawtypes")
 	@EventHandler
 	public void onExplode(EntityExplodeEvent e) {
 		if(GameState.isState(GameState.ACTIVE)) {
-			List blocks = e.blockList();
-			Iterator i = blocks.iterator();
-			while(i.hasNext()) {
-				Block block = (Block) i.next();
+			List<Block> blocks = e.blockList();
+			for(Block block : blocks)
 				if(Utils.isOutOfBounds(block.getLocation(), 22, 24, 22))
-					i.remove();
-			}
+					blocks.remove(block);
 		}
 	}
 }

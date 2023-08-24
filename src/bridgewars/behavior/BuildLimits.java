@@ -9,6 +9,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import bridgewars.Main;
 import bridgewars.game.GameState;
+import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
 public class BuildLimits implements Listener {
@@ -26,7 +27,7 @@ public class BuildLimits implements Listener {
 				if(e.getPlayer().getGameMode() == GameMode.CREATIVE)
 					return;
 				e.setCancelled(true);
-				e.getPlayer().sendMessage(Utils.chat("&cYou can't place blocks here!"));
+				e.getPlayer().sendMessage(Message.chat("&cYou can't place blocks here!"));
 			}
 		}
 		
@@ -36,7 +37,7 @@ public class BuildLimits implements Listener {
 				if(e.getPlayer().getGameMode() == GameMode.CREATIVE)
 					return;
 				e.setCancelled(true);
-				e.getPlayer().sendMessage(Utils.chat("&cYou can't place blocks here!"));
+				e.getPlayer().sendMessage(Message.chat("&cYou can't place blocks here!"));
 			}
 		}
 	}

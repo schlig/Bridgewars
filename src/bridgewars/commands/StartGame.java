@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import bridgewars.Main;
 import bridgewars.game.Game;
-import bridgewars.utils.Utils;
+import bridgewars.utils.Message;
 
 public class StartGame implements CommandExecutor {
 	
@@ -30,7 +30,7 @@ public class StartGame implements CommandExecutor {
 			Game.startGame(p, true);
 		
 		else
-			p.sendMessage(Utils.chat("&cYou do not have permission to do this."));
+			p.sendMessage(Message.chat("&cYou do not have permission to do this."));
 		
 		return false;
 	}

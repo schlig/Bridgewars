@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 import bridgewars.Main;
 import bridgewars.game.GameState;
-import bridgewars.utils.Utils;
+import bridgewars.utils.Message;
 
 public class Warp implements CommandExecutor {
 	
@@ -26,7 +26,7 @@ public class Warp implements CommandExecutor {
 		
 		if(GameState.isState(GameState.ACTIVE)
 		&& !p.isOp()) {
-			p.sendMessage(Utils.chat("&cYou can't use this command while a game is active!"));
+			p.sendMessage(Message.chat("&cYou can't use this command while a game is active!"));
 			return true;
 		}
 		
@@ -35,20 +35,20 @@ public class Warp implements CommandExecutor {
 		
 		if(args[0] == "none"
 		&& !label.contains("hub")) {
-			p.sendMessage(Utils.chat("&7Available locations&7: &6spawn&7|&6hub&7,&6 observatory&7|&6map"));
+			p.sendMessage(Message.chat("&7Available locations&7: &6spawn&7|&6hub&7,&6 observatory&7|&6map"));
 			return true;
 		}
 		
 		else if(args[0].toLowerCase().contains("spawn")
 		|| label.contains("hub")) {
 			p.teleport(new Location(Bukkit.getWorld("world"), 1062.5, 52, 88.5, -90, 10));
-			p.sendMessage(Utils.chat("&7Teleported to Spawn"));
+			p.sendMessage(Message.chat("&7Teleported to Spawn"));
 		}
 		
 		else if(args[0].toLowerCase().contains("observatory")
 		|| args[0].toLowerCase().contains("map")) {
 			p.teleport(new Location(Bukkit.getWorld("world"), 0.5, 46.0, 6.5, 180, 10));
-			p.sendMessage(Utils.chat("&7Teleported to the Observatory"));
+			p.sendMessage(Message.chat("&7Teleported to the Observatory"));
 		}
 		
 		return false;

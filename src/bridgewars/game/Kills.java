@@ -10,14 +10,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import bridgewars.Main;
-import bridgewars.items.Items;
+import bridgewars.items.CustomItems;
 import bridgewars.settings.ChosenKillstreaks;
 import bridgewars.settings.KillstreakRewards;
 import bridgewars.settings.TimeLimit;
 
 public class Kills implements Listener {
 	
-	private Items items;
+	private CustomItems items;
 	private ChosenKillstreaks ks;
 	private CustomScoreboard cs;
 	private TimeLimit tl;
@@ -25,7 +25,7 @@ public class Kills implements Listener {
 	
 	public Kills(Main plugin) {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
-		items = new Items();
+		items = new CustomItems();
 		ks = new ChosenKillstreaks();
 		ct = new CombatTagging();
 		cs = new CustomScoreboard();
@@ -34,33 +34,36 @@ public class Kills implements Listener {
 	
 	@EventHandler
 	public void onKill(PlayerDeathEvent e) {
+		if(e.getEntity() instanceof Player)
+			if(GameState.isState(GameState.ACTIVE) && cs.hasTeam((Player) e.getEntity()))
+				cs.resetTime((Player) e.getEntity());
+		
 		if(GameState.isState(GameState.ACTIVE))
 			if(e.getEntity().getKiller() instanceof Player) {
 				
 				Player p = e.getEntity();
 				Player k = e.getEntity().getKiller();
 				
-				if(ct.getAttacker((Player)e.getEntity()) != k)
+				if(p == k)
 					return;
-
 				
 				k.setLevel(k.getLevel() + 1);
 				if(KillstreakRewards.getState().isEnabled()) {
 					if(k.getLevel() % 3 == 0)
 						if(ks.getThreeStreak(k) == 0)
-							k.getInventory().addItem(items.getBridgeEgg(2, false));
+							k.getInventory().addItem(items.getItem(p, "be", 2));
 						else if(ks.getThreeStreak(k) == 1)
-							k.getInventory().addItem(items.getPortableDoinkHut(1, false));
+							k.getInventory().addItem(items.getItem(p, "pdh"));
 					if(k.getLevel() % 5 == 0)
 						if(ks.getFiveStreak(k) == 0)
-							k.getInventory().addItem(items.getHomeRunBat(1, false));
+							k.getInventory().addItem(items.getItem(p, "hrb"));
 						else if(ks.getFiveStreak(k) == 1)
-							k.getInventory().addItem(items.getFireball(1, false));
+							k.getInventory().addItem(items.getItem(p, "fb"));
 					if(k.getLevel() % 7 == 0)
 						if(ks.getSevenStreak(k) == 0)
-							k.getInventory().addItem(items.getLifeforcePotion(1, false));
+							k.getInventory().addItem(items.getItem(p, "lp"));
 						else if(ks.getSevenStreak(k) == 1)
-							k.getInventory().addItem(items.getBlackHole(1, false));
+							k.getInventory().addItem(items.getItem(p, "bh"));
 				}
 				
 				if(cs.getTime(p) < tl.getLimit() - 15)

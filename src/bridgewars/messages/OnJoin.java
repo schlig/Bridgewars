@@ -12,7 +12,7 @@ import bridgewars.Main;
 import bridgewars.commands.Fly;
 import bridgewars.game.CustomScoreboard;
 import bridgewars.settings.DoubleHealth;
-import bridgewars.utils.Utils;
+import bridgewars.utils.Message;
 
 public class OnJoin implements Listener {
 	
@@ -25,10 +25,12 @@ public class OnJoin implements Listener {
 	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
+		cs.sendScoreboard(e.getPlayer());
+		
 		Player p = e.getPlayer();
 		cs.resetTeam(p, false);
 		p.setLevel(0);
-		p.sendMessage(Utils.chat("Welcome to &6Bridgewars&r! Type &c/menu&r to get started."));
+		p.sendMessage(Message.chat("Welcome to &6Bridgewars&r! Type &c/menu&r to get started."));
 		cs.removePlayerFromTimer(p);
 		if(Fly.allowFlight.contains(p))
 			Fly.allowFlight.remove(p);
