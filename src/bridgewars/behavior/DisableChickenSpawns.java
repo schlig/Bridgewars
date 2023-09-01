@@ -14,7 +14,7 @@ public class DisableChickenSpawns implements Listener {
 	}
 	
 	@EventHandler
-	public void onThrow(PlayerEggThrowEvent e) {
+	public void onThrow(PlayerEggThrowEvent e) { //disables chickens from hatching from thrown eggs
 		e.setHatching(false);
 	}
 }

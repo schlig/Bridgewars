@@ -13,7 +13,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
 import bridgewars.Main;
-import bridgewars.items.CustomItems;
+import bridgewars.effects.PlotArmor;
 import bridgewars.settings.Blocks;
 import bridgewars.settings.Bows;
 import bridgewars.settings.DigWars;
@@ -21,23 +21,25 @@ import bridgewars.settings.GigaDrill;
 import bridgewars.settings.HotbarLayout;
 import bridgewars.settings.Shears;
 import bridgewars.settings.Swords;
+import bridgewars.utils.ItemManager;
 
 public class InstantRespawn implements Listener {
 	
 	private CustomScoreboard cs;
 	private HotbarLayout hotbar;
-	private CustomItems items;
 	
 	public InstantRespawn(Main plugin) {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 		cs = new CustomScoreboard();
-		items = new CustomItems();
 		hotbar = new HotbarLayout();
 	}
 
 	@EventHandler
 	public void onDeath(PlayerDeathEvent e) {
 		Player p = e.getEntity();
+		if(PlotArmor.armoredPlayers.contains(p))
+			return;
+		
 		p.setHealth(p.getMaxHealth());
 		final Vector v = new Vector();
 		Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("bridgewars"), () -> p.setVelocity(v), 1L);
@@ -53,21 +55,21 @@ public class InstantRespawn implements Listener {
 				p.playSound(p.getLocation(), Sound.HURT_FLESH, 1F, 1F);
 				//base equipment
 				if(!p.getInventory().contains(Material.GOLD_SWORD) && Swords.getState().isEnabled())
-					p.getInventory().addItem(items.getItem(p, "sword"));
+					p.getInventory().addItem(ItemManager.getItem("BasicSword").createItem(p));
 				if(!p.getInventory().contains(Material.SHEARS) && Shears.getState().isEnabled() && !GigaDrill.getState().isEnabled())
-					p.getInventory().addItem(items.getItem(p, "shears"));
+					p.getInventory().addItem(ItemManager.getItem("Shears").createItem(p));
 				if(!p.getInventory().contains(Material.WOOL) && Blocks.getState().isEnabled())
-					p.getInventory().addItem(items.getItem(p, "blocks", 64));
+					p.getInventory().addItem(ItemManager.getItem("WoolBlocks").createItem(p));
 				
 				//bows
 				if(!p.getInventory().contains(Material.BOW) && Bows.getState().isEnabled())
-					p.getInventory().addItem(items.getItem(p, "bow"));
+					p.getInventory().addItem(ItemManager.getItem("Bow").createItem(p));
 				if(!p.getInventory().contains(Material.ARROW) && Bows.getState().isEnabled())
 					p.getInventory().addItem(new ItemStack(Material.ARROW, 1));
 				
 				//giga shears
 				if(!p.getInventory().contains(Material.SHEARS) && GigaDrill.getState().isEnabled())
-					p.getInventory().addItem(items.getItem(p, "gigashears"));
+					p.getInventory().addItem(ItemManager.getItem("GigaShears").createItem(p));
 				
 				//digwars stuff
 				if(DigWars.getState().isEnabled()) {
@@ -78,17 +80,17 @@ public class InstantRespawn implements Listener {
 						p.getInventory().addItem(new ItemStack(Material.WOOD, 64));
 				}
 				if(!p.getInventory().contains(Material.STONE_AXE) && DigWars.getState().isEnabled())
-					p.getInventory().addItem(items.getItem(p, "axe"));
+					p.getInventory().addItem(ItemManager.getItem("Axe").createItem(p));
 				
 				//give armor back if it's missing
 				if(p.getInventory().getHelmet() == null)
-					p.getInventory().setHelmet(items.getItem(p, "helmet"));
+					p.getInventory().setHelmet(ItemManager.getItem("BasicHelmet").createItem(p));
 				if(p.getInventory().getChestplate() == null)
-					p.getInventory().setChestplate(items.getItem(p, "chestplate"));
+					p.getInventory().setChestplate(ItemManager.getItem("BasicChestplate").createItem(p));
 				if(p.getInventory().getLeggings() == null)
-					p.getInventory().setLeggings(items.getItem(p, "leggings"));
+					p.getInventory().setLeggings(ItemManager.getItem("BasicLeggings").createItem(p));
 				if(p.getInventory().getBoots() == null)
-					p.getInventory().setBoots(items.getItem(p, "boots"));
+					p.getInventory().setBoots(ItemManager.getItem("BasicBoots").createItem(p));
 				return;
 			}
 		}

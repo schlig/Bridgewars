@@ -15,7 +15,7 @@ public class Saturation implements Listener {
 	}
 	
 	@EventHandler
-	public void onFoodLevelChange(FoodLevelChangeEvent e) {
+	public void onFoodLevelChange(FoodLevelChangeEvent e) { //unlimited saturation bc hunger is dumb
 		if(e.getEntity() instanceof Player) {
 			Player p = (Player) e.getEntity();
 			p.setSaturation(1000);

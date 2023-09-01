@@ -15,7 +15,7 @@ public class DisableWeather implements Listener {
 	}
 
 	@EventHandler
-	public void onChange(WeatherChangeEvent e) {
+	public void onChange(WeatherChangeEvent e) { //prevents weather from changing unless done manually
 		e.setCancelled(true);
 	}
 }

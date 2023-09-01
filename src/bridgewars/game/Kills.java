@@ -10,14 +10,13 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import bridgewars.Main;
-import bridgewars.items.CustomItems;
 import bridgewars.settings.ChosenKillstreaks;
 import bridgewars.settings.KillstreakRewards;
 import bridgewars.settings.TimeLimit;
+import bridgewars.utils.ItemManager;
 
 public class Kills implements Listener {
 	
-	private CustomItems items;
 	private ChosenKillstreaks ks;
 	private CustomScoreboard cs;
 	private TimeLimit tl;
@@ -25,7 +24,6 @@ public class Kills implements Listener {
 	
 	public Kills(Main plugin) {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
-		items = new CustomItems();
 		ks = new ChosenKillstreaks();
 		ct = new CombatTagging();
 		cs = new CustomScoreboard();
@@ -51,19 +49,19 @@ public class Kills implements Listener {
 				if(KillstreakRewards.getState().isEnabled()) {
 					if(k.getLevel() % 3 == 0)
 						if(ks.getThreeStreak(k) == 0)
-							k.getInventory().addItem(items.getItem(p, "be", 2));
+							k.getInventory().addItem(ItemManager.getItem("BridgeEgg").createItem(p));
 						else if(ks.getThreeStreak(k) == 1)
-							k.getInventory().addItem(items.getItem(p, "pdh"));
+							k.getInventory().addItem(ItemManager.getItem("PortableDoinkHut").createItem(p));
 					if(k.getLevel() % 5 == 0)
 						if(ks.getFiveStreak(k) == 0)
-							k.getInventory().addItem(items.getItem(p, "hrb"));
+							k.getInventory().addItem(ItemManager.getItem("HomeRunBat").createItem(p));
 						else if(ks.getFiveStreak(k) == 1)
-							k.getInventory().addItem(items.getItem(p, "fb"));
+							k.getInventory().addItem(ItemManager.getItem("Fireball").createItem(p));
 					if(k.getLevel() % 7 == 0)
 						if(ks.getSevenStreak(k) == 0)
-							k.getInventory().addItem(items.getItem(p, "lp"));
+							k.getInventory().addItem(ItemManager.getItem("LifeforcePotion").createItem(p));
 						else if(ks.getSevenStreak(k) == 1)
-							k.getInventory().addItem(items.getItem(p, "bh"));
+							k.getInventory().addItem(ItemManager.getItem("BlackHole").createItem(p));
 				}
 				
 				if(cs.getTime(p) < tl.getLimit() - 15)

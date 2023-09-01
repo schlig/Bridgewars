@@ -27,7 +27,7 @@ public class JoinTeam implements CommandExecutor {
 		
 		Player p = (Player) sender;
 		
-		if(GameState.isState(GameState.ACTIVE)) {
+		if(GameState.isState(GameState.ACTIVE) && !p.isOp()) {
 			p.sendMessage(Message.chat("&cYou can't change teams while a game is active!"));
 			return true;
 		}

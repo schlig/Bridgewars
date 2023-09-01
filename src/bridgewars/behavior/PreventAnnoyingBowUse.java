@@ -20,7 +20,7 @@ public class PreventAnnoyingBowUse implements Listener {
 	}
 	
 	@EventHandler
-	public void onShoot(EntityShootBowEvent e){
+	public void onShoot(EntityShootBowEvent e){ //this just prevents people from shooting arrows in to or out of spawn
 		if(e.getEntity() instanceof Player
 		&& GameState.isState(GameState.ACTIVE)) {
 			Player p = (Player) e.getEntity();

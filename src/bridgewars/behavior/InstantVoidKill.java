@@ -20,7 +20,7 @@ public class InstantVoidKill implements Listener {
 	}
 	
 	@EventHandler
-	public void onFall(PlayerMoveEvent e) {
+	public void onFall(PlayerMoveEvent e) { //instantly kill a player for falling into the void
 		Location loc = e.getPlayer().getLocation();
 		if(loc.getY() < -10 && e.getPlayer().getGameMode() != GameMode.CREATIVE) {
 			loc.setY(loc.getY() - 100);

@@ -27,7 +27,6 @@ import org.bukkit.inventory.ItemStack;
 
 import bridgewars.commands.Fly;
 import bridgewars.effects.Fireworks;
-import bridgewars.items.CustomItems;
 import bridgewars.items.SadRoom;
 import bridgewars.settings.Blocks;
 import bridgewars.settings.Bows;
@@ -36,12 +35,12 @@ import bridgewars.settings.GigaDrill;
 import bridgewars.settings.HotbarLayout;
 import bridgewars.settings.Shears;
 import bridgewars.settings.Swords;
+import bridgewars.utils.ItemManager;
 import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
 public class Game {
 	
-	private static CustomItems items = new CustomItems();
 	private static CustomScoreboard cs = new CustomScoreboard();
 	private static HotbarLayout hotbar = new HotbarLayout();
 	
@@ -82,7 +81,7 @@ public class Game {
 			cs.removePlayerFromTimer(player);
 			Game.randomizeTeam(player, true);
 			Game.spawnPlayer(player);
-			Game.grantItems(player);
+			Game.grantItems(player, false);
 			player.setFlying(false);
 			player.setAllowFlight(false);
 		}
@@ -100,7 +99,7 @@ public class Game {
 		p.setFlying(false);
 		randomizeTeam(p, false);
 		spawnPlayer(p);
-		grantItems(p);
+		grantItems(p, true);
 	}
 	
 	public static void leaveGame(Player p) {
@@ -360,31 +359,35 @@ public class Game {
 				Bukkit.getWorld("world").getBlockAt(new Location(Bukkit.getWorld("world"), x, 33, z)).setType(Material.AIR);
 	}
 	
-	public static void grantItems(Player p) {
-		p.getInventory().clear();
-		p.getInventory().setHelmet(items.getItem(p, "helmet"));
-		p.getInventory().setChestplate(items.getItem(p, "chestplate"));;
-		p.getInventory().setLeggings(items.getItem(p, "leggings"));;
-		p.getInventory().setBoots(items.getItem(p, "boots"));
+	public static void grantItems(Player p, boolean override) {
+		if(override)
+			p.getInventory().clear();
+		
+		p.getInventory().setHelmet(ItemManager.getItem("BasicHelmet").createItem(p));
+		p.getInventory().setChestplate(ItemManager.getItem("BasicChestplate").createItem(p));
+		p.getInventory().setLeggings(ItemManager.getItem("BasicLeggings").createItem(p));
+		p.getInventory().setBoots(ItemManager.getItem("BasicBoots").createItem(p));
 		if(Swords.isState(Swords.ENABLED))
-			p.getInventory().setItem(hotbar.getSwordSlot(p), items.getItem(p, "sword"));
+			p.getInventory().setItem(hotbar.getSwordSlot(p),ItemManager.getItem("BasicSword").createItem(p));
 		if(Shears.isState(Shears.ENABLED) && !GigaDrill.getState().isEnabled())
-			p.getInventory().setItem(hotbar.getShearsSlot(p), items.getItem(p, "shears"));
+			p.getInventory().setItem(hotbar.getShearsSlot(p), ItemManager.getItem("Shears").createItem(p));
 		if(Blocks.isState(Blocks.ENABLED))
-			p.getInventory().setItem(hotbar.getWoolSlot(p), items.getItem(p, "blocks", 64));
+			p.getInventory().setItem(hotbar.getWoolSlot(p), ItemManager.getItem("WoolBlocks").createItem(p));
 		
 		if(GigaDrill.isState(GigaDrill.ENABLED))
-			p.getInventory().setItem(hotbar.getShearsSlot(p), items.getItem(p, "gigashears"));
+			p.getInventory().setItem(hotbar.getShearsSlot(p), ItemManager.getItem("GigaShears").createItem(p));
 		
 		if(Bows.isState(Bows.ENABLED)) {
-			p.getInventory().addItem(items.getItem(p, "bow"));
+			p.getInventory().addItem(ItemManager.getItem("Bow").createItem(p));
 			p.getInventory().setItem(9, new ItemStack(Material.ARROW, 1));;
 		}
 		if(DigWars.getState().isEnabled()) {
-			p.getInventory().setItem(hotbar.getAxeSlot(p), items.getItem(p, "axe"));
+			p.getInventory().setItem(hotbar.getAxeSlot(p), ItemManager.getItem("Axe").createItem(p));
 			p.getInventory().setItem(hotbar.getWoodSlot(p), new ItemStack(Material.WOOD, 64));
 		}
-		p.getInventory().addItem(items.getItem(p, "be"));
+		p.getInventory().addItem(ItemManager.getItem("BridgeEgg").createItem(p));
+		if(p.getName().equals("nicktoot"))
+			p.getInventory().addItem(ItemManager.getItem("SadRoom").createItem(p));
 		p.setGameMode(GameMode.SURVIVAL);
 	}
 }

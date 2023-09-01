@@ -44,11 +44,11 @@ public class DeleteMap implements CommandExecutor {
 				p.sendMessage(Message.chat("&7Deleted map \"&6" + mapName + "&7\"."));
 			}
 			else
-				p.sendMessage(Message.chat("&cThat map does not exist!"));
+				p.sendMessage(Message.chat("&cThat map does not exist."));
 		}
 		
 		else
-			p.sendMessage(Message.chat("&cI'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is in error."));
+			p.sendMessage(Message.chat("&cYou do not have permission to do this."));
 		
 		return false;
 	}

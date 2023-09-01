@@ -13,14 +13,13 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import bridgewars.items.CustomItems;
 import bridgewars.settings.ChosenKillstreaks;
+import bridgewars.utils.ItemManager;
 import bridgewars.utils.Message;
 
 public class KillstreakEditor {
 
 	private static GUI menu = new GUI();
-	private static CustomItems items = new CustomItems();
 	private static ChosenKillstreaks ks = new ChosenKillstreaks();
 	
 	public static void sendInput(Player p, Inventory inv, ItemStack button) {
@@ -96,8 +95,8 @@ public class KillstreakEditor {
 			ks.setSevenStreak(p, 1);
 			ItemStack potion = new ItemStack(Material.POTION, 7, (short) 8192);
 			ItemMeta pmeta = potion.getItemMeta();
-			pmeta.setDisplayName(items.getItem(p, "lp", 1, true).getItemMeta().getDisplayName());
-			pmeta.setLore(items.getItem(p, "lp", 1, true).getItemMeta().getLore());
+			pmeta.setDisplayName(ItemManager.getItem("LifeforcePotion").createItem(null).getItemMeta().getDisplayName());
+			pmeta.setLore(ItemManager.getItem("LifeforcePotion").createItem(null).getItemMeta().getLore());
 			pmeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 			potion.setItemMeta(pmeta);
 			p.getOpenInventory().setItem(14, potion);

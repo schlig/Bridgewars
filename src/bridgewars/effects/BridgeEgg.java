@@ -12,7 +12,8 @@ import bridgewars.utils.Utils;
 
 public class BridgeEgg extends BukkitRunnable {
 
-	private int x = 1, z = 1;
+	private int xDir = 1, zDir = 1;
+	private int height = 2;
 	private Location loc;
 	private Block block, blockR;
 	
@@ -33,49 +34,25 @@ public class BridgeEgg extends BukkitRunnable {
 		}
 		
 		loc = e.getLocation().add(e.getLocation().getDirection().multiply(-1));
-		loc.setY(loc.getY() - 2);
 				
-		if(loc.getX() > 0)
-			loc.setX(Math.floor(loc.getX()));
-		else {
-			loc.setX(Math.ceil(loc.getX()));
-			x = -1;
-		}
-				
-		if(loc.getZ() > 0)
-			loc.setZ(Math.floor(loc.getZ()));
-		else {
-			loc.setZ(Math.ceil(loc.getZ()));
-			z = -1;
-		}
+		if(loc.getX() < 0) xDir = -1;
+		else xDir = 1;
+		if(loc.getZ() < 0) zDir = -1;
+		else zDir = 1;
+		
+		loc.setX(Math.abs(Math.floor(loc.getX())) * xDir);
+		loc.setY(loc.getY() - height);
+		loc.setZ(Math.abs(Math.floor(loc.getZ())) * zDir);
 				
 		block = e.getWorld().getBlockAt(loc);
-			
-		if(block.getType() == Material.AIR)
-			if(!Utils.isOutOfBounds(block.getLocation(), 21, 24, 21) || override) {
-				block.setType(Material.WOOL);
-				block.setData((byte)Utils.rand(16));
-			}
-			
-		blockR = block.getRelative(x, 0, 0);
-		if(blockR.getType() == Material.AIR)
-			if(!Utils.isOutOfBounds(block.getLocation(), 21, 24, 21) || override) {
-				blockR.setType(Material.WOOL);
-				blockR.setData((byte)Utils.rand(16));
-			}
-
-		blockR = block.getRelative(0, 0, z);
-		if(blockR.getType() == Material.AIR)
-			if(!Utils.isOutOfBounds(block.getLocation(), 21, 24, 21) || override){
-				blockR.setType(Material.WOOL);
-				blockR.setData((byte)Utils.rand(16));
-			}
-			
-		blockR = block.getRelative(x, 0, z);
-		if(blockR.getType() == Material.AIR)
-			if(!Utils.isOutOfBounds(block.getLocation(), 21, 24, 21) || override){
-				blockR.setType(Material.WOOL);
-				blockR.setData((byte)Utils.rand(16));
+		
+		for(int x = 0; x != xDir * 2; x += xDir)
+			for(int z = 0; z != zDir * 2; z += zDir) {
+				blockR = block.getRelative(x, 0, z);
+				if(blockR.getType() == Material.AIR && !Utils.isOutOfBounds(blockR.getLocation(), 22, 24, 22) || override) {
+					blockR.setType(Material.WOOL);
+					blockR.setData((byte)Utils.rand(16));
+				}
 			}
 	}
 }

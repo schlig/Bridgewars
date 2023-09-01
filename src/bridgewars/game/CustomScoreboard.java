@@ -13,7 +13,6 @@ import org.bukkit.scoreboard.Team;
 import bridgewars.settings.TimeLimit;
 import bridgewars.utils.Message;
 
-@SuppressWarnings("unused")
 public class CustomScoreboard {
 	
 	private Scoreboard scoreboard;

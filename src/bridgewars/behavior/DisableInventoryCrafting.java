@@ -16,7 +16,7 @@ public class DisableInventoryCrafting implements Listener {
 	}
 	
 	@EventHandler
-	public void onCraft(CraftItemEvent e) {
+	public void onCraft(CraftItemEvent e) { //disable crafting, mainly for carpets lol
 		if(GameState.isState(GameState.ACTIVE)
 		&& !DigWars.getState().isEnabled())
 			e.setCancelled(true);

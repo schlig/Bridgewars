@@ -1,6 +1,7 @@
 package bridgewars.items;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -14,13 +15,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import bridgewars.Main;
+import bridgewars.game.CustomScoreboard;
 import bridgewars.game.Game;
 import bridgewars.game.GameState;
+import bridgewars.utils.ICustomItem;
+import bridgewars.utils.ItemBuilder;
 import bridgewars.utils.Message;
 
-public class SadRoom implements Listener {
+public class SadRoom implements ICustomItem, Listener {
 	
 	private static List<Player> sadRoomed = new ArrayList<>();
+	private CustomScoreboard cs = new CustomScoreboard();
 	
 	private Main plugin;
 	
@@ -37,6 +42,10 @@ public class SadRoom implements Listener {
 			Player k = (Player) e.getDamager();
 			if(k.getItemInHand().getType() == Material.GHAST_TEAR
 			&& GameState.isState(GameState.ACTIVE)) {
+				
+				if(cs.matchTeam(p, k))
+					return;
+				
 				if(sadRoomed.size() == 0) {
 					
 					for(int x = 0; x < 7; x++)
@@ -122,5 +131,19 @@ public class SadRoom implements Listener {
 			sadRoomed.remove(p);
 		if(sadRoomed.size() == 0)
 			clearSadRoom();
+	}
+
+	@Override
+	public Rarity getRarity() {
+		return Rarity.BLUE;
+	}
+
+	@Override
+	public ItemStack createItem(Player p) {
+		ItemStack depression = new ItemStack(Material.GHAST_TEAR, 1);
+		ItemBuilder.setName(depression, "&cDepression");
+		ItemBuilder.setLore(depression, Arrays.asList(Message.chat("&r&7Banishes a player to the"),
+				Message.chat("&r&7Sad Room for 15 seconds")));
+		return depression;
 	}
 }

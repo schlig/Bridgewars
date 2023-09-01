@@ -1,5 +1,7 @@
 package bridgewars.items;
 
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -17,9 +19,11 @@ import org.bukkit.util.Vector;
 
 import bridgewars.Main;
 import bridgewars.game.CustomScoreboard;
+import bridgewars.utils.ICustomItem;
+import bridgewars.utils.ItemBuilder;
 import bridgewars.utils.Message;
 
-public class PortableDoinkHut implements Listener {
+public class PortableDoinkHut implements ICustomItem, Listener {
 	
 	private CustomScoreboard cs = new CustomScoreboard();
 	
@@ -46,6 +50,7 @@ public class PortableDoinkHut implements Listener {
 					if(Math.abs(origin.getX()) <= 22
 					&& Math.abs(origin.getZ()) <= 22
 					&& origin.getY() <= 24
+					&& origin.getY() > 0
 					|| p.getGameMode() == GameMode.CREATIVE) {
 						success = true;
 						origin.setType(Material.WOOL);
@@ -118,5 +123,19 @@ public class PortableDoinkHut implements Listener {
 			}
 		}
 		return value;
+	}
+
+	@Override
+	public Rarity getRarity() {
+		return Rarity.WHITE;
+	}
+
+	@Override
+	public ItemStack createItem(Player p) {
+		ItemStack portableDoinkHut = new ItemStack(Material.MOB_SPAWNER, 1);
+		ItemBuilder.setName(portableDoinkHut, "&fPortable Doink Hut");
+		ItemBuilder.setLore(portableDoinkHut, Arrays.asList(Message.chat("&r&7Builds an instant house"),
+				Message.chat("&r&7where you're standing")));
+		return portableDoinkHut;
 	}
 }

@@ -54,3 +54,5 @@ commands:
     description: Toggle flight.
   debug:
     description: debug
+  label:
+    description: Places floating text at your feet.

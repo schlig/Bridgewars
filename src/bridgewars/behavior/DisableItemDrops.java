@@ -17,7 +17,7 @@ public class DisableItemDrops implements Listener {
 	}
 
 	@EventHandler
-	public void onDrop(PlayerDropItemEvent e) {
+	public void onDrop(PlayerDropItemEvent e) { //prevent players from dropping items
 		if(e.getPlayer().getGameMode() != GameMode.CREATIVE)
 			if(GameState.isState(GameState.ACTIVE))
 				e.setCancelled(true);

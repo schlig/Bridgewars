@@ -18,7 +18,7 @@ public class InfiniteBlocks implements Listener {
 	}
 	
 	@EventHandler
-	public void onPlace(BlockPlaceEvent e){
+	public void onPlace(BlockPlaceEvent e){ //infinitely replenish blocks in game
 		if(GameState.isState(GameState.ACTIVE) 
 		&& e.getPlayer().getGameMode() != GameMode.CREATIVE)
 			if(e.getItemInHand().getType() == Material.WOOL

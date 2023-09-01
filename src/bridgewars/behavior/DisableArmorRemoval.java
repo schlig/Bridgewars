@@ -17,7 +17,7 @@ public class DisableArmorRemoval implements Listener {
 	}
 	
 	@EventHandler
-	public void onClick(InventoryClickEvent e) {
+	public void onClick(InventoryClickEvent e) { //prevents armor from being dropped or removed from inventory while in game
 		if(GameState.isState(GameState.ACTIVE))
 			if(e.getWhoClicked().getGameMode() != GameMode.CREATIVE)
 				if(e.getSlotType() == SlotType.ARMOR)

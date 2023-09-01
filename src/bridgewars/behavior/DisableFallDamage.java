@@ -17,7 +17,7 @@ public class DisableFallDamage implements Listener {
 	}
 
 	@EventHandler
-	public void onDamage(EntityDamageEvent e) {
+	public void onDamage(EntityDamageEvent e) { //completely disables fall damage
 		if(e.getEntity() instanceof Player && e.getCause() == DamageCause.FALL)
 			e.setCancelled(true);
 	}

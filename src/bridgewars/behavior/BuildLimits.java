@@ -20,7 +20,7 @@ public class BuildLimits implements Listener {
 	}
 
 	@EventHandler
-	public void onBlockPlace(BlockPlaceEvent e) {
+	public void onBlockPlace(BlockPlaceEvent e) { //prevents players that are in game from placing blocks out of bounds
 		Location loc = e.getBlockPlaced().getLocation();
 		if(GameState.isState(GameState.ACTIVE)) {
 			if(Utils.isOutOfBounds(loc, 22, 24, 22)) {

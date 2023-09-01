@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import bridgewars.Main;
+import bridgewars.effects.PlotArmor;
 import bridgewars.game.CombatTagging;
 import bridgewars.game.GameState;
 
@@ -31,6 +32,9 @@ public class DeathMessages implements Listener {
 			return;
 		
 		Player p = (Player) e.getEntity();
+		
+		if(PlotArmor.armoredPlayers.contains(p))
+			return;
 
 		if(p.getKiller() instanceof Player)
 			if(p.getKiller() == p) {
@@ -117,6 +121,7 @@ public class DeathMessages implements Listener {
 		messages.put("MrFrexxy", " wasn't as cute as ");
 		messages.put("Freejourner", " had inferior fishing skills to ");
 		messages.put("MookW", " wasn't gas enough for ");
+		messages.put("towwl", " was somehow killed by ");
 	}
 	
 	private String getCustomMessage(String name) {

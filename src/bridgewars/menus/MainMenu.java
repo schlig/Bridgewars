@@ -18,15 +18,14 @@ import org.bukkit.potion.PotionEffectType;
 import bridgewars.game.CustomScoreboard;
 import bridgewars.game.Game;
 import bridgewars.game.GameState;
-import bridgewars.items.CustomItems;
 import bridgewars.settings.ChosenKillstreaks;
 import bridgewars.settings.HotbarLayout;
+import bridgewars.utils.ItemManager;
 import bridgewars.utils.Message;
 
 public class MainMenu {
 
 	private static GUI menu = new GUI();
-	private static CustomItems items = new CustomItems();
 	private static HotbarLayout hotbar = new HotbarLayout();
 	private static ChosenKillstreaks ks = new ChosenKillstreaks();
 	private static CustomScoreboard cs = new CustomScoreboard();
@@ -102,11 +101,11 @@ public class MainMenu {
 			p.openInventory(killstreakEditor);
 			
 			//main items
-			p.getOpenInventory().setItem(10, items.getItem(p, "be", 3, true));
+			p.getOpenInventory().setItem(10, ItemManager.getItem("BridgeEgg").createItem(null));
 			if(ks.getThreeStreak(p) == 0)
 				p.getOpenInventory().getItem(10).addUnsafeEnchantment(Enchantment.LURE, 1);
 			
-			ItemStack bat = items.getItem(p, "hrb", 5, true);
+			ItemStack bat = ItemManager.getItem("HomeRunBat").createItem(null);
 			bat.setDurability((short) 0);
 			bat.removeEnchantment(Enchantment.KNOCKBACK);
 			p.getOpenInventory().setItem(12, bat);
@@ -115,8 +114,8 @@ public class MainMenu {
 			
 			ItemStack potion = new ItemStack(Material.POTION, 7, (short) 8192);
 			ItemMeta meta = potion.getItemMeta();
-			meta.setDisplayName(items.getItem(p, "lp", 7, true).getItemMeta().getDisplayName());
-			meta.setLore(items.getItem(p, "lp", 7, true).getItemMeta().getLore());
+			meta.setDisplayName(ItemManager.getItem("LifeforcePotion").createItem(null).getItemMeta().getDisplayName());
+			meta.setLore(ItemManager.getItem("LifeforcePotion").createItem(null).getItemMeta().getLore());
 			meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 			potion.setItemMeta(meta);
 			p.getOpenInventory().setItem(14, potion);
@@ -127,15 +126,15 @@ public class MainMenu {
 			p.getOpenInventory().setItem(16, new ItemStack(Material.BARRIER, 1));
 			
 			//alt items
-			p.getOpenInventory().setItem(28, items.getItem(p, "pdh", 3, true));
+			p.getOpenInventory().setItem(28, ItemManager.getItem("PortableDoinkHut").createItem(null));
 			if(ks.getThreeStreak(p) == 1)
 				p.getOpenInventory().getItem(28).addUnsafeEnchantment(Enchantment.LURE, 1);
 			
-			p.getOpenInventory().setItem(30, items.getItem(p, "fb", 5, true));
+			p.getOpenInventory().setItem(30, ItemManager.getItem("Fireball").createItem(null));
 			if(ks.getFiveStreak(p) == 1)
 				p.getOpenInventory().getItem(30).addUnsafeEnchantment(Enchantment.LURE, 1);
 			
-			p.getOpenInventory().setItem(32, items.getItem(p, "bh", 7, true));
+			p.getOpenInventory().setItem(32, ItemManager.getItem("BlackHole").createItem(null));
 			if(ks.getSevenStreak(p) == 1)
 				p.getOpenInventory().getItem(32).addUnsafeEnchantment(Enchantment.LURE, 1);
 			
