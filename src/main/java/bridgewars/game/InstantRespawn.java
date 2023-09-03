@@ -1,7 +1,6 @@
 package bridgewars.game;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -22,6 +21,7 @@ import bridgewars.settings.HotbarLayout;
 import bridgewars.settings.Shears;
 import bridgewars.settings.Swords;
 import bridgewars.utils.ItemManager;
+import bridgewars.utils.Utils;
 
 public class InstantRespawn implements Listener {
 	
@@ -74,8 +74,8 @@ public class InstantRespawn implements Listener {
 				//digwars stuff
 				if(DigWars.getState().isEnabled()) {
 					p.getInventory().remove(Material.WOOD);
-					if(p.getInventory().getItem(hotbar.getWoodSlot(p)) == null)
-						p.getInventory().setItem(hotbar.getWoodSlot(p), new ItemStack(Material.WOOD, 64));
+					if(p.getInventory().getItem(hotbar.getSlot(p, "woodSlot")) == null)
+						p.getInventory().setItem(hotbar.getSlot(p, "woodSlot"), new ItemStack(Material.WOOD, 64));
 					else
 						p.getInventory().addItem(new ItemStack(Material.WOOD, 64));
 				}
@@ -97,7 +97,7 @@ public class InstantRespawn implements Listener {
 		
 		if(p.getBedSpawnLocation() != null)
 			p.setBedSpawnLocation(null);
-		p.teleport(new Location(Bukkit.getWorld("world"), 1062.5, 52, 88.5, -90, 10));
+		p.teleport(Utils.getSpawn());
 		p.playSound(p.getLocation(), Sound.HURT_FLESH, 1F, 1F);
 	}
 }

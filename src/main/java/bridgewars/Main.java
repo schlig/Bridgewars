@@ -33,20 +33,25 @@ import bridgewars.commands.Menu;
 import bridgewars.commands.OverwriteMap;
 import bridgewars.commands.SaveMap;
 import bridgewars.commands.StartGame;
+import bridgewars.commands.Transform;
 import bridgewars.commands.Warp;
 import bridgewars.effects.DoubleJumpEffect;
+import bridgewars.effects.Piggyback;
 import bridgewars.effects.PlotArmor;
 import bridgewars.game.CustomScoreboard;
 import bridgewars.game.GameState;
 import bridgewars.game.InstantRespawn;
 import bridgewars.game.Kills;
 import bridgewars.game.Timer;
-import bridgewars.menus._MenuInput;
+import bridgewars.menus.InputHandler;
 import bridgewars.messages.DeathMessages;
 import bridgewars.messages.OnJoin;
 import bridgewars.messages.OnLeave;
-import bridgewars.parkour.ParkourPlates;
-import bridgewars.settings._Settings;
+import bridgewars.parkour.Checkpoints;
+import bridgewars.parkour.ParkourQuit;
+import bridgewars.parkour.ParkourReset;
+import bridgewars.parkour.ParkourTeleport;
+import bridgewars.settings.Settings;
 import bridgewars.utils.ItemManager;
 
 public class Main extends JavaPlugin {
@@ -92,6 +97,7 @@ public class Main extends JavaPlugin {
 		new Fly(this);
 		new Debug(this);
 		new Label(this);
+		new Transform(this);
 		
 		//messages
 		new DeathMessages(this);
@@ -107,15 +113,19 @@ public class Main extends JavaPlugin {
 		//effects
 		new DoubleJumpEffect(this);
 		new PlotArmor(this);
+		new Piggyback(this);
 		
 		//parkour
-		new ParkourPlates(this);
+		new Checkpoints(this);
+		new ParkourTeleport(this);
+		new ParkourQuit(this);
+		new ParkourReset(this);
 		
 		//settings
-		new _MenuInput(this);
+		new InputHandler(this);
 		
 		GameState.setState(GameState.INACTIVE);
-		_Settings.load();
+		Settings.load();
 	}
 }
 

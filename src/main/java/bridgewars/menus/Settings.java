@@ -17,13 +17,14 @@ import bridgewars.settings.Bows;
 import bridgewars.settings.DigWars;
 import bridgewars.settings.DoubleHealth;
 import bridgewars.settings.DoubleJump;
+import bridgewars.settings.FriendlyFire;
 import bridgewars.settings.GigaDrill;
 import bridgewars.settings.KillstreakRewards;
 import bridgewars.settings.NaturalItemSpawning;
+import bridgewars.settings.Piggyback;
 import bridgewars.settings.Shears;
 import bridgewars.settings.Swords;
 import bridgewars.settings.TimeLimit;
-import bridgewars.settings._Settings;
 import bridgewars.utils.Message;
 
 public class Settings {
@@ -213,11 +214,41 @@ public class Settings {
 			}
 			break;
 			
+		case BLAZE_POWDER:
+			if(FriendlyFire.isState(FriendlyFire.ENABLED)) {
+				FriendlyFire.setState(FriendlyFire.DISABLED);
+				p.sendMessage(Message.chat("Friendly Fire is now disabled"));
+				modifyButton(p.getOpenInventory().getItem(24), false);
+				p.playSound(p.getLocation(), Sound.CLICK, .8F, 1F);
+			}
+			else {
+				FriendlyFire.setState(FriendlyFire.ENABLED);
+				p.sendMessage(Message.chat("Friendly Fire is now enabled"));
+				modifyButton(p.getOpenInventory().getItem(24), true);
+				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+			}
+			break;
+			
+		case SADDLE:
+			if(Piggyback.isState(Piggyback.ENABLED)) {
+				Piggyback.setState(Piggyback.DISABLED);
+				p.sendMessage(Message.chat("Piggyback is now disabled"));
+				modifyButton(p.getOpenInventory().getItem(25), false);
+				p.playSound(p.getLocation(), Sound.CLICK, .8F, 1F);
+			}
+			else {
+				Piggyback.setState(Piggyback.ENABLED);
+				p.sendMessage(Message.chat("Piggyback is now enabled"));
+				modifyButton(p.getOpenInventory().getItem(25), true);
+				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+			}
+			break;
+			
 		default:
 			break;
 		}
 		
-		_Settings.save();
+		bridgewars.settings.Settings.save();
 	}
 	
 	private static void modifyButton(ItemStack button, boolean state) {
@@ -265,5 +296,9 @@ public class Settings {
 			modifyButton(p.getOpenInventory().getItem(22), true);
 		if(NaturalItemSpawning.isState(NaturalItemSpawning.ENABLED))
 			modifyButton(p.getOpenInventory().getItem(23), true);
+		if(FriendlyFire.isState(FriendlyFire.ENABLED))
+			modifyButton(p.getOpenInventory().getItem(24), true);
+		if(Piggyback.isState(Piggyback.ENABLED))
+			modifyButton(p.getOpenInventory().getItem(25), true);
 	}
 }

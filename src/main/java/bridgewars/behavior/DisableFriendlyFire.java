@@ -9,6 +9,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import bridgewars.Main;
 import bridgewars.game.CustomScoreboard;
+import bridgewars.settings.FriendlyFire;
 
 public class DisableFriendlyFire implements Listener {
 
@@ -37,8 +38,12 @@ public class DisableFriendlyFire implements Listener {
 			if(target == attacker || cs.getTeam(attacker) == null)
 				return;
 			
-			if(cs.matchTeam(target, attacker))
-				e.setCancelled(true);
+			if(cs.matchTeam(target, attacker)) {
+				if(FriendlyFire.getState().isEnabled())
+					e.setDamage(0);
+				else
+					e.setCancelled(true);
+			}
 		}
 	}
 }

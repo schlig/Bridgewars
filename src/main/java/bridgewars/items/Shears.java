@@ -12,11 +12,16 @@ public class Shears implements ICustomItem {
     public Rarity getRarity() {
         return Rarity.NONE;
     }
+    
     @Override
     public ItemStack createItem(Player p) {
         ItemStack shears = new ItemStack(Material.SHEARS, 1);
         shears.addEnchantment(Enchantment.DIG_SPEED, 3);
         ItemBuilder.setUnbreakable(shears, true);
         return shears;
+    }
+    
+    public ItemStack createItem() {
+    	return createItem(null);
     }
 }

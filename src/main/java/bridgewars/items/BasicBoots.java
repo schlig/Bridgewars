@@ -15,7 +15,7 @@ public class BasicBoots implements ICustomItem {
 
     @Override
     public ItemStack createItem(Player p) {
-        ItemStack item = new ItemStack(Material.LEATHER_HELMET, 1);
+        ItemStack item = new ItemStack(Material.LEATHER_BOOTS, 1);
         String team = ItemBuilder.getTeamName(p);
         ItemBuilder.setUnbreakable(item, true);
         ItemBuilder.setLeatherColor(p, item, team);

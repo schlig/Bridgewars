@@ -1,0 +1,68 @@
+package bridgewars.parkour;
+
+import java.util.HashMap;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
+
+import bridgewars.Main;
+import bridgewars.utils.ItemManager;
+import bridgewars.utils.Message;
+
+public class Checkpoints implements Listener {
+	
+	public static HashMap<Player, Location> cp = new HashMap<>();
+	private Main plugin;
+	
+	public Checkpoints(Main plugin) {
+		Bukkit.getPluginManager().registerEvents(this, plugin);
+		this.plugin = plugin;
+	}
+	
+	@EventHandler
+	public void setCheckpoint(PlayerInteractEvent e) { //also starts the parkour challenge
+		if(e.getAction() == Action.PHYSICAL) {
+			Player p = e.getPlayer();
+			Location loc = e.getClickedBlock().getLocation();
+			if(Bukkit.getWorld("world").getBlockAt(loc).getType() != Material.IRON_PLATE)
+				return;
+			loc.setX(loc.getX() + 0.5);
+			loc.setZ(loc.getZ() + 0.5);
+			loc.setPitch(p.getLocation().getPitch());
+			loc.setYaw(p.getLocation().getYaw());
+			Checkpoints.cp.put(p, loc);
+			if(!p.getInventory().contains(ItemManager.getItem("ParkourTeleporter").createItem(null)))
+				p.getInventory().setItem(3, ItemManager.getItem("ParkourTeleporter").createItem(null));
+			if(!p.getInventory().contains(ItemManager.getItem("ParkourResetter").createItem(null)))
+				p.getInventory().setItem(4, ItemManager.getItem("ParkourResetter").createItem(null));
+			if(!p.getInventory().contains(ItemManager.getItem("ParkourQuitter").createItem(null)))
+				p.getInventory().setItem(5, ItemManager.getItem("ParkourQuitter").createItem(null));
+			if(p.getAllowFlight())
+				p.setAllowFlight(false);
+			if(p.isFlying())
+				p.setFlying(false);
+			if(!Timer.parkourList.contains(p)) {
+				p.sendMessage(Message.chat("&6Parkour challenge started!"));
+				new Timer(p).runTaskTimer(plugin, 0L, 0L);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void endTimer(PlayerInteractEvent e) { //ends the parkour
+		if(e.getAction() == Action.PHYSICAL) {
+			Player p = e.getPlayer();
+			Location loc = e.getClickedBlock().getLocation();
+			if(Bukkit.getWorld("world").getBlockAt(loc).getType() != Material.GOLD_PLATE)
+				return;
+			if(Timer.parkourList.contains(p))
+				Timer.parkourList.remove(p);
+		}
+	}
+}

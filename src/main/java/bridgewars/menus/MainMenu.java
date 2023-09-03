@@ -85,13 +85,15 @@ public class MainMenu {
 			Inventory hotbarEditor = Bukkit.createInventory(null, 45, "Hotbar Layout");
 			hotbarEditor.setContents(menu.getHotbar().getContents());
 			p.openInventory(hotbarEditor);
-			int i = hotbar.getSwordSlot(p);
+			int i = hotbar.getSlot(p, "swordSlot");
 			p.getOpenInventory().setItem(i + 18, new ItemStack(Material.GOLD_SWORD));
-			p.getOpenInventory().setItem(hotbar.getShearsSlot(p) + 18, new ItemStack(Material.SHEARS));
-			p.getOpenInventory().setItem(hotbar.getWoolSlot(p) + 18, new ItemStack(Material.WOOL));
-			p.getOpenInventory().setItem(hotbar.getBowSlot(p) + 18, new ItemStack(Material.BOW));
-			p.getOpenInventory().setItem(hotbar.getWoodSlot(p) + 18, new ItemStack(Material.WOOD));
-			p.getOpenInventory().setItem(hotbar.getAxeSlot(p) + 18, new ItemStack(Material.STONE_AXE));
+			p.getOpenInventory().setItem(hotbar.getSlot(p, "shearsSlot") + 18, new ItemStack(Material.SHEARS));
+			p.getOpenInventory().setItem(hotbar.getSlot(p, "woolSlot") + 18, new ItemStack(Material.WOOL));
+			p.getOpenInventory().setItem(hotbar.getSlot(p, "bowSlot") + 18, new ItemStack(Material.BOW));
+			p.getOpenInventory().setItem(hotbar.getSlot(p, "woodSlot") + 18, new ItemStack(Material.WOOD));
+			p.getOpenInventory().setItem(hotbar.getSlot(p, "axeSlot") + 18, new ItemStack(Material.STONE_AXE));
+			p.getOpenInventory().setItem(hotbar.getSlot(p, "waterSlot") + 18, new ItemStack(Material.WATER_BUCKET));
+			p.getOpenInventory().setItem(hotbar.getSlot(p, "lavaSlot") + 18, new ItemStack(Material.LAVA_BUCKET));
 			break;
 			
 		case IRON_SWORD:

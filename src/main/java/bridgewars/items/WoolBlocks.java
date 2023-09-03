@@ -11,6 +11,7 @@ public class WoolBlocks implements ICustomItem {
     public Rarity getRarity() {
         return Rarity.NONE;
     }
+    
     @Override
     public ItemStack createItem(Player p) {
         ItemStack item = new ItemStack(Material.WOOL, 64);
@@ -29,5 +30,9 @@ public class WoolBlocks implements ICustomItem {
                 break;
         }
         return item;
+    }
+    
+    public ItemStack createItem() {
+    	return createItem(null);
     }
 }
