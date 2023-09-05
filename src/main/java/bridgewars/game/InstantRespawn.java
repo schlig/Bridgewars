@@ -95,6 +95,8 @@ public class InstantRespawn implements Listener {
 			}
 		}
 		
+		p.setPassenger(null);
+		
 		if(p.getBedSpawnLocation() != null)
 			p.setBedSpawnLocation(null);
 		p.teleport(Utils.getSpawn());

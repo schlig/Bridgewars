@@ -85,8 +85,9 @@ public class MainMenu {
 			Inventory hotbarEditor = Bukkit.createInventory(null, 45, "Hotbar Layout");
 			hotbarEditor.setContents(menu.getHotbar().getContents());
 			p.openInventory(hotbarEditor);
-			int i = hotbar.getSlot(p, "swordSlot");
-			p.getOpenInventory().setItem(i + 18, new ItemStack(Material.GOLD_SWORD));
+
+			if(!hotbar.slotsAreValid(p))
+				hotbar.restoreDefaults(p);
 			p.getOpenInventory().setItem(hotbar.getSlot(p, "shearsSlot") + 18, new ItemStack(Material.SHEARS));
 			p.getOpenInventory().setItem(hotbar.getSlot(p, "woolSlot") + 18, new ItemStack(Material.WOOL));
 			p.getOpenInventory().setItem(hotbar.getSlot(p, "bowSlot") + 18, new ItemStack(Material.BOW));

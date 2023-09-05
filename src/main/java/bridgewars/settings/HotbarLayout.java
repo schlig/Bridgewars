@@ -57,12 +57,10 @@ public class HotbarLayout {
 	}
 	
 	public int getSlot(Player p, String slot) {
-		if(!slotsAreValid(p))
-			restoreDefaults(p);
 		return scoreboard.getObjective(slot).getScore(Utils.getName(p.getUniqueId())).getScore();
 	}
 	
-	private boolean slotsAreValid(Player p) {
+	public boolean slotsAreValid(Player p) {
 		for(Objective obj1 : slots)
 			for(Objective obj2 : slots)
 				if(obj1.getScore(p.getName()).getScore() == obj2.getScore(p.getName()).getScore() && obj1 != obj2)

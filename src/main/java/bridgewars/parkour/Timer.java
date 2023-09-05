@@ -3,13 +3,16 @@ package bridgewars.parkour;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import bridgewars.commands.Fly;
 import bridgewars.game.GameState;
 import bridgewars.utils.ItemManager;
 import bridgewars.utils.Message;
+import bridgewars.utils.Utils;
 
 public class Timer extends BukkitRunnable implements Listener {
 	
@@ -29,18 +32,13 @@ public class Timer extends BukkitRunnable implements Listener {
 	public void run() {
 		if(GameState.isState(GameState.ACTIVE)) {
 			p.sendMessage(Message.chat("&cParkour challenge aborted due to the game starting."));
-			parkourList.remove(p);
-			time.remove(p);
-			this.cancel();
+			endParkour(p);
 			return;
 		}
 		
 		if(cancelled.get(p)) {
 			p.sendMessage(Message.chat("&cYou quit the parkour challenge."));
-			parkourList.remove(p);
-			removeParkourItems(p);
-			time.remove(p);
-			this.cancel();
+			endParkour(p);
 			return;
 		}
 		
@@ -62,9 +60,7 @@ public class Timer extends BukkitRunnable implements Listener {
 					+ extraSecondsZero + seconds.toString() + "." 
 					+ extraMSZero + milliseconds.toString() + "&6."));
 
-			removeParkourItems(p);
-			time.remove(p);
-			this.cancel();
+			endParkour(p);
 			return;
 		}
 		time.put(p, time.get(p) + 1);
@@ -77,5 +73,21 @@ public class Timer extends BukkitRunnable implements Listener {
 			p.getInventory().remove(ItemManager.getItem("ParkourResetter").createItem(null));
 		if(p.getInventory().contains(ItemManager.getItem("ParkourQuitter").createItem(null)))
 			p.getInventory().remove(ItemManager.getItem("ParkourQuitter").createItem(null));
+	}
+	
+	private void endParkour(Player p) {
+		time.remove(p);
+		parkourList.remove(p);
+		removeParkourItems(p);
+		this.cancel();
+		if(Checkpoints.cp.containsKey(p))
+			Checkpoints.cp.remove(p);
+		if(Checkpoints.startPlate.containsKey(p))
+			Checkpoints.startPlate.remove(p);
+	
+		if(p.getGameMode() == GameMode.CREATIVE)
+			Fly.setFlight(p, true, false);
+		else
+			p.teleport(Utils.getSpawn());
 	}
 }

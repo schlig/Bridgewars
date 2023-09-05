@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import bridgewars.Main;
@@ -25,9 +26,6 @@ public class ParkourQuit implements Listener {
 			Player p = e.getPlayer();
 			if(Checkpoints.cp.containsKey(p) 
 					&& Utils.matchItem(p.getItemInHand(), ItemManager.getItem("ParkourQuitter").createItem(null))) {
-				p.teleport(Utils.getSpawn());
-				if(Checkpoints.cp.containsKey(p))
-					Checkpoints.cp.remove(p);
 				Timer.cancelled.put(p, true);
 				if(p.getGameMode() != GameMode.CREATIVE)
 					p.getInventory().clear();
@@ -42,6 +40,12 @@ public class ParkourQuit implements Listener {
 		Player p = e.getPlayer();
 		if(Timer.parkourList.contains(p)
 				&& Utils.matchItem(p.getItemInHand(), ItemManager.getItem("ParkourQuitter").createItem(null)))
+			e.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void preventOpeningInventories(InventoryOpenEvent e) {
+		if(Utils.matchItem(e.getPlayer().getItemInHand(), ItemManager.getItem("ParkourResetter").createItem(null)))
 			e.setCancelled(true);
 	}
 }

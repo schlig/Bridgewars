@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import bridgewars.Main;
@@ -26,7 +27,9 @@ public class ParkourReset implements Listener {
 			if(Checkpoints.cp.containsKey(p) 
 					&& Utils.matchItem(p.getItemInHand(), ItemManager.getItem("ParkourResetter").createItem(null))) {
 				p.sendMessage(Message.chat("&6You reset your parkour time!"));
-				p.teleport(Checkpoints.cp.get(p));
+				p.teleport(Checkpoints.startPlate.get(p));
+				if(Checkpoints.cp.containsKey(p))
+					Checkpoints.cp.remove(p);
 				Timer.time.put(p, 0);
 			}
 		}
@@ -37,6 +40,12 @@ public class ParkourReset implements Listener {
 		Player p = e.getPlayer();
 		if(Timer.parkourList.contains(p)
 				&& Utils.matchItem(p.getItemInHand(), ItemManager.getItem("ParkourResetter").createItem(null)))
+			e.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void preventOpeningInventories(InventoryOpenEvent e) {
+		if(Utils.matchItem(e.getPlayer().getItemInHand(), ItemManager.getItem("ParkourResetter").createItem(null)))
 			e.setCancelled(true);
 	}
 }

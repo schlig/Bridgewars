@@ -12,12 +12,14 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import bridgewars.Main;
+import bridgewars.commands.Fly;
 import bridgewars.utils.ItemManager;
 import bridgewars.utils.Message;
 
 public class Checkpoints implements Listener {
 	
 	public static HashMap<Player, Location> cp = new HashMap<>();
+	public static HashMap<Player, Location> startPlate = new HashMap<>();
 	private Main plugin;
 	
 	public Checkpoints(Main plugin) {
@@ -37,16 +39,18 @@ public class Checkpoints implements Listener {
 			loc.setPitch(p.getLocation().getPitch());
 			loc.setYaw(p.getLocation().getYaw());
 			Checkpoints.cp.put(p, loc);
+			if(!Checkpoints.startPlate.containsKey(p))
+				Checkpoints.startPlate.put(p, loc);
+			
 			if(!p.getInventory().contains(ItemManager.getItem("ParkourTeleporter").createItem(null)))
 				p.getInventory().setItem(3, ItemManager.getItem("ParkourTeleporter").createItem(null));
 			if(!p.getInventory().contains(ItemManager.getItem("ParkourResetter").createItem(null)))
 				p.getInventory().setItem(4, ItemManager.getItem("ParkourResetter").createItem(null));
 			if(!p.getInventory().contains(ItemManager.getItem("ParkourQuitter").createItem(null)))
 				p.getInventory().setItem(5, ItemManager.getItem("ParkourQuitter").createItem(null));
-			if(p.getAllowFlight())
-				p.setAllowFlight(false);
-			if(p.isFlying())
-				p.setFlying(false);
+			
+			Fly.setFlight(p, false, false);
+			
 			if(!Timer.parkourList.contains(p)) {
 				p.sendMessage(Message.chat("&6Parkour challenge started!"));
 				new Timer(p).runTaskTimer(plugin, 0L, 0L);

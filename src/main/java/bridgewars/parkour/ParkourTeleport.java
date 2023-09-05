@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import bridgewars.Main;
@@ -25,5 +26,11 @@ public class ParkourTeleport implements Listener {
 					&& Utils.matchItem(p.getItemInHand(), ItemManager.getItem("ParkourTeleporter").createItem(null)))
 				p.teleport(Checkpoints.cp.get(p));
 		}
+	}
+	
+	@EventHandler
+	public void preventOpeningInventories(InventoryOpenEvent e) {
+		if(Utils.matchItem(e.getPlayer().getItemInHand(), ItemManager.getItem("ParkourTeleporter").createItem(null)))
+			e.setCancelled(true);
 	}
 }

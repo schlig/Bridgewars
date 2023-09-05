@@ -123,9 +123,9 @@ public class Main extends JavaPlugin {
 		
 		//settings
 		new InputHandler(this);
-		
-		GameState.setState(GameState.INACTIVE);
+
 		Settings.load();
+		GameState.setState(GameState.INACTIVE);
 	}
 }
 

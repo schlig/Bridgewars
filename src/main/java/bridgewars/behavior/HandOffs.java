@@ -34,7 +34,6 @@ public class HandOffs implements Listener {
 					return;
 				
 				t.getInventory().addItem(item);
-				p.setItemInHand(null);
 				
 				if(item.getAmount() == 1) {
 					t.sendMessage(Message.chat(p.getDisplayName() + " handed you a " + item.getItemMeta().getDisplayName() + "&r!"));
@@ -44,6 +43,7 @@ public class HandOffs implements Listener {
 					t.sendMessage(Message.chat(p.getDisplayName() + " handed you some " + item.getItemMeta().getDisplayName() + "s&r!"));
 					p.sendMessage(Message.chat("&rYou handed your " + item.getItemMeta().getDisplayName() + "s &rto " + t.getDisplayName() + "&r!"));
 				}
+				p.setItemInHand(null);
 			}
 		}
 	}
