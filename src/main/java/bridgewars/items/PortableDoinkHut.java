@@ -18,14 +18,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import bridgewars.Main;
-import bridgewars.game.CustomScoreboard;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
 import bridgewars.utils.Message;
 
 public class PortableDoinkHut implements ICustomItem, Listener {
-	
-	private CustomScoreboard cs = new CustomScoreboard();
 	
 	public PortableDoinkHut (Main plugin) {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -44,20 +41,7 @@ public class PortableDoinkHut implements ICustomItem, Listener {
 				
 				boolean success = false;
 				
-				//generate doink hut
-				if(origin.getType() == Material.AIR 
-				|| origin.getType() == Material.WOOL) {
-					if(Math.abs(origin.getX()) <= 22
-					&& Math.abs(origin.getZ()) <= 22
-					&& origin.getY() <= 24
-					&& origin.getY() > 0
-					|| p.getGameMode() == GameMode.CREATIVE) {
-						success = true;
-						origin.setType(Material.WOOL);
-						origin.setData(getColor(p));
-					}
-				}
-				
+				//build doink hut
 				for(int x = -2; x <= 2; x++)
 					for(int z = -2; z <= 2; z++)
 						for(int y = 0; y <= 4; y++)
@@ -68,10 +52,11 @@ public class PortableDoinkHut implements ICustomItem, Listener {
 								|| p.getGameMode() == GameMode.CREATIVE) {
 									success = true;
 									origin.getRelative(x, y, z).setType(Material.WOOL);
-									origin.getRelative(x, y, z).setData(getColor(p));
+									origin.getRelative(x, y, z).setData(ItemBuilder.getColorID(p));
 								}
 							}
 				
+				//fill doink with air
 				for(int x = -1; x <= 1; x++)
 					for(int z = -1; z <= 1; z++)
 						for(int y = 1; y <= 2; y++)
@@ -102,27 +87,6 @@ public class PortableDoinkHut implements ICustomItem, Listener {
 	public void blockPlacement(BlockPlaceEvent e) {
 		if(e.getBlock().getType() == Material.MOB_SPAWNER)
 			e.setCancelled(true);
-	}
-	
-	private byte getColor(Player p) {
-		byte value = 0;
-		if(cs.hasTeam(p)) {
-			switch(cs.getTeam(p)) {
-			case "red":
-				value = 14;
-				break;
-			case "blue":
-				value = 3;
-				break;
-			case "green":
-				value = 5;
-				break;
-			case "yellow":
-				value = 4;
-				break;
-			}
-		}
-		return value;
 	}
 
 	@Override

@@ -32,8 +32,7 @@ public class OnJoin implements Listener {
 		p.setLevel(0);
 		p.sendMessage(Message.chat("Welcome to &6Bridgewars&r! Type &c/menu&r to get started."));
 		cs.removePlayerFromTimer(p);
-		if(Fly.allowFlight.contains(p))
-			Fly.allowFlight.remove(p);
+		Fly.allowFlight.put(p, false);
 		
 		if(DoubleHealth.getState().isEnabled()) {
 			p.setMaxHealth(40);
@@ -43,8 +42,11 @@ public class OnJoin implements Listener {
 			p.setHealth(20);
 			p.setMaxHealth(20);
 		}
-			
-		if(p.getGameMode() != GameMode.CREATIVE) {
+		
+		if(p.getGameMode() == GameMode.CREATIVE || p.getGameMode() == GameMode.SPECTATOR)
+			Fly.allowFlight.put(p, true);
+		
+		else {
 			p.setAllowFlight(false);
 			p.setFlying(false);
 			p.teleport(new Location(Bukkit.getWorld("world"), 1062.5, 52, 88.5, -90, 10));
@@ -52,7 +54,5 @@ public class OnJoin implements Listener {
 			p.getInventory().setArmorContents(null);
 			p.setGameMode(GameMode.ADVENTURE);
 		}
-		if(p.getGameMode() == GameMode.CREATIVE || p.getGameMode() == GameMode.SPECTATOR)
-			Fly.allowFlight.add(p);
 	}
 }

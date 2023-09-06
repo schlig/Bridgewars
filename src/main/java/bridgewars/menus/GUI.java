@@ -124,6 +124,16 @@ public class GUI {
 				Message.chat("&7Items will randomly spawn anywhere"),
 				Message.chat("&7on the map"))));
 		
+		settings.setItem(24, item(Material.BLAZE_POWDER, 1, 0, "&r&6Friendly Fire", false, Arrays.asList(
+				Message.chat("&r&cDisabled"),
+				Message.chat("&7Allow hitting teammates without"),
+				Message.chat("&7damaging them"))));
+		
+		settings.setItem(25, item(Material.SADDLE, 1, 0, "&r&6Piggyback", false, Arrays.asList(
+				Message.chat("&r&cDisabled"),
+				Message.chat("&7Right click your teammates"),
+				Message.chat("&7to ride them"))));
+		
 		settings.setItem(40, button(0));
 		
 		//build the timer menu

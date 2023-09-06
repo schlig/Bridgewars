@@ -1,6 +1,8 @@
 package bridgewars.utils;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Color;
 import org.bukkit.entity.Player;
@@ -8,6 +10,10 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.SkullMeta;
+
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 
 import bridgewars.game.CustomScoreboard;
 
@@ -53,6 +59,43 @@ public class ItemBuilder {
 		meta.setColor(getColor(cs.getTeam(p)));
 		armorPiece.setItemMeta(meta);
 		return armorPiece;
+	}
+	
+	public static ItemStack setSkullTexture(ItemStack item, UUID uuid, String texture) {
+		
+		SkullMeta meta = (SkullMeta) item.getItemMeta();
+		GameProfile skullProfile = new GameProfile(uuid, null);
+		skullProfile.getProperties().put("textures", new Property("textures", texture));
+		
+		try {
+			Field profileField = meta.getClass().getDeclaredField("profile");
+			profileField.setAccessible(true);
+			profileField.set(meta, skullProfile);
+        } catch (Exception e) { }
+		
+		item.setItemMeta(meta);
+		return item;
+	}
+	
+	public static byte getColorID(Player p) {
+		byte value = 0;
+		if(cs.hasTeam(p)) {
+			switch(cs.getTeam(p)) {
+			case "red":
+				value = 14;
+				break;
+			case "blue":
+				value = 3;
+				break;
+			case "green":
+				value = 5;
+				break;
+			case "yellow":
+				value = 4;
+				break;
+			}
+		}
+		return value;
 	}
 	
 	private static Color getColor(String s) { //gets a color from a specified team name

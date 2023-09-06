@@ -30,6 +30,9 @@ public class ItemManager {
         allItems.add(new Fireball(plugin));
         allItems.add(new HomeRunBat(plugin));
         allItems.add(new SadRoom(plugin));
+        allItems.add(new DisguiseKit(plugin));
+        allItems.add(new BottomlessWaterBucket(plugin));
+        allItems.add(new BottomlessLavaBucket(plugin));
         allItems.add(new Axe());
         allItems.add(new BasicBoots());
         allItems.add(new BasicChestplate());
@@ -41,6 +44,8 @@ public class ItemManager {
         allItems.add(new Shears());
         allItems.add(new WoolBlocks());
         allItems.add(new ParkourTeleporter());
+        allItems.add(new ParkourResetter());
+        allItems.add(new ParkourQuitter());
         allItems.sort(Comparator.comparing(ICustomItem::getRarity).thenComparing(o -> o.getClass().getSimpleName()));
         try {
             validateConfig();
@@ -180,7 +185,7 @@ public class ItemManager {
     
     public static ICustomItem getItem(String name){
         for (ICustomItem i : allItems)
-            if(i.getClass().getSimpleName().equals(name))
+            if(i.getClass().getSimpleName().equalsIgnoreCase(name))
                 return i;
         
         Bukkit.getLogger().severe("ERROR getting item: " + name);

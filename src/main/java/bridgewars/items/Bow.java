@@ -21,4 +21,8 @@ public class Bow implements ICustomItem {
         ItemBuilder.setName(bow, "&r" + team.substring(0, 1).toUpperCase() + team.substring(1) + " Bow");
         return bow;
     }
+    
+    public ItemStack createItem() {
+    	return createItem(null);
+    }
 }

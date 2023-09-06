@@ -8,10 +8,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class GigaShears implements ICustomItem {
+	
     @Override
     public Rarity getRarity() {
         return Rarity.NONE;
     }
+    
     @Override
     public ItemStack createItem(Player p) {
         ItemStack gigaShears = new ItemStack(Material.SHEARS, 1);

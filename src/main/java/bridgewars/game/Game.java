@@ -254,7 +254,7 @@ public class Game {
 					if(forced)
 						p.teleport(new Location(Bukkit.getWorld("world"), 0.5, 45.0, 0.5, 0, 10));
 					else
-						if(p == winner)
+						if(Utils.matchTeam(p, winner))
 							p.teleport(new Location(Bukkit.getWorld("world"), 0.5, 48.0, -5.5, 0, 10));
 						else
 							p.teleport(new Location(Bukkit.getWorld("world"), 0.5, 45.0, 6.5, 180, 10));
@@ -263,7 +263,10 @@ public class Game {
 					p.getInventory().setArmorContents(null);
 					p.setGameMode(GameMode.ADVENTURE);
 					if(!forced) {
-						Message.sendTitle(p, Message.chat("&6&lGAME OVER"), Message.chat("&l" + cs.getTeam(winner).substring(0, 1).toUpperCase() + cs.getTeam(winner).substring(1, cs.getTeam(winner).length()) + " team wins!"), 5, 20, 5);
+						Message.sendTitle(p, Message.chat("&6&lGAME OVER"), 
+								Message.chat("&l" + cs.getTeam(winner).substring(0, 1).toUpperCase()
+										          + cs.getTeam(winner).substring(1, cs.getTeam(winner).length()) 
+										          + " team wins!"), 5, 20, 5);
 						if(cs.getTeam(p) == cs.getTeam(winner))
 							p.playSound(p.getLocation(), Sound.LEVEL_UP, 1F, 1F);
 						else
@@ -368,22 +371,24 @@ public class Game {
 		p.getInventory().setLeggings(ItemManager.getItem("BasicLeggings").createItem(p));
 		p.getInventory().setBoots(ItemManager.getItem("BasicBoots").createItem(p));
 		if(Swords.isState(Swords.ENABLED))
-			p.getInventory().setItem(hotbar.getSwordSlot(p),ItemManager.getItem("BasicSword").createItem(p));
+			p.getInventory().setItem(hotbar.getSlot(p, "swordSlot"),ItemManager.getItem("BasicSword").createItem(p));
 		if(Shears.isState(Shears.ENABLED) && !GigaDrill.getState().isEnabled())
-			p.getInventory().setItem(hotbar.getShearsSlot(p), ItemManager.getItem("Shears").createItem(p));
+			p.getInventory().setItem(hotbar.getSlot(p, "shearsSlot"), ItemManager.getItem("Shears").createItem(p));
 		if(Blocks.isState(Blocks.ENABLED))
-			p.getInventory().setItem(hotbar.getWoolSlot(p), ItemManager.getItem("WoolBlocks").createItem(p));
+			p.getInventory().setItem(hotbar.getSlot(p, "woolSlot"), ItemManager.getItem("WoolBlocks").createItem(p));
 		
 		if(GigaDrill.isState(GigaDrill.ENABLED))
-			p.getInventory().setItem(hotbar.getShearsSlot(p), ItemManager.getItem("GigaShears").createItem(p));
+			p.getInventory().setItem(hotbar.getSlot(p, "shearsSlot"), ItemManager.getItem("GigaShears").createItem(p));
 		
 		if(Bows.isState(Bows.ENABLED)) {
 			p.getInventory().addItem(ItemManager.getItem("Bow").createItem(p));
 			p.getInventory().setItem(9, new ItemStack(Material.ARROW, 1));;
 		}
 		if(DigWars.getState().isEnabled()) {
-			p.getInventory().setItem(hotbar.getAxeSlot(p), ItemManager.getItem("Axe").createItem(p));
-			p.getInventory().setItem(hotbar.getWoodSlot(p), new ItemStack(Material.WOOD, 64));
+			p.getInventory().setItem(hotbar.getSlot(p, "axeSlot"), ItemManager.getItem("Axe").createItem(p));
+			p.getInventory().setItem(hotbar.getSlot(p, "woodSlot"), new ItemStack(Material.WOOD, 64));
+			p.getInventory().setItem(hotbar.getSlot(p, "waterSlot"), ItemManager.getItem("BottomlessWaterBucket").createItem(null));
+			p.getInventory().setItem(hotbar.getSlot(p, "lavaSlot"), ItemManager.getItem("BottomlessLavaBucket").createItem(null));
 		}
 		p.getInventory().addItem(ItemManager.getItem("BridgeEgg").createItem(p));
 		if(p.getName().equals("nicktoot"))

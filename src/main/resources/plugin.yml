@@ -56,3 +56,6 @@ commands:
     description: debug
   label:
     description: Places floating text at your feet.
+  transform:
+    aliases: [d]
+    description: become another player

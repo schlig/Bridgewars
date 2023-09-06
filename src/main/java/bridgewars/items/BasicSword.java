@@ -16,7 +16,7 @@ public class BasicSword implements ICustomItem {
         ItemStack sword = new ItemStack(Material.GOLD_SWORD, 1);
         ItemBuilder.setUnbreakable(sword, true);
         String team = ItemBuilder.getTeamName(p);
-        ItemBuilder.setName(sword, "&r" + team.substring(0, 1).toUpperCase() + team.substring(1) + " Bow");
+        ItemBuilder.setName(sword, "&r" + team.substring(0, 1).toUpperCase() + team.substring(1) + " Sword");
         return sword;
     }
 }

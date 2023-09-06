@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 import bridgewars.Main;
 import bridgewars.game.CustomScoreboard;
+import bridgewars.utils.ItemManager;
 import bridgewars.utils.Message;
 
 public class HandOffs implements Listener {
@@ -26,10 +27,14 @@ public class HandOffs implements Listener {
 			Player t = (Player) e.getRightClicked();
 			
 			if(cs.matchTeam(p, t) && p.isSneaking()) {
+				
 				ItemStack item = p.getItemInHand();
 				
+				if(!ItemManager.getItemNames().contains(item.getItemMeta().getDisplayName()))
+					return;
+				
 				t.getInventory().addItem(item);
-				p.setItemInHand(null);
+				
 				if(item.getAmount() == 1) {
 					t.sendMessage(Message.chat(p.getDisplayName() + " handed you a " + item.getItemMeta().getDisplayName() + "&r!"));
 					p.sendMessage(Message.chat("&rYou handed your " + item.getItemMeta().getDisplayName() + " &rto " + t.getDisplayName() + "&r!"));
@@ -38,6 +43,7 @@ public class HandOffs implements Listener {
 					t.sendMessage(Message.chat(p.getDisplayName() + " handed you some " + item.getItemMeta().getDisplayName() + "s&r!"));
 					p.sendMessage(Message.chat("&rYou handed your " + item.getItemMeta().getDisplayName() + "s &rto " + t.getDisplayName() + "&r!"));
 				}
+				p.setItemInHand(null);
 			}
 		}
 	}

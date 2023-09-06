@@ -34,22 +34,28 @@ public class HotbarEditor {
 			for(int i = 0; i < 9; i++)
 				switch(p.getOpenInventory().getItem(i + 18).getType()) {
 				case GOLD_SWORD:
-					hotbar.setSwordSlot(p, i);
+					hotbar.setSlot(p, i, "swordSlot");
 					break;
 				case SHEARS:
-					hotbar.setShearsSlot(p, i);
+					hotbar.setSlot(p, i, "shearsSlot");
 					break;
 				case WOOL:
-					hotbar.setWoolSlot(p, i);
+					hotbar.setSlot(p, i, "woolSlot");
 					break;
 				case STONE_AXE:
-					hotbar.setAxeSlot(p, i);
+					hotbar.setSlot(p, i, "axeSlot");
 					break;
 				case WOOD:
-					hotbar.setWoodSlot(p, i);
+					hotbar.setSlot(p, i, "woodSlot");
 					break;
 				case BOW:
-					hotbar.setBowSlot(p, i);
+					hotbar.setSlot(p, i, "bowSlot");
+					break;
+				case WATER_BUCKET:
+					hotbar.setSlot(p, i, "waterSlot");
+					break;
+				case LAVA_BUCKET:
+					hotbar.setSlot(p, i, "lavaSlot");
 					break;
 				default:
 				}

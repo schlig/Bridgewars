@@ -19,6 +19,7 @@ import bridgewars.Main;
 import bridgewars.effects.PlotArmor;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
+import bridgewars.utils.ItemManager;
 import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
@@ -30,7 +31,7 @@ public class LifeforcePotion implements ICustomItem, Listener {
 	
 	@EventHandler
 	public void onDrink(PlayerItemConsumeEvent e) {
-		if(Utils.compareItemName(e.getItem(), "&cLifeforcePotion")) {
+		if(Utils.matchItem(e.getItem(), ItemManager.getItem("LifeforcePotion").createItem(null))) {
 			Player p = e.getPlayer();
 			PlotArmor.armoredPlayers.add(p);
 			Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("bridgewars"), () -> 

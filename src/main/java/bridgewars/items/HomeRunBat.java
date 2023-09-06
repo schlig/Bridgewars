@@ -3,6 +3,7 @@ package bridgewars.items;
 import bridgewars.Main;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
+import bridgewars.utils.ItemManager;
 import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 import org.bukkit.Bukkit;
@@ -25,7 +26,7 @@ public class HomeRunBat implements ICustomItem, Listener {
     @EventHandler
     public void onHit(PlayerItemDamageEvent e) {
         if(e.getItem().getType() == Material.WOOD_SWORD)
-            if(Utils.compareItemName(e.getItem(), "&aHome Run Bat"))
+            if(Utils.matchItem(e.getItem(), ItemManager.getItem("HomeRunBat").createItem(null)))
                 e.setDamage(20);
     }
 

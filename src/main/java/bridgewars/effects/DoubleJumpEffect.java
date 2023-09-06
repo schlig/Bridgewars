@@ -24,7 +24,7 @@ public class DoubleJumpEffect implements Listener {
 		Player p = e.getPlayer();
 		
 		if(DoubleJump.getState().isEnabled()
-		&& !Fly.allowFlight.contains(p)) {
+		&& !Fly.allowFlight.get(p)) {
 			e.setCancelled(true);
 
 			p.setFlying(false);

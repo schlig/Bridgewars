@@ -18,7 +18,7 @@ import net.minecraft.server.v1_8_R3.EnumParticle;
 
 public class Timer {
 	
-	private static ArrayList<BukkitTask> taskList = new ArrayList<>();
+	private static ArrayList<BukkitTask> particleList = new ArrayList<>();
 	
 	private static CustomScoreboard cs;
 	private static TimeLimit limit;
@@ -42,7 +42,7 @@ public class Timer {
 			@Override
 			public void run() {
 				if(Bukkit.getOnlinePlayers().size() == 0) { //automatically ends a game if no players are online
-					taskList.clear();
+					particleList.clear();
 					Game.endGame(null, true);
 					this.cancel();
 					return;
@@ -62,7 +62,7 @@ public class Timer {
 				for(Player p : Bukkit.getOnlinePlayers()) { //creates the particle trail for players that are close to winning
 					cs.updateTime(p, limit.getLimit());
 					if(cs.getTime(p) == limit.getLimit() - 15)
-						taskList.add(new Particle((Entity) p, EnumParticle.EXPLOSION_NORMAL, 0, 30, 0, 0, 10 * 255, 0, 0.0001F, 20, 300, true).runTaskTimer(plugin, 0L, 1L));
+						particleList.add(new Particle((Entity) p, EnumParticle.EXPLOSION_NORMAL, 0, 30, 0, 0, 10 * 255, 0, 0.0001F, 20, 300, true).runTaskTimer(plugin, 0L, 1L));
 				}
 			}
 		}.runTaskTimer(Bukkit.getPluginManager().getPlugin("bridgewars"), 0L, 20L);

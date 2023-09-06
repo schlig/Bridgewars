@@ -11,8 +11,10 @@ import org.bukkit.entity.Player;
 import bridgewars.Main;
 import bridgewars.utils.Message;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GiveItem implements CommandExecutor, TabCompleter {
@@ -21,6 +23,7 @@ public class GiveItem implements CommandExecutor, TabCompleter {
 	
 	public GiveItem(Main plugin) {
 		plugin.getCommand("giveitem").setExecutor(this);
+		plugin.getCommand("giveitem").setTabCompleter(this);
 		allItems = ItemManager.getItemNames();
 	}
 	
@@ -64,8 +67,18 @@ public class GiveItem implements CommandExecutor, TabCompleter {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 		if(args.length == 1){
-			return allItems;
+			final List<String> completionList = new ArrayList<>();
+			final List<String> completeArgument = new ArrayList<>();
+			StringUtil.copyPartialMatches(args[0], allItems, completionList);
+
+			for(String index : completionList)
+				if(!completeArgument.contains(index))
+					completeArgument.add(index);
+			
+			Collections.sort(completeArgument);
+			return completeArgument;
 		}
+		
 		return null;
 	}
 }

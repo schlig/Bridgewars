@@ -12,22 +12,23 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import bridgewars.Main;
+import bridgewars.commands.Fly;
 import bridgewars.utils.ItemManager;
 import bridgewars.utils.Message;
-import bridgewars.utils.Utils;
 
-public class ParkourPlates implements Listener {
-
-	private HashMap<Player, Location> checkpoint = new HashMap<>();
+public class Checkpoints implements Listener {
+	
+	public static HashMap<Player, Location> cp = new HashMap<>();
+	public static HashMap<Player, Location> startPlate = new HashMap<>();
 	private Main plugin;
 	
-	public ParkourPlates(Main plugin) {
+	public Checkpoints(Main plugin) {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 		this.plugin = plugin;
 	}
 	
 	@EventHandler
-	public void setCheckpoint(PlayerInteractEvent e) {
+	public void setCheckpoint(PlayerInteractEvent e) { //also starts the parkour challenge
 		if(e.getAction() == Action.PHYSICAL) {
 			Player p = e.getPlayer();
 			Location loc = e.getClickedBlock().getLocation();
@@ -37,9 +38,19 @@ public class ParkourPlates implements Listener {
 			loc.setZ(loc.getZ() + 0.5);
 			loc.setPitch(p.getLocation().getPitch());
 			loc.setYaw(p.getLocation().getYaw());
-			checkpoint.put(p, loc);
+			Checkpoints.cp.put(p, loc);
+			if(!Checkpoints.startPlate.containsKey(p))
+				Checkpoints.startPlate.put(p, loc);
+			
 			if(!p.getInventory().contains(ItemManager.getItem("ParkourTeleporter").createItem(null)))
-				p.getInventory().addItem(ItemManager.getItem("ParkourTeleporter").createItem(null));
+				p.getInventory().setItem(3, ItemManager.getItem("ParkourTeleporter").createItem(null));
+			if(!p.getInventory().contains(ItemManager.getItem("ParkourResetter").createItem(null)))
+				p.getInventory().setItem(4, ItemManager.getItem("ParkourResetter").createItem(null));
+			if(!p.getInventory().contains(ItemManager.getItem("ParkourQuitter").createItem(null)))
+				p.getInventory().setItem(5, ItemManager.getItem("ParkourQuitter").createItem(null));
+			
+			Fly.setFlight(p, false, false);
+			
 			if(!Timer.parkourList.contains(p)) {
 				p.sendMessage(Message.chat("&6Parkour challenge started!"));
 				new Timer(p).runTaskTimer(plugin, 0L, 0L);
@@ -48,7 +59,7 @@ public class ParkourPlates implements Listener {
 	}
 	
 	@EventHandler
-	public void endTimer(PlayerInteractEvent e) {
+	public void endTimer(PlayerInteractEvent e) { //ends the parkour
 		if(e.getAction() == Action.PHYSICAL) {
 			Player p = e.getPlayer();
 			Location loc = e.getClickedBlock().getLocation();
@@ -56,15 +67,6 @@ public class ParkourPlates implements Listener {
 				return;
 			if(Timer.parkourList.contains(p))
 				Timer.parkourList.remove(p);
-		}
-	}
-	
-	@EventHandler
-	public void teleportToCheckpoint(PlayerInteractEvent e) {
-		if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			Player p = e.getPlayer();
-			if(checkpoint.containsKey(p) && Utils.compareItemName(p.getItemInHand(), "&6Teleport to Last Checkpoint"))
-				p.teleport(checkpoint.get(p));
 		}
 	}
 }

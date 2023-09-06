@@ -1,7 +1,6 @@
 package bridgewars.commands;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
@@ -16,7 +15,7 @@ import bridgewars.utils.Utils;
 
 public class Fly implements CommandExecutor {
 	
-	public static List<Player> allowFlight = new ArrayList<>();
+	public static HashMap<Player, Boolean> allowFlight = new HashMap<>();
 
 	public Fly(Main plugin) {
 		plugin.getCommand("fly").setExecutor(this);
@@ -32,23 +31,26 @@ public class Fly implements CommandExecutor {
 		
 		if(GameState.isState(GameState.ACTIVE)
 		&& !Utils.isOutOfBounds(p.getLocation(), 200, 40, 200)
-		&& p.getGameMode() != GameMode.CREATIVE) {
+		&& p.getGameMode() != GameMode.CREATIVE)
 			p.sendMessage(Message.chat("&cYou can't fly while in a game!"));
-		}
-		else {
-			if(allowFlight.contains(p)) {
-				p.setAllowFlight(false);
-				p.setFlying(false);
-				p.sendMessage(Message.chat("&6Turned off flight"));
-				allowFlight.remove(p);
-			}
-			else {
-				p.setAllowFlight(true);
-				p.sendMessage(Message.chat("&6Turned on flight"));
-				allowFlight.add(p);
-			}
-		}
+		
+		else
+			setFlight(p, !allowFlight.get(p), true);
 		
 		return false;
+	}
+	
+	public static void setFlight(Player p, boolean state, boolean showMessage) {
+		allowFlight.put(p, state);
+		p.setAllowFlight(state);
+		
+		if(state)
+			if(showMessage)
+				p.sendMessage(Message.chat("&6Turned on flight"));
+		else {
+			p.setFlying(state);
+			if(showMessage)
+				p.sendMessage(Message.chat("&6Turned off flight"));
+		}
 	}
 }

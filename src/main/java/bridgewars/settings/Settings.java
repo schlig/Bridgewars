@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class _Settings {
+public class Settings {
 	
 	private static String filepath = "./plugins/bridgewars/options.ini";
 
@@ -29,6 +29,8 @@ public class _Settings {
 			gigaDrill(Boolean.parseBoolean(br.readLine()));
 			digWars(Boolean.parseBoolean(br.readLine()));
 			naturalItemSpawns(Boolean.parseBoolean(br.readLine()));
+			friendlyFire(Boolean.parseBoolean(br.readLine()));
+			piggyback(Boolean.parseBoolean(br.readLine()));
 			
 			br.close();
 		} catch (IOException e) { }
@@ -60,6 +62,10 @@ public class _Settings {
 			bw.write(DigWars.getState().isEnabled().toString());
 			bw.newLine();
 			bw.write(NaturalItemSpawning.getState().isEnabled().toString());
+			bw.newLine();
+			bw.write(FriendlyFire.getState().isEnabled().toString());
+			bw.newLine();
+			bw.write(Piggyback.getState().isEnabled().toString());
 			bw.newLine();
 			
 			bw.flush();
@@ -135,5 +141,19 @@ public class _Settings {
 			NaturalItemSpawning.setState(NaturalItemSpawning.ENABLED);
 		else
 			NaturalItemSpawning.setState(NaturalItemSpawning.DISABLED);
+	}
+	
+	private static void friendlyFire(boolean value) {
+		if(value)
+			FriendlyFire.setState(FriendlyFire.ENABLED);
+		else
+			FriendlyFire.setState(FriendlyFire.DISABLED);
+	}
+	
+	private static void piggyback(boolean value) {
+		if(value)
+			Piggyback.setState(Piggyback.ENABLED);
+		else
+			Piggyback.setState(Piggyback.DISABLED);
 	}
 }

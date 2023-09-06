@@ -14,11 +14,11 @@ import org.bukkit.inventory.ItemStack;
 
 import bridgewars.Main;
 
-public class _MenuInput implements Listener {
+public class InputHandler implements Listener {
 	
 	private GUI menu;
 	
-	public _MenuInput(Main plugin) {
+	public InputHandler(Main plugin) {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 		menu = new GUI();
 	}
