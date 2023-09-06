@@ -9,6 +9,7 @@ import org.bukkit.entity.Item;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 
 public class World {
+	public static final int gameXSize = 22, gameYSize = 24, gameZSize = 22;
 	
 	private static int x = 0, y = 0, z = 0;
 	
@@ -18,6 +19,10 @@ public class World {
 				for(z = 0; z < 1; z++) {
 					
 				}
+	}
+
+	public static boolean inGameArea(Location loc){
+		return Utils.isOutOfBounds(loc, gameXSize, gameYSize, gameZSize);
 	}
 	
 	public static void attemptItemSpawn(final int originX, final int originY, final int originZ, final int radius, boolean showParticles) {

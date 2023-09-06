@@ -51,6 +51,7 @@ public class Particle extends BukkitRunnable {
 		this.checkTimeLimit = checkTimeLimit;
 	}
 
+
 //	Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "execute @a[score_time_min=" + ((Integer)(limit.getLimit() - 15)).toString() + "] ~ ~ ~ particle explode ~ ~26 ~ .25 10 .25 .0001 20 force @a");
 	@Override
 	public void run() {

@@ -2,9 +2,7 @@ package bridgewars.items;
 
 import bridgewars.Main;
 import bridgewars.effects.RepelField;
-import bridgewars.utils.ItemBuilder;
-import bridgewars.utils.Message;
-import bridgewars.utils.ICustomItem;
+import bridgewars.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -27,10 +25,10 @@ public class ForceFieldGenerator implements ICustomItem, Listener {
 
     @EventHandler
     public void onUse(PlayerInteractEvent e) {
-        Player p = e.getPlayer();
-        ItemStack item = p.getItemInHand();
         if(e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            if(item.getType() == Material.DIAMOND) {
+            ItemStack item = e.getItem();
+            if(Utils.matchItem(item, ItemManager.getItem("ForceFieldGenerator").createItem(null))) {
+                Player p = e.getPlayer();
                 new RepelField(p, 5, 1, 100, plugin).runTaskTimer(plugin,0,1);
                 item.setAmount(item.getAmount() - 1);
                 p.setItemInHand(item);

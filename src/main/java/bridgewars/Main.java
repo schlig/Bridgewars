@@ -60,7 +60,7 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 		
 		//initialization
-		new ItemManager(this);
+		ItemManager.Initialize(this);
 		
 		//behavior
 		new BuildLimits(this);

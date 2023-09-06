@@ -6,8 +6,12 @@ import java.net.URL;
 import java.util.Random;
 import java.util.UUID;
 
+import net.minecraft.server.v1_8_R3.EnumParticle;
+import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
+import net.minecraft.server.v1_8_R3.PlayerConnection;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -26,18 +30,12 @@ public class Utils {
 	}
 	
 	public static boolean isOutOfBounds(Location loc, int x, int y, int z) {
-		if(Math.abs(loc.getBlockX()) > x || loc.getBlockY() > y || Math.abs(loc.getBlockZ()) > z)
-			return true;
-		else
-			return false;
+        return Math.abs(loc.getBlockX()) > x || loc.getBlockY() > y || Math.abs(loc.getBlockZ()) > z;
 	}
 	
 	public static boolean isOutOfBounds(Location loc, int x, int y, int z, int x2, int y2, int z2) {
-		if(loc.getBlockX() > x || loc.getBlockY() > y || loc.getBlockZ() > z
-		|| loc.getBlockX() < x2 || loc.getBlockY() < y2 || loc.getBlockZ() < z2)
-			return true;
-		else
-			return false;
+        return loc.getBlockX() > x || loc.getBlockY() > y || loc.getBlockZ() > z
+                || loc.getBlockX() < x2 || loc.getBlockY() < y2 || loc.getBlockZ() < z2;
 	}
 	
 	public static boolean matchItem(ItemStack item, ItemStack target){
@@ -84,6 +82,15 @@ public class Utils {
 		} catch (IOException e) { 
 			e.printStackTrace();
 			return null; }
+	}
+	public static void sendSingleParticle(EnumParticle effect, float x, float y, float z, float xOffset, float yOffset, float zOffset, float speed, int amount) {
+		for (Player p : Bukkit.getOnlinePlayers())
+		{
+			PacketPlayOutWorldParticles particlePacket = new PacketPlayOutWorldParticles(effect, true, x, y, z, xOffset / 255, yOffset / 255, zOffset / 255, speed, amount);
+			CraftPlayer player = (CraftPlayer) p;
+			PlayerConnection connection = player.getHandle().playerConnection;
+			connection.sendPacket(particlePacket);
+		}
 	}
 	
 	public static Boolean matchTeam(Player p, Player p2) {

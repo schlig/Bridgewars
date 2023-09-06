@@ -20,7 +20,7 @@ public class ItemManager {
     private static ArrayList<ICustomItem> allItems = new ArrayList<>();
     private static ItemPool activeItems;
     
-    public ItemManager(Main plugin){
+    public static void Initialize(Main plugin){
     	
         allItems.add(new ForceFieldGenerator(plugin));
         allItems.add(new BlackHole(plugin));
@@ -46,6 +46,7 @@ public class ItemManager {
         allItems.add(new ParkourTeleporter());
         allItems.add(new ParkourResetter());
         allItems.add(new ParkourQuitter());
+        allItems.add(new Railgun(plugin));
         allItems.sort(Comparator.comparing(ICustomItem::getRarity).thenComparing(o -> o.getClass().getSimpleName()));
         try {
             validateConfig();
