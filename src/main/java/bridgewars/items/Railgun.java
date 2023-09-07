@@ -48,14 +48,16 @@ public class Railgun implements ICustomItem, Listener {
                 BlockIterator blockIterator = new BlockIterator(e.getPlayer(),50);
                 Block block;
                 Player p = e.getPlayer();
+                ArrayList<Player> hitPlayers = new ArrayList<>();
                 while (blockIterator.hasNext()){
                     block = blockIterator.next();
                     if(!World.inGameArea(block.getLocation()) && block.getType() != Material.BEDROCK){
                         Location loc = block.getLocation();
                             for (Player player : Bukkit.getOnlinePlayers()
                             ) {
-                                if(player.getLocation().distance(loc) < 1 && !Utils.matchTeam(player, p)){
-                                    player.damage(5, p);
+                                if(player.getLocation().distance(loc) < 1 && !Utils.matchTeam(player, p) && !hitPlayers.contains(player)){
+                                    player.damage(7, p);
+                                    hitPlayers.add(player);
                                 }
                                 if(block.getType() != Material.AIR){
                                     player.playSound(block.getLocation(), Sound.DIG_WOOL, 1F, 1F);
