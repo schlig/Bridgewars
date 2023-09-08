@@ -10,7 +10,6 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import bridgewars.Main;
-import bridgewars.utils.ItemManager;
 import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
@@ -25,7 +24,7 @@ public class ParkourReset implements Listener {
 		if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Player p = e.getPlayer();
 			if(Checkpoints.cp.containsKey(p) 
-					&& Utils.matchItem(p.getItemInHand(), ItemManager.getItem("ParkourResetter").createItem(null))) {
+					&& Utils.getID(p.getItemInHand()).equals("parkourresetter")) {
 				p.sendMessage(Message.chat("&6You reset your parkour time!"));
 				p.teleport(Checkpoints.startPlate.get(p));
 				if(Checkpoints.cp.containsKey(p))
@@ -39,13 +38,13 @@ public class ParkourReset implements Listener {
 	public void preventPlacement(BlockPlaceEvent e) {
 		Player p = e.getPlayer();
 		if(Timer.parkourList.contains(p)
-				&& Utils.matchItem(p.getItemInHand(), ItemManager.getItem("ParkourResetter").createItem(null)))
+				&& Utils.getID(p.getItemInHand()).equals("parkourresetter"))
 			e.setCancelled(true);
 	}
 	
 	@EventHandler
 	public void preventOpeningInventories(InventoryOpenEvent e) {
-		if(Utils.matchItem(e.getPlayer().getItemInHand(), ItemManager.getItem("ParkourResetter").createItem(null)))
+		if(Utils.getID(e.getPlayer().getItemInHand()).equals("parkourresetter"))
 			e.setCancelled(true);
 	}
 }

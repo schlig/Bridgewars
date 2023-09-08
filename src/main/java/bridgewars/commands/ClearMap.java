@@ -6,8 +6,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import bridgewars.Main;
-import bridgewars.game.Game;
 import bridgewars.utils.Message;
+import bridgewars.utils.World;
 
 public class ClearMap implements CommandExecutor {
 	
@@ -24,7 +24,7 @@ public class ClearMap implements CommandExecutor {
 		Player p = (Player) sender;
 		
 		if(p.isOp()) {
-			Game.clearMap();
+			World.clearMap();
 			p.sendMessage(Message.chat("&7Cleared the map"));
 		}
 		

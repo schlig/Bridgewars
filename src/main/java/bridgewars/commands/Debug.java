@@ -1,19 +1,15 @@
 package bridgewars.commands;
 
-import java.util.ArrayList;
-
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import bridgewars.Main;
-import bridgewars.effects.Cloak;
-import bridgewars.utils.Utils;
 
 public class Debug implements CommandExecutor {
 	
+	@SuppressWarnings("unused")
 	private Main plugin;
 	
 	public Debug(Main plugin) {
@@ -30,13 +26,6 @@ public class Debug implements CommandExecutor {
 		Player p = (Player) sender;
 		if(!p.isOp())
 			return false;
-
-		ArrayList<Player> players = new ArrayList<>();
-		for(Player player : Bukkit.getOnlinePlayers())
-			players.add(player);
-		
-		players.remove(p);
-		new Cloak(p, Utils.getUUID(args[0]), 20).runTaskTimer(plugin, 0L, 20L);
 		
 		return false;
 	}

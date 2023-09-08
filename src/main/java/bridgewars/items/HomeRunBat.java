@@ -1,11 +1,7 @@
 package bridgewars.items;
 
-import bridgewars.Main;
-import bridgewars.utils.ICustomItem;
-import bridgewars.utils.ItemBuilder;
-import bridgewars.utils.ItemManager;
-import bridgewars.utils.Message;
-import bridgewars.utils.Utils;
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -15,7 +11,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
+import bridgewars.Main;
+import bridgewars.utils.ICustomItem;
+import bridgewars.utils.ItemBuilder;
+import bridgewars.utils.Message;
+import bridgewars.utils.Utils;
 
 public class HomeRunBat implements ICustomItem, Listener {
 
@@ -26,7 +26,7 @@ public class HomeRunBat implements ICustomItem, Listener {
     @EventHandler
     public void onHit(PlayerItemDamageEvent e) {
         if(e.getItem().getType() == Material.WOOD_SWORD)
-            if(Utils.matchItem(e.getItem(), ItemManager.getItem("HomeRunBat").createItem(null)))
+            if(Utils.getID(e.getItem()).equals(getClass().getSimpleName().toLowerCase()))
                 e.setDamage(20);
     }
 
@@ -37,11 +37,12 @@ public class HomeRunBat implements ICustomItem, Listener {
 
     @Override
     public ItemStack createItem(Player p) {
-        ItemStack homeRunBat = new ItemStack(Material.WOOD_SWORD, 1);
-        homeRunBat.addUnsafeEnchantment(Enchantment.KNOCKBACK, 5);
-        ItemBuilder.setName(homeRunBat, "&aHome Run Bat");
-        ItemBuilder.setLore(homeRunBat, Arrays.asList(Message.chat("&r&7Deals massive knockback"),
+        ItemStack item = new ItemStack(Material.WOOD_SWORD, 1);
+        item.addUnsafeEnchantment(Enchantment.KNOCKBACK, 5);
+        ItemBuilder.setName(item, "&aHome Run Bat");
+        ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7Deals massive knockback"),
                 Message.chat("&r&7Only has 3 uses")));
-        return homeRunBat;
+        ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        return item;
     }
 }

@@ -6,8 +6,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import bridgewars.Main;
-import bridgewars.game.Game;
 import bridgewars.utils.Message;
+import bridgewars.utils.World;
 
 public class LoadMap implements CommandExecutor {
 	
@@ -35,8 +35,8 @@ public class LoadMap implements CommandExecutor {
 		}
 		
 		if(p.isOp()) {
-			Game.clearMap();
-			Game.buildMap(mapName, p, true);
+			World.clearMap();
+			World.loadMap(mapName, p, true);
 		}
 		
 		else

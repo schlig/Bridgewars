@@ -27,7 +27,7 @@ public class ForceFieldGenerator implements ICustomItem, Listener {
     public void onUse(PlayerInteractEvent e) {
         if(e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             ItemStack item = e.getItem();
-            if(Utils.matchItem(item, ItemManager.getItem("ForceFieldGenerator").createItem(null))) {
+            if(Utils.getID(item).equals(getClass().getSimpleName().toLowerCase())) {
                 Player p = e.getPlayer();
                 new RepelField(p, 5, 1, 100, plugin).runTaskTimer(plugin,0,1);
                 item.setAmount(item.getAmount() - 1);
@@ -43,11 +43,12 @@ public class ForceFieldGenerator implements ICustomItem, Listener {
 
     @Override
     public ItemStack createItem(Player p) {
-        ItemStack out = new ItemStack(Material.DIAMOND, 1);
-        ItemBuilder.setName(out, "&rForce Field Generator");
-        ItemBuilder.setLore(out, Arrays.asList(
+        ItemStack item = new ItemStack(Material.DIAMOND, 1);
+        ItemBuilder.setName(item, "&rForce Field Generator");
+        ItemBuilder.setLore(item, Arrays.asList(
         		Message.chat("&r&7Repels all entities in a 5"),
         		Message.chat("&r&7block radius for 5 seconds")));
-        return out;
+        ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        return item;
     }
 }

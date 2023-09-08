@@ -20,7 +20,6 @@ import bridgewars.Main;
 import bridgewars.effects.Cloak;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
-import bridgewars.utils.ItemManager;
 import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
@@ -38,7 +37,7 @@ public class DisguiseKit implements ICustomItem, Listener {
 	@EventHandler
 	public void onUse(PlayerInteractEvent e) {
 		if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			if(!Utils.matchItem(e.getItem(), ItemManager.getItem("DisguiseKit").createItem(null)))
+			if(!Utils.getID(e.getItem()).equals(getClass().getSimpleName().toLowerCase()))
 				return;
 			
 			Player p = e.getPlayer();
@@ -69,7 +68,7 @@ public class DisguiseKit implements ICustomItem, Listener {
 	
 	@EventHandler
 	public void onPlace(BlockPlaceEvent e) {
-		if(Utils.matchItem(e.getItemInHand(), ItemManager.getItem("DisguiseKit").createItem(null)))
+		if(Utils.getID(e.getItemInHand()).equals(getClass().getSimpleName().toLowerCase()))
 			e.setCancelled(true);
 	}
 	
@@ -80,13 +79,14 @@ public class DisguiseKit implements ICustomItem, Listener {
 
     @Override
     public ItemStack createItem(Player p) {
-        ItemStack disguiseKit = new ItemStack(Material.SKULL_ITEM, 1);
-        disguiseKit.setDurability((short) 3);
-        ItemBuilder.setName(disguiseKit, "&aDisguise Kit");
-        ItemBuilder.setSkullTexture(disguiseKit, id, texture);
-        ItemBuilder.setLore(disguiseKit, Arrays.asList(
+        ItemStack item = new ItemStack(Material.SKULL_ITEM, 1);
+        item.setDurability((short) 3);
+        ItemBuilder.setName(item, "&aDisguise Kit");
+        ItemBuilder.setSkullTexture(item, id, texture);
+        ItemBuilder.setLore(item, Arrays.asList(
         		Message.chat("&r&7A special kit that transforms you"),
         		Message.chat("&r&7into a different player for 1 minute")));
-        return disguiseKit;
+        ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        return item;
     }
 }

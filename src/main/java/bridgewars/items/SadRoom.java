@@ -20,7 +20,6 @@ import bridgewars.game.Game;
 import bridgewars.game.GameState;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
-import bridgewars.utils.ItemManager;
 import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
@@ -42,7 +41,7 @@ public class SadRoom implements ICustomItem, Listener {
 		&& e.getDamager() instanceof Player) {
 			Player p = (Player) e.getEntity();
 			Player k = (Player) e.getDamager();
-			if(Utils.matchItem(k.getItemInHand(), ItemManager.getItem("SadRoom").createItem(null))
+			if(Utils.getID(k.getItemInHand()).equals(getClass().getSimpleName().toLowerCase())
 			&& GameState.isState(GameState.ACTIVE)) {
 				
 				if(cs.matchTeam(p, k))
@@ -142,10 +141,11 @@ public class SadRoom implements ICustomItem, Listener {
 
 	@Override
 	public ItemStack createItem(Player p) {
-		ItemStack depression = new ItemStack(Material.GHAST_TEAR, 1);
-		ItemBuilder.setName(depression, "&cDespair");
-		ItemBuilder.setLore(depression, Arrays.asList(Message.chat("&r&7Banishes a player to the"),
+		ItemStack item = new ItemStack(Material.GHAST_TEAR, 1);
+		ItemBuilder.setName(item, "&cDespair");
+		ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7Banishes a player to the"),
 				Message.chat("&r&7Sad Room for 15 seconds")));
-		return depression;
+		ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+		return item;
 	}
 }

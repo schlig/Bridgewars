@@ -21,7 +21,7 @@ import bridgewars.settings.HotbarLayout;
 import bridgewars.settings.Shears;
 import bridgewars.settings.Swords;
 import bridgewars.utils.ItemManager;
-import bridgewars.utils.Utils;
+import bridgewars.utils.World;
 
 public class InstantRespawn implements Listener {
 	
@@ -99,7 +99,7 @@ public class InstantRespawn implements Listener {
 		
 		if(p.getBedSpawnLocation() != null)
 			p.setBedSpawnLocation(null);
-		p.teleport(Utils.getSpawn());
+		p.teleport(World.getSpawn());
 		p.playSound(p.getLocation(), Sound.HURT_FLESH, 1F, 1F);
 	}
 }

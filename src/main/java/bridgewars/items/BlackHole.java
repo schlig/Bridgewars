@@ -50,10 +50,11 @@ public class BlackHole implements ICustomItem, Listener {
 
     @Override
     public ItemStack createItem(Player p) {
-        ItemStack out = new ItemStack(Material.SNOW_BALL, 1);
-        ItemBuilder.setName(out, "&cBlack Hole");
-        ItemBuilder.setLore(out, Arrays.asList(Message.chat("&r&7A throwable black hole that eats"),
+        ItemStack item = new ItemStack(Material.SNOW_BALL, 1);
+        ItemBuilder.setName(item, "&cBlack Hole");
+        ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7A throwable black hole that eats"),
                 Message.chat("&r&7every block in its path")));
-        return out;
+        ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        return item;
     }
 }

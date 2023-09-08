@@ -12,7 +12,31 @@ import java.util.Comparator;
 import org.bukkit.Bukkit;
 
 import bridgewars.Main;
-import bridgewars.items.*;
+import bridgewars.items.Axe;
+import bridgewars.items.BasicBoots;
+import bridgewars.items.BasicChestplate;
+import bridgewars.items.BasicHelmet;
+import bridgewars.items.BasicLeggings;
+import bridgewars.items.BasicSword;
+import bridgewars.items.BlackHole;
+import bridgewars.items.BottomlessLavaBucket;
+import bridgewars.items.BottomlessWaterBucket;
+import bridgewars.items.Bow;
+import bridgewars.items.BridgeEgg;
+import bridgewars.items.DisguiseKit;
+import bridgewars.items.Fireball;
+import bridgewars.items.ForceFieldGenerator;
+import bridgewars.items.GigaShears;
+import bridgewars.items.HomeRunBat;
+import bridgewars.items.LifeforcePotion;
+import bridgewars.items.ParkourQuitter;
+import bridgewars.items.ParkourResetter;
+import bridgewars.items.ParkourTeleporter;
+import bridgewars.items.PortableDoinkHut;
+import bridgewars.items.Railgun;
+import bridgewars.items.SadRoom;
+import bridgewars.items.Shears;
+import bridgewars.items.WoolBlocks;
 
 public class ItemManager {
 	
@@ -33,6 +57,7 @@ public class ItemManager {
         allItems.add(new DisguiseKit(plugin));
         allItems.add(new BottomlessWaterBucket(plugin));
         allItems.add(new BottomlessLavaBucket(plugin));
+        allItems.add(new Railgun(plugin));
         allItems.add(new Axe());
         allItems.add(new BasicBoots());
         allItems.add(new BasicChestplate());
@@ -46,7 +71,6 @@ public class ItemManager {
         allItems.add(new ParkourTeleporter());
         allItems.add(new ParkourResetter());
         allItems.add(new ParkourQuitter());
-        allItems.add(new Railgun(plugin));
         allItems.sort(Comparator.comparing(ICustomItem::getRarity).thenComparing(o -> o.getClass().getSimpleName()));
         try {
             validateConfig();

@@ -19,6 +19,7 @@ public class BasicChestplate implements ICustomItem {
         ItemBuilder.setUnbreakable(item, true);
         ItemBuilder.setLeatherColor(p, item, team);
         ItemBuilder.setName(item, "&r" + team.substring(0, 1).toUpperCase() + team.substring(1) + " Chestplate");
+        ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
         return item;
     }
 }

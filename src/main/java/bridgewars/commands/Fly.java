@@ -31,7 +31,8 @@ public class Fly implements CommandExecutor {
 		
 		if(GameState.isState(GameState.ACTIVE)
 		&& !Utils.isOutOfBounds(p.getLocation(), 200, 40, 200)
-		&& p.getGameMode() != GameMode.CREATIVE)
+		&& p.getGameMode() != GameMode.CREATIVE
+		&& !p.isOp())
 			p.sendMessage(Message.chat("&cYou can't fly while in a game!"));
 		
 		else
@@ -44,13 +45,13 @@ public class Fly implements CommandExecutor {
 		allowFlight.put(p, state);
 		p.setAllowFlight(state);
 		
-		if(state)
-			if(showMessage)
+		if(!state)
+			p.setFlying(false);
+		
+		if(showMessage)
+			if(state)
 				p.sendMessage(Message.chat("&6Turned on flight"));
-		else {
-			p.setFlying(state);
-			if(showMessage)
+			else
 				p.sendMessage(Message.chat("&6Turned off flight"));
-		}
 	}
 }

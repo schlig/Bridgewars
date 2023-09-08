@@ -105,7 +105,7 @@ public class Main extends JavaPlugin {
 		new OnLeave(this);
 
 		//game
-		new CustomScoreboard().clearTeams();
+		new CustomScoreboard().resetBoard();
 		new Kills(this);
 		new Timer(this);
 		new InstantRespawn(this);

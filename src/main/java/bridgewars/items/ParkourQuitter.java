@@ -17,8 +17,9 @@ public class ParkourQuitter implements ICustomItem {
 
 	@Override
 	public ItemStack createItem(Player p) {
-		ItemStack ParkourTeleporter = new ItemStack(Material.BARRIER, 1);
-		ItemBuilder.setName(ParkourTeleporter, Message.chat("&6Quit Parkour"));
-		return ParkourTeleporter;
+		ItemStack item = new ItemStack(Material.BARRIER, 1);
+		ItemBuilder.setName(item, Message.chat("&6Quit Parkour"));
+		ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+		return item;
 	}
 }

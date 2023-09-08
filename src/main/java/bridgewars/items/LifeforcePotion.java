@@ -19,7 +19,6 @@ import bridgewars.Main;
 import bridgewars.effects.PlotArmor;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
-import bridgewars.utils.ItemManager;
 import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
@@ -31,7 +30,7 @@ public class LifeforcePotion implements ICustomItem, Listener {
 	
 	@EventHandler
 	public void onDrink(PlayerItemConsumeEvent e) {
-		if(Utils.matchItem(e.getItem(), ItemManager.getItem("LifeforcePotion").createItem(null))) {
+		if(Utils.getID(e.getItem()).equals(getClass().getSimpleName().toLowerCase())) {
 			Player p = e.getPlayer();
 			PlotArmor.armoredPlayers.add(p);
 			Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("bridgewars"), () -> 
@@ -46,19 +45,20 @@ public class LifeforcePotion implements ICustomItem, Listener {
 
     @Override
     public ItemStack createItem(Player p) {
-        ItemStack lifeforcePotion = new ItemStack(Material.POTION, 1);
-        lifeforcePotion.setDurability((short) 8233);
-        ItemMeta meta = lifeforcePotion.getItemMeta();
+        ItemStack item = new ItemStack(Material.POTION, 1);
+        item.setDurability((short) 8233);
+        ItemMeta meta = item.getItemMeta();
         PotionMeta effect = (PotionMeta) meta;
         effect.addCustomEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 600, 0), true);
-        lifeforcePotion.setItemMeta(meta);
-        lifeforcePotion.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
-        ItemBuilder.setName(lifeforcePotion, "&cLifeforce Potion");
-        ItemBuilder.setLore(lifeforcePotion, Arrays.asList(Message.chat("&r&7Strength I (0:30)"),
+        item.setItemMeta(meta);
+        item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+        ItemBuilder.setName(item, "&cLifeforce Potion");
+        ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7Strength I (0:30)"),
                 Message.chat("&r&7Plot Armor"),
                 Message.chat("&r&7Survive fatal damage"),
                 Message.chat("&r&7with half a heart")));
-        ItemBuilder.hideFlags(lifeforcePotion);
-        return lifeforcePotion;
+        ItemBuilder.hideFlags(item);
+        ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        return item;
     }
 }

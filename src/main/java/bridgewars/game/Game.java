@@ -1,13 +1,6 @@
 package bridgewars.game;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -20,8 +13,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -31,20 +22,22 @@ import bridgewars.items.SadRoom;
 import bridgewars.settings.Blocks;
 import bridgewars.settings.Bows;
 import bridgewars.settings.DigWars;
+import bridgewars.settings.DoubleJump;
 import bridgewars.settings.GigaDrill;
 import bridgewars.settings.HotbarLayout;
 import bridgewars.settings.Shears;
 import bridgewars.settings.Swords;
 import bridgewars.utils.ItemManager;
 import bridgewars.utils.Message;
+import bridgewars.utils.Packet;
 import bridgewars.utils.Utils;
+import bridgewars.utils.World;
 
 public class Game {
 	
 	private static CustomScoreboard cs = new CustomScoreboard();
 	private static HotbarLayout hotbar = new HotbarLayout();
 	
-	private static String filepath = "./plugins/bridgewars/maps/";
 	
 	public static void startGame(Player p, boolean debugMessages) {
 		
@@ -57,11 +50,11 @@ public class Game {
 			return;
 		}
 		
-		Game.clearMap();
+		World.clearMap();
 		if(debugMessages)
 			p.sendMessage(Message.chat("&7Cleared the map"));
 		
-		if(!(Game.buildMap(null, p, false)))
+		if(!(World.loadMap(null, p, false)))
 			return;
 		if(debugMessages)
 			p.sendMessage(Message.chat("&7Built the map"));
@@ -77,13 +70,14 @@ public class Game {
 		SadRoom.clearSadRoom();
 		
 		for(Player player : Bukkit.getOnlinePlayers()) {
-			Fly.allowFlight.remove(player);
+			Fly.allowFlight.put(player, false);
+			player.setFlying(false);
+			if(!DoubleJump.getState().isEnabled())
+				player.setAllowFlight(false);
 			cs.removePlayerFromTimer(player);
 			Game.randomizeTeam(player, true);
 			Game.spawnPlayer(player);
 			Game.grantItems(player, false);
-			player.setFlying(false);
-			player.setAllowFlight(false);
 		}
 		if(debugMessages) {
 			p.sendMessage(Message.chat("&7Randomized teams"));
@@ -109,92 +103,6 @@ public class Game {
 			p.getInventory().clear();
 			p.teleport(new Location(Bukkit.getWorld("world"), 1062.5, 52, 88.5, -90, 10));
 		}
-	}
-	
-	public static void clearMap() {
-		//map bounds
-		//-28 0 -28
-		//28 41 28
-		for(int x = -22; x <= 22; x++)
-			for(int z = -22; z <= 22; z++)
-				for(int y = 0; y <= 24; y++)
-					Bukkit.getWorld("world").getBlockAt(x, y, z).setType(Material.AIR);
-		
-		for(Entity e : Bukkit.getWorld("world").getEntities())
-			if(e instanceof Item)
-				e.teleport(new Location(Bukkit.getWorld("world"), 0, -100, 0));
-	}
-	
-	@SuppressWarnings("deprecation")
-	public static boolean buildMap(String map, Player p, boolean override) {
-		File file;
-		int i;
-		if(map == null) {
-			file = new File(filepath);
-			ArrayList<String> mapList = new ArrayList<>(Arrays.asList(file.list()));
-			ArrayList<String> blacklist = new ArrayList<>();
-			try {
-				for(String name : mapList) {
-					RandomAccessFile r = new RandomAccessFile(filepath + name, "rw");
-					r.seek(0);
-					String test = r.readLine();
-					if(test.contains("1"))
-						blacklist.add(name);
-					r.close();
-				}
-				for(String name : blacklist)
-					mapList.remove(name);
-				
-			} catch (IOException e) { 
-				e.printStackTrace();
-				p.sendMessage(Message.chat("&cFailed to load map \"&6" + map + "&c\""));
-			}
-			if(mapList.size() == 0) {
-				Bukkit.broadcastMessage(Message.chat("&cThere aren't any maps in rotation!"));
-				return false;
-			}
-			i = Utils.rand(mapList.size());
-			map = mapList.get(i);
-			file = new File(filepath + map);
-		}
-		else {
-			map = map + ".map";
-			file = new File(filepath + map);
-			try {
-				map = file.getCanonicalFile().getName();
-			} catch (IOException e) {
-				p.sendMessage(Message.chat("&cFailed to load map \"&6" + map + "&c\""));
-				return false;
-			}
-		}
-		
-		try {
-			if(!(file.exists())) {
-				p.sendMessage(Message.chat("&cFailed to load map \"&6" + map + "&c\" &7(try checking case sensitivity?)"));
-				return false;
-			}
-			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-			String line;
-			int x, y, z, t;
-			br.readLine();
-			while((line = br.readLine()) != null) {
-				String[] block = line.split("[,]");
-				x = Integer.parseInt(block[1].replaceAll(",", ""));
-				y = Integer.parseInt(block[2].replaceAll(",", ""));
-				z = Integer.parseInt(block[3].replaceAll(",", ""));
-				t = Integer.parseInt(block[4].replaceAll(",", ""));
-				Block build = Bukkit.getWorld("world").getBlockAt(new Location(Bukkit.getWorld("world"), x, y, z));
-				build.setType(Material.getMaterial(block[0].replaceAll(",", "")));
-				build.setData((byte) t);
-			}
-			br.close();
-		} catch (IOException e) {
-			
-		}
-		map = map.substring(0, map.length() - 4);
-		for(Player player : Bukkit.getOnlinePlayers())
-			player.sendMessage(Message.chat("&lMap: &6&l" + map));
-		return true;
 	}
 	
 	public static void randomizeTeam(Player p, Boolean override) {
@@ -263,7 +171,7 @@ public class Game {
 					p.getInventory().setArmorContents(null);
 					p.setGameMode(GameMode.ADVENTURE);
 					if(!forced) {
-						Message.sendTitle(p, Message.chat("&6&lGAME OVER"), 
+						Packet.sendTitle(p, Message.chat("&6&lGAME OVER"), 
 								Message.chat("&l" + cs.getTeam(winner).substring(0, 1).toUpperCase()
 										          + cs.getTeam(winner).substring(1, cs.getTeam(winner).length()) 
 										          + " team wins!"), 5, 20, 5);

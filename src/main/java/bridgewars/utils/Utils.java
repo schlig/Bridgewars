@@ -6,12 +6,8 @@ import java.net.URL;
 import java.util.Random;
 import java.util.UUID;
 
-import net.minecraft.server.v1_8_R3.EnumParticle;
-import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
-import net.minecraft.server.v1_8_R3.PlayerConnection;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -19,6 +15,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import bridgewars.game.CustomScoreboard;
+import net.minecraft.server.v1_8_R3.NBTTagCompound;
 
 public class Utils {
 	
@@ -38,15 +35,14 @@ public class Utils {
                 || loc.getBlockX() < x2 || loc.getBlockY() < y2 || loc.getBlockZ() < z2;
 	}
 	
-	public static boolean matchItem(ItemStack item, ItemStack target){
+	public static String getID(ItemStack in) {
+		net.minecraft.server.v1_8_R3.ItemStack item = CraftItemStack.asNMSCopy(in);
 		if(item == null)
-			return false;
-		if(!item.hasItemMeta())
-			return false;
-		if(!item.getItemMeta().hasDisplayName())
-			return false;
-
-        return item.getItemMeta().getDisplayName().equals(target.getItemMeta().getDisplayName());
+			return "Error";
+		NBTTagCompound idtag = item.getTag();
+		if(idtag != null && idtag.hasKey("id"))
+			return idtag.getString("id");
+		return "Error";
 	}
 	
 	public static String getName(UUID uuid) {
@@ -83,21 +79,8 @@ public class Utils {
 			e.printStackTrace();
 			return null; }
 	}
-	public static void sendSingleParticle(EnumParticle effect, float x, float y, float z, float xOffset, float yOffset, float zOffset, float speed, int amount) {
-		for (Player p : Bukkit.getOnlinePlayers())
-		{
-			PacketPlayOutWorldParticles particlePacket = new PacketPlayOutWorldParticles(effect, true, x, y, z, xOffset / 255, yOffset / 255, zOffset / 255, speed, amount);
-			CraftPlayer player = (CraftPlayer) p;
-			PlayerConnection connection = player.getHandle().playerConnection;
-			connection.sendPacket(particlePacket);
-		}
-	}
 	
 	public static Boolean matchTeam(Player p, Player p2) {
 		return cs.matchTeam(p, p2);
-	}
-	
-	public static Location getSpawn() {
-		return new Location(Bukkit.getWorld("world"), 1062.5, 52, 88.5, -90, 10);
 	}
 }

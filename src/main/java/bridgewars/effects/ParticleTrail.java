@@ -1,18 +1,15 @@
-package bridgewars.utils;
+package bridgewars.effects;
 
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import bridgewars.game.CustomScoreboard;
 import bridgewars.settings.TimeLimit;
+import bridgewars.utils.Packet;
 import net.minecraft.server.v1_8_R3.EnumParticle;
-import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
-import net.minecraft.server.v1_8_R3.PlayerConnection;
 
-public class Particle extends BukkitRunnable {
+public class ParticleTrail extends BukkitRunnable {
 	
 	private CustomScoreboard cs = new CustomScoreboard();
 	private TimeLimit tl = new TimeLimit();
@@ -28,7 +25,7 @@ public class Particle extends BukkitRunnable {
 	private int amount;
 	private boolean checkTimeLimit;
 	
-	public Particle(Entity target, EnumParticle effect, float x, float y, float z, float xOffset, float yOffset, float zOffset, float speed, int amount, int duration, boolean checkTimeLimit) {
+	public ParticleTrail(Entity target, EnumParticle effect, float x, float y, float z, float xOffset, float yOffset, float zOffset, float speed, int amount, int duration, boolean checkTimeLimit) {
 		this.target = target;
 		this.effect = effect;
 
@@ -52,7 +49,6 @@ public class Particle extends BukkitRunnable {
 	}
 
 
-//	Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "execute @a[score_time_min=" + ((Integer)(limit.getLimit() - 15)).toString() + "] ~ ~ ~ particle explode ~ ~26 ~ .25 10 .25 .0001 20 force @a");
 	@Override
 	public void run() {
 		
@@ -69,16 +65,8 @@ public class Particle extends BukkitRunnable {
 		targetYPos = (float) target.getLocation().getY();
 		targetZPos = (float) target.getLocation().getZ();
 		
-		for(Player p : Bukkit.getOnlinePlayers())
-			sendParticlePacket(p, targetXPos + x, targetYPos + y, targetZPos + z, xOffset, yOffset, zOffset);
+		Packet.sendParticle(effect, targetXPos + x, targetYPos + y, targetZPos + z, xOffset, yOffset, zOffset, speed, amount);
 		
 		duration--;
-	}
-	
-	private void sendParticlePacket(Player p, float x, float y, float z, float xOffset, float yOffset, float zOffset) {
-		PacketPlayOutWorldParticles particlePacket = new PacketPlayOutWorldParticles(effect, true, x, y, z, xOffset/255, yOffset/255, zOffset/255, speed, amount);
-		CraftPlayer player = (CraftPlayer) p;
-        PlayerConnection connection = player.getHandle().playerConnection;
-        connection.sendPacket(particlePacket);
 	}
 }

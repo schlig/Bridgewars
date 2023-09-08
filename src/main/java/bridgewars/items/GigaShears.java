@@ -16,9 +16,10 @@ public class GigaShears implements ICustomItem {
     
     @Override
     public ItemStack createItem(Player p) {
-        ItemStack gigaShears = new ItemStack(Material.SHEARS, 1);
-        gigaShears.addEnchantment(Enchantment.DIG_SPEED, 5);
-        ItemBuilder.setUnbreakable(gigaShears, true);
-        return gigaShears;
+        ItemStack item = new ItemStack(Material.SHEARS, 1);
+        item.addEnchantment(Enchantment.DIG_SPEED, 5);
+        ItemBuilder.setUnbreakable(item, true);
+        ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        return item;
     }
 }

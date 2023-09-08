@@ -15,11 +15,12 @@ public class Axe implements ICustomItem {
 
     @Override
     public ItemStack createItem(Player p) {
-        ItemStack axe = new ItemStack(Material.STONE_AXE, 1);
-        axe.addEnchantment(Enchantment.DIG_SPEED, 5);
-        ItemBuilder.setUnbreakable(axe,true);
+        ItemStack item = new ItemStack(Material.STONE_AXE, 1);
+        item.addEnchantment(Enchantment.DIG_SPEED, 5);
+        ItemBuilder.setUnbreakable(item,true);
         String team = ItemBuilder.getTeamName(p);
-        ItemBuilder.setName(axe, "&r" + team.substring(0, 1).toUpperCase() + team.substring(1) + " Axe");
-        return axe;
+        ItemBuilder.setName(item, "&r" + team.substring(0, 1).toUpperCase() + team.substring(1) + " Axe");
+        ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        return item;
     }
 }
