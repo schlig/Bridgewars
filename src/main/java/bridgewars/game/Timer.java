@@ -9,10 +9,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import bridgewars.Main;
+import bridgewars.effects.ParticleTrail;
 import bridgewars.settings.NaturalItemSpawning;
 import bridgewars.settings.TimeLimit;
 import bridgewars.utils.Message;
-import bridgewars.utils.Particle;
 import bridgewars.utils.World;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 
@@ -62,7 +62,7 @@ public class Timer {
 				for(Player p : Bukkit.getOnlinePlayers()) { //creates the particle trail for players that are close to winning
 					cs.updateTime(p, limit.getLimit());
 					if(cs.getTime(p) == limit.getLimit() - 15)
-						particleList.add(new Particle((Entity) p, EnumParticle.EXPLOSION_NORMAL, 0, 30, 0, 0, 10 * 255, 0, 0.0001F, 20, 300, true).runTaskTimer(plugin, 0L, 1L));
+						particleList.add(new ParticleTrail((Entity) p, EnumParticle.EXPLOSION_NORMAL, 0, 30, 0, 0, 10 * 255, 0, 0.0001F, 20, 300, true).runTaskTimer(plugin, 0L, 1L));
 				}
 			}
 		}.runTaskTimer(Bukkit.getPluginManager().getPlugin("bridgewars"), 0L, 20L);

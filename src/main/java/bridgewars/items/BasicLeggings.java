@@ -7,10 +7,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class BasicLeggings implements ICustomItem {
+	
     @Override
     public Rarity getRarity() {
         return Rarity.NONE;
     }
+    
     @Override
     public ItemStack createItem(Player p) {
         ItemStack item = new ItemStack(Material.LEATHER_LEGGINGS, 1);
@@ -18,6 +20,7 @@ public class BasicLeggings implements ICustomItem {
         ItemBuilder.setUnbreakable(item, true);
         ItemBuilder.setLeatherColor(p, item, team);
         ItemBuilder.setName(item, "&r" + team.substring(0, 1).toUpperCase() + team.substring(1) + " Leggings");
+        ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
         return item;
     }
 }

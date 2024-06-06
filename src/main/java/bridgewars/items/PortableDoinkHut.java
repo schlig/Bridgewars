@@ -96,10 +96,11 @@ public class PortableDoinkHut implements ICustomItem, Listener {
 
 	@Override
 	public ItemStack createItem(Player p) {
-		ItemStack portableDoinkHut = new ItemStack(Material.MOB_SPAWNER, 1);
-		ItemBuilder.setName(portableDoinkHut, "&fPortable Doink Hut");
-		ItemBuilder.setLore(portableDoinkHut, Arrays.asList(Message.chat("&r&7Builds an instant house"),
+		ItemStack item = new ItemStack(Material.MOB_SPAWNER, 1);
+		ItemBuilder.setName(item, "&fPortable Doink Hut");
+		ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7Builds an instant house"),
 				Message.chat("&r&7where you're standing")));
-		return portableDoinkHut;
+		ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+		return item;
 	}
 }

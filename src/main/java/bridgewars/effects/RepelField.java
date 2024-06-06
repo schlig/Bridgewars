@@ -12,7 +12,6 @@ import org.bukkit.util.Vector;
 
 import bridgewars.Main;
 import bridgewars.game.CustomScoreboard;
-import bridgewars.utils.Particle;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 
 public class RepelField extends BukkitRunnable {
@@ -64,7 +63,7 @@ public class RepelField extends BukkitRunnable {
         Vector particlePos;
         for(int i = 0; i < 5; i++) {
             particlePos = new Vector(Math.random() - .5f, Math.random() - .5f, Math.random() - .5f).normalize();
-            new Particle(u, EnumParticle.CRIT_MAGIC,
+            new ParticleTrail(u, EnumParticle.CRIT_MAGIC,
                     (float) (particlePos.getX() * d), (float) (particlePos.getY() * d), (float) (particlePos.getZ() * d),
                     0, 0, 0,
                     0.05f, 5, 1000, false).runTask(plugin);

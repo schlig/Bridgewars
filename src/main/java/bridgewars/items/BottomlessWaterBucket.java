@@ -40,8 +40,9 @@ public class BottomlessWaterBucket implements ICustomItem, Listener {
 
     @Override
     public ItemStack createItem(Player p) {
-        ItemStack out = new ItemStack(Material.WATER_BUCKET, 1);
-        ItemBuilder.setName(out, "&rBottomless Water Bucket");
-        return out;
+        ItemStack item = new ItemStack(Material.WATER_BUCKET, 1);
+        ItemBuilder.setName(item, "&rBottomless Water Bucket");
+        ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        return item;
     }
 }

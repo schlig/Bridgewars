@@ -195,4 +195,9 @@ public class CustomScoreboard {
 				p.sendMessage(Message.chat("&lYou left your team."));
 		}
 	}
+	
+	public void resetBoard() {
+		resetAllTimes();
+		clearTeams();
+	}
 }

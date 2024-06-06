@@ -33,22 +33,32 @@ public class Warp implements CommandExecutor {
 		if(args.length < 1)
 			args = new String[] {"none"};
 		
-		if(args[0] == "none"
-		&& !label.contains("hub")) {
-			p.sendMessage(Message.chat("&7Available locations&7: &6spawn&7|&6hub&7,&6 observatory&7|&6map"));
+		if(label.contains("hub"))
+			args = new String[] {"hub"};
+		
+		if(args[0] == "none") {
+			p.sendMessage(Message.chat("&7Available locations&7: &6spawn&7|&6hub&7,&6 observatory&7|&6map, bmcl"));
 			return true;
 		}
 		
-		else if(args[0].toLowerCase().contains("spawn")
-		|| label.contains("hub")) {
+		
+		switch(args[0]) {
+		case "hub":
+		case "spawn":
 			p.teleport(new Location(Bukkit.getWorld("world"), 1062.5, 52, 88.5, -90, 10));
 			p.sendMessage(Message.chat("&7Teleported to Spawn"));
-		}
-		
-		else if(args[0].toLowerCase().contains("observatory")
-		|| args[0].toLowerCase().contains("map")) {
+			break;
+			
+		case "map":
+		case "observatory":
 			p.teleport(new Location(Bukkit.getWorld("world"), 0.5, 46.0, 6.5, 180, 10));
 			p.sendMessage(Message.chat("&7Teleported to the Observatory"));
+			break;
+			
+		case "bmcl":
+			p.teleport(new Location(Bukkit.getWorld("world"), 69420.5, 69.0, 69420.5, -90, 10));
+			p.sendMessage(Message.chat("&7Teleported to Bad MC Level"));
+			break;
 		}
 		
 		return false;

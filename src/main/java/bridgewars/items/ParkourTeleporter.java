@@ -9,6 +9,7 @@ import bridgewars.utils.ItemBuilder;
 import bridgewars.utils.Message;
 
 public class ParkourTeleporter implements ICustomItem {
+	
 	@Override
 	public Rarity getRarity() {
 		return Rarity.NONE;
@@ -16,8 +17,9 @@ public class ParkourTeleporter implements ICustomItem {
 
 	@Override
 	public ItemStack createItem(Player p) {
-		ItemStack ParkourTeleporter = new ItemStack(Material.NETHER_STAR, 1);
-		ItemBuilder.setName(ParkourTeleporter, Message.chat("&6Teleport to Last Checkpoint"));
-		return ParkourTeleporter;
+		ItemStack item = new ItemStack(Material.NETHER_STAR, 1);
+		ItemBuilder.setName(item, Message.chat("&6Teleport to Last Checkpoint"));
+		ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+		return item;
 	}
 }

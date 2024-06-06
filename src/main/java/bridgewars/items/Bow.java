@@ -8,21 +8,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class Bow implements ICustomItem {
+	
     @Override
     public Rarity getRarity() {
         return Rarity.NONE;
     }
+    
     @Override
     public ItemStack createItem(Player p) {
-        ItemStack bow = new ItemStack(Material.BOW, 1);
-        bow.addEnchantment(Enchantment.ARROW_INFINITE, 1);
-        ItemBuilder.setUnbreakable(bow, true);
+        ItemStack item = new ItemStack(Material.BOW, 1);
+        item.addEnchantment(Enchantment.ARROW_INFINITE, 1);
+        ItemBuilder.setUnbreakable(item, true);
         String team = ItemBuilder.getTeamName(p);
-        ItemBuilder.setName(bow, "&r" + team.substring(0, 1).toUpperCase() + team.substring(1) + " Bow");
-        return bow;
-    }
-    
-    public ItemStack createItem() {
-    	return createItem(null);
+        ItemBuilder.setName(item, "&r" + team.substring(0, 1).toUpperCase() + team.substring(1) + " Bow");
+        ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        return item;
     }
 }

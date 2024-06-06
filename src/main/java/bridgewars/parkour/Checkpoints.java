@@ -3,6 +3,7 @@ package bridgewars.parkour;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -48,6 +49,8 @@ public class Checkpoints implements Listener {
 				p.getInventory().setItem(4, ItemManager.getItem("ParkourResetter").createItem(null));
 			if(!p.getInventory().contains(ItemManager.getItem("ParkourQuitter").createItem(null)))
 				p.getInventory().setItem(5, ItemManager.getItem("ParkourQuitter").createItem(null));
+			if(!p.getInventory().contains(ItemManager.getItem("ParkourCheckpoint").createItem(null)) && p.getGameMode() == GameMode.CREATIVE)
+				p.getInventory().setItem(8, ItemManager.getItem("ParkourCheckpoint").createItem(null));
 			
 			Fly.setFlight(p, false, false);
 			

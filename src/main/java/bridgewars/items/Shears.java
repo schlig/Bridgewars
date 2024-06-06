@@ -15,10 +15,11 @@ public class Shears implements ICustomItem {
     
     @Override
     public ItemStack createItem(Player p) {
-        ItemStack shears = new ItemStack(Material.SHEARS, 1);
-        shears.addEnchantment(Enchantment.DIG_SPEED, 3);
-        ItemBuilder.setUnbreakable(shears, true);
-        return shears;
+        ItemStack item = new ItemStack(Material.SHEARS, 1);
+        item.addEnchantment(Enchantment.DIG_SPEED, 3);
+        ItemBuilder.setUnbreakable(item, true);
+		ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        return item;
     }
     
     public ItemStack createItem() {

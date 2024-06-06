@@ -9,10 +9,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import bridgewars.Main;
+import bridgewars.commands.ChatSetting;
 import bridgewars.commands.Fly;
 import bridgewars.game.CustomScoreboard;
 import bridgewars.settings.DoubleHealth;
 import bridgewars.utils.Message;
+import bridgewars.utils.Permissions;
 
 public class OnJoin implements Listener {
 	
@@ -33,6 +35,9 @@ public class OnJoin implements Listener {
 		p.sendMessage(Message.chat("Welcome to &6Bridgewars&r! Type &c/menu&r to get started."));
 		cs.removePlayerFromTimer(p);
 		Fly.allowFlight.put(p, false);
+		if(!ChatSetting.allChat.containsKey(p))
+			ChatSetting.allChat.put(p, true);
+		Permissions.loadSettings(p);
 		
 		if(DoubleHealth.getState().isEnabled()) {
 			p.setMaxHealth(40);

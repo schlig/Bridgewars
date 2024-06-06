@@ -21,7 +21,6 @@ import bridgewars.game.CustomScoreboard;
 import bridgewars.game.GameState;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
-import bridgewars.utils.ItemManager;
 import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
@@ -37,7 +36,7 @@ public class Fireball implements ICustomItem, Listener {
     public void onThrow(PlayerInteractEvent e) {
         if(e.getAction() == Action.RIGHT_CLICK_AIR
                 || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if(Utils.matchItem(e.getItem(), ItemManager.getItem("Fireball").createItem(null))) {
+            if(Utils.getID(e.getItem()).equals(getClass().getSimpleName().toLowerCase())) {
                 if(GameState.isState(GameState.ACTIVE))
                     if(cs.getTime(e.getPlayer()) == 0) {
                         e.setCancelled(true);
@@ -63,7 +62,7 @@ public class Fireball implements ICustomItem, Listener {
     @EventHandler
     public void onPlaceAttempt(BlockPlaceEvent e) {
         if(e.getBlock().getType() == Material.FIRE)
-            if(Utils.matchItem(e.getItemInHand(), ItemManager.getItem("Fireball").createItem(null)))
+            if(Utils.getID(e.getItemInHand()).equals(getClass().getSimpleName().toLowerCase()))
                 e.setCancelled(true);
     }
 
@@ -99,10 +98,11 @@ public class Fireball implements ICustomItem, Listener {
 
     @Override
     public ItemStack createItem(Player p) {
-        ItemStack out = new ItemStack(Material.FIREBALL, 1);
-        ItemBuilder.setName(out, "&aFireball");
-        ItemBuilder.setLore(out, Arrays.asList(Message.chat("&r&7Throws an exploding fireball"),
+        ItemStack item = new ItemStack(Material.FIREBALL, 1);
+        ItemBuilder.setName(item, "&aFireball");
+        ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7Throws an exploding fireball"),
                 Message.chat("&r&7that deals heavy knockback")));
-        return out;
+        ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        return item;
     }
 }

@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import bridgewars.Main;
 import bridgewars.utils.Disguise;
+import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
 public class Transform implements CommandExecutor {
@@ -25,8 +26,10 @@ public class Transform implements CommandExecutor {
 		}
 		
 		Player p = (Player) sender;
-		if(!p.isOp())
+		if(!p.hasPermission("trusted.disguise")) {
+			p.sendMessage(Message.chat("&cYou do not have permission to do this."));
 			return false;
+		}
 
 		ArrayList<Player> players = new ArrayList<>();
 		for(Player player : Bukkit.getOnlinePlayers())

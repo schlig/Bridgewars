@@ -2,7 +2,6 @@ package bridgewars.commands;
 
 import java.util.HashMap;
 
-import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,10 +28,19 @@ public class Fly implements CommandExecutor {
 		
 		Player p = (Player) sender;
 		
+		if(!p.hasPermission("trusted.fly")) {
+			p.sendMessage(Message.chat("&cYou do not have permission to do this."));
+			return false;
+		}
+		
 		if(GameState.isState(GameState.ACTIVE)
 		&& !Utils.isOutOfBounds(p.getLocation(), 200, 40, 200)
-		&& p.getGameMode() != GameMode.CREATIVE)
+		&& !p.isOp())
 			p.sendMessage(Message.chat("&cYou can't fly while in a game!"));
+		else if(bridgewars.parkour.Timer.parkourList.contains(p)
+				&& !p.isOp()) {
+			p.sendMessage(Message.chat("&cYou can't fly during a parkour challenge!"));
+		}
 		
 		else
 			setFlight(p, !allowFlight.get(p), true);
@@ -44,13 +52,13 @@ public class Fly implements CommandExecutor {
 		allowFlight.put(p, state);
 		p.setAllowFlight(state);
 		
-		if(state)
-			if(showMessage)
+		if(!state)
+			p.setFlying(false);
+		
+		if(showMessage)
+			if(state)
 				p.sendMessage(Message.chat("&6Turned on flight"));
-		else {
-			p.setFlying(state);
-			if(showMessage)
+			else
 				p.sendMessage(Message.chat("&6Turned off flight"));
-		}
 	}
 }

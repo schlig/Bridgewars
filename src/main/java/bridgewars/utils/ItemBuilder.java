@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Color;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -16,6 +17,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
 import bridgewars.game.CustomScoreboard;
+import net.minecraft.server.v1_8_R3.NBTTagCompound;
 
 public class ItemBuilder {
 
@@ -115,4 +117,36 @@ public class ItemBuilder {
 	public static String getTeamName(Player p){
 		return cs.getTeam(p);
 	}
+	
+	public static ItemStack setID(ItemStack in, String id) {
+
+		net.minecraft.server.v1_8_R3.ItemStack item = CraftItemStack.asNMSCopy(in);
+		NBTTagCompound idtag = item.getTag();
+		idtag.setString("id", id);
+		item.setTag(idtag);
+		
+		ItemStack out = CraftItemStack.asBukkitCopy(item);
+		in.setItemMeta(out.getItemMeta());
+		
+		return in;
+	}
+	
+//	public static ItemStack setID(ItemStack item) {    [this is just here so i have something to work with]
+//
+//		net.minecraft.server.v1_8_R3.ItemStack itemTags = CraftItemStack.asNMSCopy(item);
+//		NBTTagCompound compound = itemTags.getTag();
+//		NBTTagList list = new NBTTagList();
+//		NBTTagCompound speed = new NBTTagCompound();
+//		speed.set("AttributeName", new NBTTagString("generic.movementSpeed"));
+//		speed.set("Name", new NBTTagString("generic.movementSpeed"));
+//		speed.set("Amount", new NBTTagDouble(0.1));
+//		speed.set("Operation", new NBTTagInt(1));
+//		speed.set("UUIDLeast", new NBTTagInt(1));
+//		speed.set("UUIDMost", new NBTTagInt(1));
+//		list.add(speed);
+//		compound.set("AttributeModifiers", list);
+//		itemTags.setTag(compound);
+//		
+//		return item = CraftItemStack.asBukkitCopy(itemTags);
+//	}
 }
