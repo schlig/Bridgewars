@@ -1,10 +1,8 @@
 package bridgewars.commands;
 
 import bridgewars.Main;
-import bridgewars.game.Game;
 import bridgewars.game.GameState;
 import bridgewars.utils.Message;
-import bridgewars.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
