@@ -48,10 +48,11 @@ public class Railgun implements ICustomItem, Listener {
                     && block.getType() != Material.BEDROCK){
                         Location loc = block.getLocation();
                             for (Player player : Bukkit.getOnlinePlayers()) {
-                                if(player.getLocation().distance(loc) < 1 && !Utils.matchTeam(player, p) && !hitPlayers.contains(player)){
-                                    player.damage(7, p);
-                                    hitPlayers.add(player);
-                                }
+                            	if(player.getLocation().distance(loc) < 1 || player.getEyeLocation().distance(loc) < 1)
+	                                if(!Utils.matchTeam(player, p) && !hitPlayers.contains(player)){
+	                                    player.damage(7, p);
+	                                    hitPlayers.add(player);
+	                                }
                                 if(block.getType() != Material.AIR){
                                     player.playSound(block.getLocation(), Sound.DIG_WOOL, 1F, 1F);
                                 }
@@ -82,7 +83,7 @@ public class Railgun implements ICustomItem, Listener {
     @Override
     public ItemStack createItem(Player p) {
         ItemStack item = new ItemStack(Material.BLAZE_ROD, 1);
-        ItemBuilder.setName(item, "&rRailgun");
+        ItemBuilder.setName(item, "&aRailgun");
         ItemBuilder.setLore(item, Arrays.asList(
                 Message.chat("&r&7Shoots a beam that destroys"),
                 Message.chat("&r&7blocks and players.")));

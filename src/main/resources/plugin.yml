@@ -59,3 +59,45 @@ commands:
   transform:
     aliases: [d]
     description: become another player
+  permission:
+    aliases: [perm]
+    description: grants a player a permission
+  gm:
+    aliases: [gmc, gms, gma, gmsp]
+    description: faster gamemode change
+  chat:
+    aliases: [tc, ac]
+    description: set your chat settings
+  whisper:
+    aliases: [w, msg]
+    description: /tell but better lmao
+
+permissions:
+  trusted:
+    description: gives access to trusted
+    default: op
+    children:
+      trusted.worldedit: true
+      trusted.gamemode: true
+      trusted.fly: true
+      trusted.label: true
+      trusted.endgame: true
+      trusted.settings: true
+  trusted.worldedit:
+    description: allows usage of worldedit
+    default: op
+  trusted.gamemode:
+    description: allows setting of own gamemode outside of a game
+    default: op
+  trusted.fly:
+    description: allows /fly in lobby
+    default: op
+  trusted.label:
+    description: allows use of /label outside of a game
+    default: op
+  trusted.endgame:
+    description: allows player to end game manually
+    default: op
+  trusted.settings:
+    description: allows player to edit game settings
+    default: op

@@ -15,13 +15,16 @@ import bridgewars.behavior.IndestructibleOoBBlocks;
 import bridgewars.behavior.InfiniteBlocks;
 import bridgewars.behavior.InstantVoidKill;
 import bridgewars.behavior.PreventAnnoyingBowUse;
+import bridgewars.behavior.PreventItemFrameChanges;
 import bridgewars.behavior.Saturation;
+import bridgewars.commands.ChatSetting;
 import bridgewars.commands.ClearMap;
 import bridgewars.commands.Debug;
 import bridgewars.commands.DeleteMap;
 import bridgewars.commands.EditMode;
 import bridgewars.commands.EndGame;
 import bridgewars.commands.Fly;
+import bridgewars.commands.GM;
 import bridgewars.commands.GiveItem;
 import bridgewars.commands.JoinGame;
 import bridgewars.commands.JoinTeam;
@@ -31,10 +34,12 @@ import bridgewars.commands.LoadMap;
 import bridgewars.commands.MapList;
 import bridgewars.commands.Menu;
 import bridgewars.commands.OverwriteMap;
+import bridgewars.commands.Permission;
 import bridgewars.commands.SaveMap;
 import bridgewars.commands.StartGame;
 import bridgewars.commands.Transform;
 import bridgewars.commands.Warp;
+import bridgewars.commands.Whisper;
 import bridgewars.effects.DoubleJumpEffect;
 import bridgewars.effects.Piggyback;
 import bridgewars.effects.PlotArmor;
@@ -44,15 +49,18 @@ import bridgewars.game.InstantRespawn;
 import bridgewars.game.Kills;
 import bridgewars.game.Timer;
 import bridgewars.menus.InputHandler;
+import bridgewars.messages.Chat;
 import bridgewars.messages.DeathMessages;
 import bridgewars.messages.OnJoin;
 import bridgewars.messages.OnLeave;
 import bridgewars.parkour.Checkpoints;
+import bridgewars.parkour.ParkourCheckpoint;
 import bridgewars.parkour.ParkourQuit;
 import bridgewars.parkour.ParkourReset;
 import bridgewars.parkour.ParkourTeleport;
 import bridgewars.settings.Settings;
 import bridgewars.utils.ItemManager;
+import bridgewars.utils.Permissions;
 
 public class Main extends JavaPlugin {
 	
@@ -77,6 +85,7 @@ public class Main extends JavaPlugin {
 		new DisableFriendlyFire(this);
 		new PreventAnnoyingBowUse(this);
 		new HandOffs(this);
+		new PreventItemFrameChanges(this);
 		
 		//commands
 		new Menu(this);
@@ -98,11 +107,16 @@ public class Main extends JavaPlugin {
 		new Debug(this);
 		new Label(this);
 		new Transform(this);
+		new GM(this);
+		new Permission(this);
+		new Whisper(this);
+		new ChatSetting(this);
 		
 		//messages
 		new DeathMessages(this);
 		new OnJoin(this);
 		new OnLeave(this);
+		new Chat(this);
 
 		//game
 		new CustomScoreboard().resetBoard();
@@ -120,12 +134,21 @@ public class Main extends JavaPlugin {
 		new ParkourTeleport(this);
 		new ParkourQuit(this);
 		new ParkourReset(this);
+		new ParkourCheckpoint(this);
 		
 		//settings
 		new InputHandler(this);
+		
+		//utils
+		new Permissions(this);
 
 		Settings.load();
 		GameState.setState(GameState.INACTIVE);
+	}
+	
+	@Override
+	public void onDisable() {
+
 	}
 }
 

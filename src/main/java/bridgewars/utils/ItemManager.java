@@ -29,6 +29,7 @@ import bridgewars.items.ForceFieldGenerator;
 import bridgewars.items.GigaShears;
 import bridgewars.items.HomeRunBat;
 import bridgewars.items.LifeforcePotion;
+import bridgewars.items.ParkourCheckpoint;
 import bridgewars.items.ParkourQuitter;
 import bridgewars.items.ParkourResetter;
 import bridgewars.items.ParkourTeleporter;
@@ -71,6 +72,7 @@ public class ItemManager {
         allItems.add(new ParkourTeleporter());
         allItems.add(new ParkourResetter());
         allItems.add(new ParkourQuitter());
+        allItems.add(new ParkourCheckpoint());
         allItems.sort(Comparator.comparing(ICustomItem::getRarity).thenComparing(o -> o.getClass().getSimpleName()));
         try {
             validateConfig();

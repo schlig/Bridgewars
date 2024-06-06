@@ -28,7 +28,7 @@ public class EndGame implements CommandExecutor {
 		
 		Player p = (Player) sender;
 		
-		if(p.isOp()) {
+		if(p.hasPermission("trusted.endgame")) {
 			if(GameState.isState(GameState.INACTIVE)) {
 				p.sendMessage(Message.chat("&cThere is no game in progress."));
 				return true;

@@ -12,7 +12,6 @@ import bridgewars.commands.Fly;
 import bridgewars.game.GameState;
 import bridgewars.utils.ItemManager;
 import bridgewars.utils.Message;
-import bridgewars.utils.World;
 
 public class Timer extends BukkitRunnable implements Listener {
 	
@@ -73,6 +72,8 @@ public class Timer extends BukkitRunnable implements Listener {
 			p.getInventory().remove(ItemManager.getItem("ParkourResetter").createItem(null));
 		if(p.getInventory().contains(ItemManager.getItem("ParkourQuitter").createItem(null)))
 			p.getInventory().remove(ItemManager.getItem("ParkourQuitter").createItem(null));
+		if(p.getInventory().contains(ItemManager.getItem("ParkourCheckpoint").createItem(null)))
+			p.getInventory().remove(ItemManager.getItem("ParkourCheckpoint").createItem(null));
 	}
 	
 	private void endParkour(Player p) {
@@ -87,7 +88,5 @@ public class Timer extends BukkitRunnable implements Listener {
 	
 		if(p.getGameMode() == GameMode.CREATIVE)
 			Fly.setFlight(p, true, false);
-		else
-			p.teleport(World.getSpawn());
 	}
 }

@@ -11,6 +11,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import bridgewars.Main;
+import bridgewars.game.GameState;
 import bridgewars.utils.Message;
 
 public class Label implements CommandExecutor {
@@ -31,20 +32,37 @@ public class Label implements CommandExecutor {
 		
 		Player p = (Player) sender;
 		
-		if(!p.isOp()) {
+		if(!p.hasPermission("trusted.label")) {
 			p.sendMessage(Message.chat("&cYou do not have permission to do this."));
 			return false;
 		}
 		
-		if(args.length == 0)
+		if(!p.isOp() && GameState.isState(GameState.ACTIVE)) {
+			p.sendMessage(Message.chat("&cYou cannot do this while a game is active."));
 			return false;
+		}
+		
+		if(args.length == 0) {
+			p.sendMessage(Message.chat("&cUsage: /label [offset|undo] <text>"));
+			return false;
+		}
 		
 		if(args[0].equals("undo")) {
+			
 			if(entries.size() <= 0) {
-				p.sendMessage(Message.chat("&cThere were no more labels to remove."));
+				p.sendMessage(Message.chat("&cThere are no labels to remove."));
 				return false;
 			}
-			ArmorStand Label = entries.get(entries.size() - 1);
+			
+			ArmorStand Label = null;
+			if(args.length > 1) {
+				for(ArmorStand entry : entries)
+					if(entry.getCustomName().equals(args[1]))
+						Label = entry;
+			}
+			else
+				Label = entries.get(entries.size() - 1);
+			
 			entries.remove(Label);
 			Label.remove();
 			p.sendMessage("Removed label \"" + Label.getCustomName() + "\"");
