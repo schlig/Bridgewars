@@ -7,7 +7,7 @@ public class GameEnd extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
     private final int gameID;
 
-    public static HandlerList getHandletList() {
+    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 
