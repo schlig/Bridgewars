@@ -12,15 +12,19 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class ForceFieldGenerator implements ICustomItem, Listener {
     private Main plugin;
+    private ArrayList<BukkitTask> tasks;
 
     public ForceFieldGenerator (Main plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.plugin = plugin;
+        this.tasks = new ArrayList<>();
     }
 
     @EventHandler
@@ -29,10 +33,19 @@ public class ForceFieldGenerator implements ICustomItem, Listener {
             ItemStack item = e.getItem();
             if(Utils.matchItem(item, ItemManager.getItem("ForceFieldGenerator").createItem(null))) {
                 Player p = e.getPlayer();
-                new RepelField(p, 5, 1, 100, plugin).runTaskTimer(plugin,0,1);
+                tasks.add(new RepelField(p, 5, 1, 100, plugin).runTaskTimer(plugin,0,1));
                 item.setAmount(item.getAmount() - 1);
                 p.setItemInHand(item);
                 p.playSound(p.getLocation(), Sound.FIREWORK_LAUNCH, 1F, .5F);
+            }
+        }
+    }
+    @EventHandler
+    public void onGameEnd(){
+        for (BukkitTask task : tasks
+             ) {
+            if(task != null){
+                task.cancel();
             }
         }
     }

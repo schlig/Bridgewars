@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public interface ICustomItem {
-	
     enum Rarity {
     	
         NONE(0,0,0),
@@ -24,7 +23,6 @@ public interface ICustomItem {
             this.b = b;
         }
     }
-    
     Rarity getRarity();
     ItemStack createItem(Player p);
 }

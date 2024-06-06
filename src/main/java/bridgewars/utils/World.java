@@ -21,7 +21,7 @@ public class World {
 				}
 	}
 
-	public static boolean inGameArea(Location loc){
+	public static boolean outsideGameArea(Location loc){
 		return Utils.isOutOfBounds(loc, gameXSize, gameYSize, gameZSize);
 	}
 	

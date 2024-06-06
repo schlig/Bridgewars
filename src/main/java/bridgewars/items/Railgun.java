@@ -1,7 +1,6 @@
 package bridgewars.items;
 
 import bridgewars.Main;
-import bridgewars.game.GameState;
 import bridgewars.utils.*;
 import bridgewars.utils.World;
 import net.minecraft.server.v1_8_R3.EnumParticle;
@@ -11,10 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.util.BlockIterator;
 
 import java.util.ArrayList;
@@ -51,11 +48,11 @@ public class Railgun implements ICustomItem, Listener {
                 ArrayList<Player> hitPlayers = new ArrayList<>();
                 while (blockIterator.hasNext()){
                     block = blockIterator.next();
-                    if(!World.inGameArea(block.getLocation()) && block.getType() != Material.BEDROCK){
+                    if(World.outsideGameArea(block.getLocation()) && block.getType() != Material.BEDROCK){
                         Location loc = block.getLocation();
                             for (Player player : Bukkit.getOnlinePlayers()
                             ) {
-                                if(player.getLocation().distance(loc) < 1 && !Utils.matchTeam(player, p) && !hitPlayers.contains(player)){
+                                if(loc.distance(player.getEyeLocation().subtract(0,1,0)) < 1 && !Utils.matchTeam(player, p) && !hitPlayers.contains(player)){
                                     player.damage(7, p);
                                     hitPlayers.add(player);
                                 }

@@ -5,13 +5,15 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import bridgewars.utils.Disguise;
 import bridgewars.utils.Message;
 
-public class Cloak extends BukkitRunnable {
+public class Cloak extends BukkitRunnable implements Listener {
 	
 	public static ArrayList<UUID> cloakedPlayers = new ArrayList<>();
 	
@@ -41,6 +43,14 @@ public class Cloak extends BukkitRunnable {
 			this.cancel();
 		}
 		d--;
+	}
+	public void endEffect(){
+		d = 0;
+	}
+
+	@EventHandler
+	public void onGameEnd(){
+		endEffect();
 	}
 	
 	private void setArmor(Player u, ItemStack[] armor) {

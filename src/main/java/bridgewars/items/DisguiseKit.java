@@ -66,7 +66,6 @@ public class DisguiseKit implements ICustomItem, Listener {
 			}
 		}
 	}
-	
 	@EventHandler
 	public void onPlace(BlockPlaceEvent e) {
 		if(Utils.matchItem(e.getItemInHand(), ItemManager.getItem("DisguiseKit").createItem(null)))

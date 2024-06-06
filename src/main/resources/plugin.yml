@@ -59,3 +59,9 @@ commands:
   transform:
     aliases: [d]
     description: become another player
+  spectate:
+    aliases: [spec]
+    description: Join spectator mode, add a name to teleport to the location of that player.
+  unspectate:
+    aliases: [unspec]
+    description: Leave spectator mode.

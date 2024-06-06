@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import bridgewars.events.GameEnd;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -23,6 +24,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
 import bridgewars.commands.Fly;
@@ -38,12 +40,12 @@ import bridgewars.settings.Swords;
 import bridgewars.utils.ItemManager;
 import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
+import org.bukkit.event.Event;
 
 public class Game {
 	
 	private static CustomScoreboard cs = new CustomScoreboard();
 	private static HotbarLayout hotbar = new HotbarLayout();
-	
 	private static String filepath = "./plugins/bridgewars/maps/";
 	
 	public static void startGame(Player p, boolean debugMessages) {
@@ -77,13 +79,18 @@ public class Game {
 		SadRoom.clearSadRoom();
 		
 		for(Player player : Bukkit.getOnlinePlayers()) {
-			Fly.allowFlight.remove(player);
-			cs.removePlayerFromTimer(player);
-			Game.randomizeTeam(player, true);
-			Game.spawnPlayer(player);
-			Game.grantItems(player, false);
-			player.setFlying(false);
-			player.setAllowFlight(false);
+			if (player.getGameMode() == GameMode.SURVIVAL){
+				Fly.allowFlight.remove(player);
+				cs.removePlayerFromTimer(player);
+				Game.randomizeTeam(player, true);
+				Game.spawnPlayer(player);
+				Game.grantItems(player, false);
+				player.setFlying(false);
+				player.setAllowFlight(false);
+			} else if (player.getGameMode() == GameMode.SPECTATOR) {
+				cs.removePlayerFromTimer(player);
+				p.teleport(new Location(Bukkit.getWorld("world"), 0, 34, 0, 0, 20));
+			}
 		}
 		if(debugMessages) {
 			p.sendMessage(Message.chat("&7Randomized teams"));
@@ -244,6 +251,8 @@ public class Game {
 	}
 	
 	public static void endGame(Player winner, Boolean forced) {
+		GameEnd gameEndEvent = new GameEnd(0);
+		Bukkit.getPluginManager().callEvent(gameEndEvent);
 		if(winner != null) {
 			List<Player> winners = new ArrayList<>();
 			for(Player p : Bukkit.getOnlinePlayers()) {
