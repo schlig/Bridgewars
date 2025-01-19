@@ -31,6 +31,7 @@ public class Settings {
 			naturalItemSpawns(Boolean.parseBoolean(br.readLine()));
 			friendlyFire(Boolean.parseBoolean(br.readLine()));
 			piggyback(Boolean.parseBoolean(br.readLine()));
+			chosenTeams(Boolean.parseBoolean(br.readLine()));
 			
 			br.close();
 		} catch (IOException e) { }
@@ -66,6 +67,8 @@ public class Settings {
 			bw.write(FriendlyFire.getState().isEnabled().toString());
 			bw.newLine();
 			bw.write(Piggyback.getState().isEnabled().toString());
+			bw.newLine();
+			bw.write(RandomTeams.getState().isEnabled().toString());
 			bw.newLine();
 			
 			bw.flush();
@@ -155,5 +158,12 @@ public class Settings {
 			Piggyback.setState(Piggyback.ENABLED);
 		else
 			Piggyback.setState(Piggyback.DISABLED);
+	}
+	
+	private static void chosenTeams(boolean value) {
+		if(value)
+			RandomTeams.setState(RandomTeams.ENABLED);
+		else
+			RandomTeams.setState(RandomTeams.DISABLED);
 	}
 }

@@ -13,6 +13,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
+//import org.bukkit.potion.PotionEffect;
+//import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionEffectType;
 
 import bridgewars.Main;
@@ -49,16 +51,16 @@ public class LifeforcePotion implements ICustomItem, Listener {
         item.setDurability((short) 8233);
         ItemMeta meta = item.getItemMeta();
         PotionMeta effect = (PotionMeta) meta;
-        effect.addCustomEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 600, 0), true);
+        effect.addCustomEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 1, 0), true);
         item.setItemMeta(meta);
         item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
-        ItemBuilder.setName(item, "&cLifeforce Potion");
-        ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7Strength I (0:30)"),
-                Message.chat("&r&7Plot Armor"),
-                Message.chat("&r&7Survive fatal damage"),
-                Message.chat("&r&7with half a heart")));
-        ItemBuilder.hideFlags(item);
         ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        ItemBuilder.setName(item, "Lifeforce Potion");
+        ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7Strength I (0:10)"),
+                Message.chat("&r&7Plot Armor"),
+                Message.chat("&r&7Revive on death with"),
+                Message.chat("&r&7full health")));
+        ItemBuilder.hideFlags(item);
         return item;
     }
 }

@@ -21,11 +21,34 @@ import bridgewars.Main;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
 import bridgewars.utils.Message;
+import bridgewars.utils.Utils;
 
 public class PortableDoinkHut implements ICustomItem, Listener {
 	
+	private final int radius = 2;
+	private final int height = 3;
+	
+	private final int mapRadius = 22;
+	private final int mapHeight = 24;
+	
 	public PortableDoinkHut (Main plugin) {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
+	}
+
+	@Override
+	public Rarity getRarity() {
+		return Rarity.GREEN;
+	}
+
+	@Override
+	public ItemStack createItem(Player p) {
+		ItemStack item = new ItemStack(Material.MOB_SPAWNER, 1);
+		ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+		ItemBuilder.setName(item, "Portable Doink Hut");
+		ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7Builds an instant house"),
+				Message.chat("&r&7where you're standing")));
+		ItemBuilder.disableStacking(item);
+		return item;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -42,13 +65,13 @@ public class PortableDoinkHut implements ICustomItem, Listener {
 				boolean success = false;
 				
 				//build doink hut
-				for(int x = -2; x <= 2; x++)
-					for(int z = -2; z <= 2; z++)
-						for(int y = 0; y <= 4; y++)
+				for(int x = -radius; x <= radius; x++)
+					for(int z = -radius; z <= radius; z++)
+						for(int y = 0; y <= height; y++)
 							if(origin.getRelative(x, y, z).getType() == Material.AIR || origin.getRelative(x, y, z).getType() == Material.WOOL) {
-								if(Math.abs(origin.getRelative(x, y, z).getX()) <= 22
-								&& Math.abs(origin.getRelative(x, y, z).getZ()) <= 22
-								&& origin.getRelative(x, y, z).getY() <= 24
+								if(Math.abs(origin.getRelative(x, y, z).getX()) <= mapRadius
+								&& Math.abs(origin.getRelative(x, y, z).getZ()) <= mapRadius
+								&& origin.getRelative(x, y, z).getY() <= mapHeight
 								|| p.getGameMode() == GameMode.CREATIVE) {
 									success = true;
 									origin.getRelative(x, y, z).setType(Material.WOOL);
@@ -85,22 +108,7 @@ public class PortableDoinkHut implements ICustomItem, Listener {
 	
 	@EventHandler
 	public void blockPlacement(BlockPlaceEvent e) {
-		if(e.getBlock().getType() == Material.MOB_SPAWNER)
+		if(Utils.getID(e.getItemInHand()).equals(getClass().getSimpleName().toLowerCase()))
 			e.setCancelled(true);
-	}
-
-	@Override
-	public Rarity getRarity() {
-		return Rarity.WHITE;
-	}
-
-	@Override
-	public ItemStack createItem(Player p) {
-		ItemStack item = new ItemStack(Material.MOB_SPAWNER, 1);
-		ItemBuilder.setName(item, "&fPortable Doink Hut");
-		ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7Builds an instant house"),
-				Message.chat("&r&7where you're standing")));
-		ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
-		return item;
 	}
 }

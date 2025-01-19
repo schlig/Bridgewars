@@ -88,6 +88,8 @@ public class MainMenu {
 
 			if(!hotbar.slotsAreValid(p))
 				hotbar.restoreDefaults(p);
+			
+			p.getOpenInventory().setItem(hotbar.getSlot(p, "swordSlot") + 18, new ItemStack(Material.GOLD_SWORD));
 			p.getOpenInventory().setItem(hotbar.getSlot(p, "shearsSlot") + 18, new ItemStack(Material.SHEARS));
 			p.getOpenInventory().setItem(hotbar.getSlot(p, "woolSlot") + 18, new ItemStack(Material.WOOL));
 			p.getOpenInventory().setItem(hotbar.getSlot(p, "bowSlot") + 18, new ItemStack(Material.BOW));
@@ -95,6 +97,7 @@ public class MainMenu {
 			p.getOpenInventory().setItem(hotbar.getSlot(p, "axeSlot") + 18, new ItemStack(Material.STONE_AXE));
 			p.getOpenInventory().setItem(hotbar.getSlot(p, "waterSlot") + 18, new ItemStack(Material.WATER_BUCKET));
 			p.getOpenInventory().setItem(hotbar.getSlot(p, "lavaSlot") + 18, new ItemStack(Material.LAVA_BUCKET));
+			
 			break;
 			
 		case IRON_SWORD:

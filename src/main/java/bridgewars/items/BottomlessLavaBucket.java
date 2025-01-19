@@ -42,8 +42,8 @@ public class BottomlessLavaBucket implements ICustomItem, Listener {
     @Override
     public ItemStack createItem(Player p) {
         ItemStack item = new ItemStack(Material.LAVA_BUCKET, 1);
-        ItemBuilder.setName(item, "&rBottomless Lava Bucket");
         ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        ItemBuilder.setName(item, "&rBottomless Lava Bucket");
         return item;
     }
 }

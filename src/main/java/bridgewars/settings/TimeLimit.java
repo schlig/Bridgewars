@@ -10,6 +10,7 @@ public class TimeLimit {
 	private Scoreboard scoreboard;
 	private Objective timeLimit;
 	private Score value;
+	private int revealTime = 30;
 	
 	public TimeLimit() {
 		scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
@@ -20,6 +21,10 @@ public class TimeLimit {
 			value.setScore(150);
 		}
 		timeLimit = scoreboard.getObjective("timeLimit");
+	}
+	
+	public Integer revealTime() {
+		return getLimit() - revealTime;
 	}
 	
 	public Integer getLimit() {

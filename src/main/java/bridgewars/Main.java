@@ -4,13 +4,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import bridgewars.behavior.BuildLimits;
 import bridgewars.behavior.DisableArmorRemoval;
+import bridgewars.behavior.DisableBasicItemDrops;
 import bridgewars.behavior.DisableChickenSpawns;
 import bridgewars.behavior.DisableFallDamage;
 import bridgewars.behavior.DisableFriendlyFire;
 import bridgewars.behavior.DisableInventoryCrafting;
-import bridgewars.behavior.DisableItemDrops;
 import bridgewars.behavior.DisableWeather;
-import bridgewars.behavior.HandOffs;
 import bridgewars.behavior.IndestructibleOoBBlocks;
 import bridgewars.behavior.InfiniteBlocks;
 import bridgewars.behavior.InstantVoidKill;
@@ -76,7 +75,7 @@ public class Main extends JavaPlugin {
 		new DisableChickenSpawns(this);
 		new DisableFallDamage(this);
 		new DisableInventoryCrafting(this);
-		new DisableItemDrops(this);
+		new DisableBasicItemDrops(this);
 		new DisableWeather(this);
 		new IndestructibleOoBBlocks(this);
 		new InfiniteBlocks(this);
@@ -84,7 +83,6 @@ public class Main extends JavaPlugin {
 		new Saturation(this);
 		new DisableFriendlyFire(this);
 		new PreventAnnoyingBowUse(this);
-		new HandOffs(this);
 		new PreventItemFrameChanges(this);
 		
 		//commands
@@ -151,18 +149,3 @@ public class Main extends JavaPlugin {
 
 	}
 }
-
-/*Item Ideas:
- * -Proximity Mine
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- */ 

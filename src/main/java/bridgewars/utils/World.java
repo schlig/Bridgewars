@@ -22,11 +22,19 @@ import net.minecraft.server.v1_8_R3.EnumParticle;
 
 public class World {
 	
-	private final static String filepath = "./plugins/bridgewars/maps/";
+	private final static String mapPath = "./plugins/bridgewars/maps/";
+	private final static String objectPath = "/plugins/bridgewars/objects";
 	
 	private static int x = 0, y = 0, z = 0;
-
-	public static final int gameXSize = 22, gameYSize = 24, gameZSize = 22;
+	private static final int gameXSize = 22, gameYSize = 24, gameZSize = 22;
+	
+	private static final double worldSpawnX = 1062.5;
+	private static final double worldSpawnY = 52;
+	private static final double worldSpawnZ = 88.5;
+	private static final float worldSpawnYaw = -90;
+	private static final float worldSpawnPitch = 10;
+	
+	private static final  int maximumSpawnAttempts = 500;
 	
 	public static void fill(Location origin, int x, int y, int z, int x2, int y2, int z2, Material material) {
 		for(x+=0; x < x2; x++)
@@ -36,20 +44,76 @@ public class World {
 	}
 
 	public static boolean inGameArea(Location loc){
-		return Utils.isOutOfBounds(loc, gameXSize, gameYSize, gameZSize);
+		return !Utils.isOutOfBounds(loc, gameXSize, gameYSize, gameZSize);
 	}
 	
 	public static Location getSpawn() {
-		return new Location(Bukkit.getWorld("world"), 1062.5, 52, 88.5, -90, 10);
+		return new Location(Bukkit.getWorld("world"), worldSpawnX, worldSpawnY, worldSpawnZ, worldSpawnYaw, worldSpawnPitch);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static void removeObject(String object, int xtrans, int ytrans, int ztrans) {
+		File file = new File(objectPath + object + ".bwobj");
+		
+		try {
+			if(!(file.exists()))
+				return;
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+			String line;
+			int x, y, z, t;
+			br.readLine();
+			while((line = br.readLine()) != null) {
+				String[] block = line.split("[,]");
+				x = Integer.parseInt(block[1].replaceAll(",", ""));
+				y = Integer.parseInt(block[2].replaceAll(",", ""));
+				z = Integer.parseInt(block[3].replaceAll(",", ""));
+				t = Integer.parseInt(block[4].replaceAll(",", ""));
+				Block build = Bukkit.getWorld("world").getBlockAt(new Location(Bukkit.getWorld("world"), x + xtrans, y + ytrans, z + ztrans));
+				build.setType(Material.AIR);
+				build.setData((byte) t);
+			}
+			br.close();
+		} catch (IOException e) {
+			
+		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static void loadObject(String object, int xtrans, int ytrans, int ztrans) {
+		File file = new File(objectPath + object + ".bwobj");
+		
+		try {
+			if(!(file.exists()))
+				return;
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+			String line;
+			int x, y, z, t;
+			br.readLine();
+			while((line = br.readLine()) != null) {
+				String[] block = line.split("[,]");
+				x = Integer.parseInt(block[1].replaceAll(",", ""));
+				y = Integer.parseInt(block[2].replaceAll(",", ""));
+				z = Integer.parseInt(block[3].replaceAll(",", ""));
+				t = Integer.parseInt(block[4].replaceAll(",", ""));
+				Block build = Bukkit.getWorld("world").getBlockAt(new Location(Bukkit.getWorld("world"), x + xtrans, y + ytrans, z + ztrans));
+				build.setType(Material.getMaterial(block[0].replaceAll(",", "")));
+				build.setData((byte) t);
+			}
+			br.close();
+		} catch (IOException e) {
+			
+		}
 	}
 	
 	public static void clearMap() {
 		//map bounds
 		//-28 0 -28
 		//28 41 28
-		for(int x = -22; x <= 22; x++)
-			for(int z = -22; z <= 22; z++)
-				for(int y = 0; y <= 24; y++)
+		for(int x = gameXSize * -1; x <= gameXSize; x++)
+			for(int z = gameZSize * -1; z <= gameZSize; z++)
+				for(int y = 0; y <= gameYSize; y++)
 					Bukkit.getWorld("world").getBlockAt(x, y, z).setType(Material.AIR);
 		
 		for(Entity e : Bukkit.getWorld("world").getEntities())
@@ -62,12 +126,12 @@ public class World {
 		File file;
 		int i;
 		if(map == null) {
-			file = new File(filepath);
+			file = new File(mapPath);
 			ArrayList<String> mapList = new ArrayList<>(Arrays.asList(file.list()));
 			ArrayList<String> blacklist = new ArrayList<>();
 			try {
 				for(String name : mapList) {
-					RandomAccessFile r = new RandomAccessFile(filepath + name, "rw");
+					RandomAccessFile r = new RandomAccessFile(mapPath + name, "rw");
 					r.seek(0);
 					String test = r.readLine();
 					if(test.contains("1"))
@@ -87,11 +151,11 @@ public class World {
 			}
 			i = Utils.rand(mapList.size());
 			map = mapList.get(i);
-			file = new File(filepath + map);
+			file = new File(mapPath + map);
 		}
 		else {
 			map = map + ".map";
-			file = new File(filepath + map);
+			file = new File(mapPath + map);
 			try {
 				map = file.getCanonicalFile().getName();
 			} catch (IOException e) {
@@ -146,7 +210,7 @@ public class World {
 					break;
 				}
 			attempts++;
-			if(attempts == 300) //the check for a valid location is only ran 300 times to prevent excessive resource use
+			if(attempts == maximumSpawnAttempts) //the check for a valid location is only ran a certain number of times to prevent excessive resource use
 				break;
 		}
 		
@@ -173,8 +237,8 @@ public class World {
 					break;
 					
 				case BLUE:
-					r = 0;
-					g = 0;
+					r = -255;
+					g = -255;
 					b = 255;
 			}
 			item = Bukkit.getWorld("world").dropItem(new Location(Bukkit.getWorld("world"), x + 0.5, y + 1, z + 0.5), spawnableItem.createItem(null));

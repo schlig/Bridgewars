@@ -39,10 +39,10 @@ public class Kills implements Listener {
 		if(GameState.isState(GameState.ACTIVE))
 			if(e.getEntity().getKiller() instanceof Player) {
 				
-				Player p = e.getEntity();
-				Player k = e.getEntity().getKiller();
+				Player p = e.getEntity(); //victim
+				Player k = e.getEntity().getKiller(); //killer
 				
-				if(p == k)
+				if(p == k || !cs.matchTeam(p, k))
 					return;
 				
 				k.setLevel(k.getLevel() + 1);

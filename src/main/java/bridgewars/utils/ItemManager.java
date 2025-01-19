@@ -24,19 +24,25 @@ import bridgewars.items.BottomlessWaterBucket;
 import bridgewars.items.Bow;
 import bridgewars.items.BridgeEgg;
 import bridgewars.items.DisguiseKit;
+import bridgewars.items.Eraser;
 import bridgewars.items.Fireball;
 import bridgewars.items.ForceFieldGenerator;
 import bridgewars.items.GigaShears;
+import bridgewars.items.HeartContainer;
 import bridgewars.items.HomeRunBat;
 import bridgewars.items.LifeforcePotion;
+import bridgewars.items.MysteryPill;
 import bridgewars.items.ParkourCheckpoint;
 import bridgewars.items.ParkourQuitter;
 import bridgewars.items.ParkourResetter;
 import bridgewars.items.ParkourTeleporter;
+import bridgewars.items.PitfallTrap;
 import bridgewars.items.PortableDoinkHut;
 import bridgewars.items.Railgun;
-import bridgewars.items.SadRoom;
+import bridgewars.items.SadTear;
 import bridgewars.items.Shears;
+import bridgewars.items.UltimastPortal;
+import bridgewars.items.UnoReverse;
 import bridgewars.items.WoolBlocks;
 
 public class ItemManager {
@@ -45,20 +51,35 @@ public class ItemManager {
     private static ArrayList<ICustomItem> allItems = new ArrayList<>();
     private static ItemPool activeItems;
     
+    //item odds
+    //white: 70%
+    //green: 20%
+    //red: 9%
+    //blue: 1% (there are no blue items rn)
+    private static final float greenPercent = 0.2f;
+    private static final float redPercent = 0.09f;
+    private static final float bluePercent = 0.01f;
+    
     public static void Initialize(Main plugin){
     	
         allItems.add(new ForceFieldGenerator(plugin));
         allItems.add(new BlackHole(plugin));
         allItems.add(new BridgeEgg(plugin));
         allItems.add(new LifeforcePotion(plugin));
+        allItems.add(new DisguiseKit(plugin));
         allItems.add(new PortableDoinkHut(plugin));
         allItems.add(new Fireball(plugin));
         allItems.add(new HomeRunBat(plugin));
-        allItems.add(new SadRoom(plugin));
-        allItems.add(new DisguiseKit(plugin));
+        allItems.add(new SadTear(plugin));
         allItems.add(new BottomlessWaterBucket(plugin));
         allItems.add(new BottomlessLavaBucket(plugin));
         allItems.add(new Railgun(plugin));
+        allItems.add(new Eraser(plugin));
+        allItems.add(new UltimastPortal(plugin));
+        allItems.add(new UnoReverse(plugin));
+        allItems.add(new PitfallTrap(plugin));
+        allItems.add(new HeartContainer(plugin));
+        allItems.add(new MysteryPill(plugin));
         allItems.add(new Axe());
         allItems.add(new BasicBoots());
         allItems.add(new BasicChestplate());
@@ -79,7 +100,7 @@ public class ItemManager {
         }catch (IOException ioe){
             Bukkit.getLogger().severe(ioe.getMessage());
         }
-        generateItemPool(0.3f, 0.1f, 0);
+        generateItemPool(greenPercent, redPercent, bluePercent);
     }
     
     public static void generateItemPool(float greenPercent, float redPercent, float bluePercent){

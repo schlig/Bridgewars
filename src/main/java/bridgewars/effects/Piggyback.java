@@ -7,9 +7,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 
 import bridgewars.Main;
+import bridgewars.game.CustomScoreboard;
 
 public class Piggyback implements Listener {
 
+	private static CustomScoreboard cs = new CustomScoreboard();
+	
 	public Piggyback(Main plugin) {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
@@ -20,7 +23,8 @@ public class Piggyback implements Listener {
 				&& bridgewars.settings.Piggyback.getState().isEnabled()) {
 			Player p = e.getPlayer();
 			Player t = (Player) e.getRightClicked();
-			t.setPassenger(p);
+			if(cs.matchTeam(p, t))
+				t.setPassenger(p);
 		}
 	}
 }

@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.Random;
 import java.util.UUID;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
@@ -82,5 +83,14 @@ public class Utils {
 	
 	public static Boolean matchTeam(Player p, Player p2) {
 		return cs.matchTeam(p, p2);
+	}
+	
+	public static void subtractItem(Player p) {
+		ItemStack item = p.getItemInHand();
+		if(p.getGameMode() != GameMode.CREATIVE) {
+			item.setAmount(item.getAmount() - 1);
+			p.setItemInHand(item);
+		}
+		else return;
 	}
 }

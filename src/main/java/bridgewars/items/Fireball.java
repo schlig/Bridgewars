@@ -45,7 +45,7 @@ public class Fireball implements ICustomItem, Listener {
                 if(e.getAction() == Action.RIGHT_CLICK_AIR)
                     e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.GHAST_FIREBALL, 0.5F, 1F);
                 org.bukkit.entity.Fireball fireball = e.getPlayer().launchProjectile(org.bukkit.entity.Fireball.class);
-                fireball.setVelocity(fireball.getVelocity().multiply(4));
+                fireball.setVelocity(fireball.getVelocity().multiply(1.5));
                 fireball.setYield(4);
                 fireball.setIsIncendiary(false);
                 fireball.setShooter(e.getPlayer());
@@ -76,7 +76,7 @@ public class Fireball implements ICustomItem, Listener {
                 e.setCancelled(true);
             else {
                 Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("bridgewars"), () -> p.setVelocity(p.getVelocity().multiply(3).setY(2)), 1L);
-                e.setDamage(8);
+                e.setDamage(6);
             }
         }
     }
@@ -99,10 +99,10 @@ public class Fireball implements ICustomItem, Listener {
     @Override
     public ItemStack createItem(Player p) {
         ItemStack item = new ItemStack(Material.FIREBALL, 1);
-        ItemBuilder.setName(item, "&aFireball");
+        ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        ItemBuilder.setName(item, "Fireball");
         ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7Throws an exploding fireball"),
                 Message.chat("&r&7that deals heavy knockback")));
-        ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
         return item;
     }
 }

@@ -18,8 +18,8 @@ public class ParkourTeleporter implements ICustomItem {
 	@Override
 	public ItemStack createItem(Player p) {
 		ItemStack item = new ItemStack(Material.NETHER_STAR, 1);
-		ItemBuilder.setName(item, Message.chat("&6Teleport to Last Checkpoint"));
 		ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+		ItemBuilder.setName(item, Message.chat("&6Teleport to Last Checkpoint"));
 		return item;
 	}
 }

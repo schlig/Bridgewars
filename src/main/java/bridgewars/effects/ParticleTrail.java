@@ -25,7 +25,9 @@ public class ParticleTrail extends BukkitRunnable {
 	private int amount;
 	private boolean checkTimeLimit;
 	
-	public ParticleTrail(Entity target, EnumParticle effect, float x, float y, float z, float xOffset, float yOffset, float zOffset, float speed, int amount, int duration, boolean checkTimeLimit) {
+	public ParticleTrail(Entity target, EnumParticle effect, float x, float y, float z, 
+			float xOffset, float yOffset, float zOffset, float speed, int amount, 
+			int duration, boolean checkTimeLimit) {
 		this.target = target;
 		this.effect = effect;
 
@@ -51,9 +53,8 @@ public class ParticleTrail extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		
 		if(checkTimeLimit && target instanceof Player)
-			if(cs.getTime((Player) target) < tl.getLimit() - 15)
+			if(cs.getTime((Player) target) < tl.revealTime())
 				this.cancel();
 		
 		if(target.isDead() || duration == 0) {

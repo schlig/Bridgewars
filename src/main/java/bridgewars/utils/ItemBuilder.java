@@ -32,6 +32,26 @@ public class ItemBuilder {
 	
 	public static ItemStack setName(ItemStack item, String name) { //sets an item's display name
 		ItemMeta meta = item.getItemMeta();
+		ICustomItem ic = ItemManager.getItem(Utils.getID(item));
+		switch(ic.getRarity()) {
+		default:
+		case NONE:
+		case WHITE:
+			name = Message.chat("&r" + name);
+			break;
+				
+		case GREEN:
+			name = Message.chat("&a" + name);
+			break;
+			
+		case RED:
+			name = Message.chat("&c" + name);
+			break;
+				
+		case BLUE:
+			name = Message.chat("&9" + name);
+			break;
+		}
 		meta.setDisplayName(Message.chat(name));
 		item.setItemMeta(meta);
 		return item;
@@ -119,10 +139,26 @@ public class ItemBuilder {
 	}
 	
 	public static ItemStack setID(ItemStack in, String id) {
-
+		ItemMeta meta = in.getItemMeta();
+		meta.setDisplayName("Loading");
+		in.setItemMeta(meta);
+		
 		net.minecraft.server.v1_8_R3.ItemStack item = CraftItemStack.asNMSCopy(in);
 		NBTTagCompound idtag = item.getTag();
 		idtag.setString("id", id);
+		item.setTag(idtag);
+		
+		ItemStack out = CraftItemStack.asBukkitCopy(item);
+		in.setItemMeta(out.getItemMeta());
+		
+		return in;
+	}
+	
+	public static ItemStack disableStacking(ItemStack in) {
+		
+		net.minecraft.server.v1_8_R3.ItemStack item = CraftItemStack.asNMSCopy(in);
+		NBTTagCompound idtag = item.getTag();
+		idtag.setString("stackable", UUID.randomUUID().toString());
 		item.setTag(idtag);
 		
 		ItemStack out = CraftItemStack.asBukkitCopy(item);

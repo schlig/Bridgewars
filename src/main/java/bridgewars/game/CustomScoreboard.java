@@ -28,6 +28,12 @@ public class CustomScoreboard {
 	private TimeLimit limit = new TimeLimit();
 	private HashMap<UUID, String> display = new HashMap<>();
 	
+	private int firstWarning = 60;
+	private int secondWarning = 30; //time remaining to notify players
+	private int finalWarning = 15;
+	
+	private int boundingHeight = 30; // max y elevation for timer to tick down
+	
 	public CustomScoreboard() {
 		scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
 		
@@ -71,25 +77,35 @@ public class CustomScoreboard {
 		if(hasTeam(p)) {
 			p.setScoreboard(scoreboard);
 			score = time.getScore(display.get(p.getUniqueId()));
-			if(p.getLocation().getY() <= 30
+			int points = score.getScore();
+			
+			if(p.getLocation().getY() <= boundingHeight //increase time by 1 if below y=30          
 					&& !p.getGameMode().equals(GameMode.CREATIVE)
-					&& score.getScore() < TimeLimit)
-				score.setScore(score.getScore() + 1);
-			if(score.getScore() == TimeLimit - 60 && TimeLimit - 60 > 0) {
+					&& points < TimeLimit)
+				score.setScore(points + 1);
+			
+			if(p.getLocation().getY() > boundingHeight  //decrease time by 1 if above y=30 to prevent platform stalling
+			&& p.getGameMode() != GameMode.CREATIVE
+            && points > 0)
+				score.setScore(points - 1);
+			
+			if(points == TimeLimit - firstWarning && TimeLimit > firstWarning) {
 				Bukkit.broadcastMessage(Message.chat("&l" + p.getDisplayName() + " &rhas &l&e60&r seconds remaining!"));
 				for(Player player : Bukkit.getOnlinePlayers())
 					player.playSound(player.getLocation(), Sound.NOTE_PLING, 1F, 1F);
 			}
-			else if(score.getScore() == TimeLimit - 30 && TimeLimit - 30 > 0) {
-				Bukkit.broadcastMessage(Message.chat("&l" + p.getDisplayName() + " &rhas &l&630&r seconds remaining!"));
+			
+			else if(points == TimeLimit - secondWarning && TimeLimit > secondWarning) {
+				Bukkit.broadcastMessage(Message.chat("&l" + p.getDisplayName() + " &rhas &l&630&r seconds remaining! Their location has been revealed!"));
 				for(Player player : Bukkit.getOnlinePlayers())
 					player.playSound(player.getLocation(), Sound.NOTE_PLING, 1F, 1F);
+				if(Cloak.cloakedPlayers.contains(p.getUniqueId()))
+					Cloak.cloakedPlayers.remove(p.getUniqueId());
 			}
-			else if(score.getScore() >= TimeLimit - 15 && TimeLimit - 15 > 0) {
-				if(score.getScore() == TimeLimit - 15 && TimeLimit - 15 > 0) {
-					Bukkit.broadcastMessage(Message.chat("&l" + p.getDisplayName() + " &rhas &l&c15&r seconds remaining! Their location has been revealed!"));
-					if(Cloak.cloakedPlayers.contains(p.getUniqueId()))
-						Cloak.cloakedPlayers.remove(p.getUniqueId());
+			
+			else if(points >= TimeLimit - finalWarning && TimeLimit > finalWarning) {
+				if(points == TimeLimit - finalWarning) {
+					Bukkit.broadcastMessage(Message.chat("&l" + p.getDisplayName() + " &rhas &l&c15&r seconds remaining!"));
 				}
 				if(score.getScore() == TimeLimit - 15 && TimeLimit - 15 > 0 || score.getScore() >= TimeLimit - 9 && TimeLimit - 15 > 0)
 					for(Player player : Bukkit.getOnlinePlayers())
@@ -114,7 +130,7 @@ public class CustomScoreboard {
 	}
 	
 	public void removePlayerFromTimer(Player p) {
-		Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "scoreboard players reset " + display.get(p.getUniqueId()) + " time");
+		Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "scoreboard players reset " + Utils.getName(p.getUniqueId()) + " time");
 	}
 	
 	public void resetAllTimes() {

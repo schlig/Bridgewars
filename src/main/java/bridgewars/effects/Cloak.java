@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import bridgewars.utils.Disguise;
+import bridgewars.utils.ItemManager;
 import bridgewars.utils.Message;
 
 public class Cloak extends BukkitRunnable {
@@ -24,7 +25,7 @@ public class Cloak extends BukkitRunnable {
 		this.d = d;
 		this.prevArmor = p.getInventory().getArmorContents();
 		if(Bukkit.getPlayer(t) != null)
-			setArmor(p, getArmor(Bukkit.getPlayer(t)));
+			setArmor(Bukkit.getPlayer(t));
 		Disguise.setDisguise(p, t);
 		cloakedPlayers.add(p.getUniqueId());
 		p.sendMessage(Message.chat("&lYou have disguised yourself as " + Bukkit.getPlayer(t).getDisplayName() + "&r&l!"));
@@ -43,11 +44,19 @@ public class Cloak extends BukkitRunnable {
 		d--;
 	}
 	
+	private void setArmor(Player u) {
+		p.getInventory().setHelmet(ItemManager.getItem("BasicHelmet").createItem(u));
+		p.getInventory().setChestplate(ItemManager.getItem("BasicChestplate").createItem(u));
+		p.getInventory().setLeggings(ItemManager.getItem("BasicLeggings").createItem(u));
+		p.getInventory().setBoots(ItemManager.getItem("BasicBoots").createItem(u));
+	}
+	
 	private void setArmor(Player u, ItemStack[] armor) {
 		u.getInventory().setArmorContents(armor);
 	}
 	
-	private ItemStack[] getArmor(Player t) {
-		return t.getInventory().getArmorContents();
+	public static void remove(Player p) {
+		if(cloakedPlayers.contains(p.getUniqueId()))
+			cloakedPlayers.remove(p.getUniqueId());
 	}
 }

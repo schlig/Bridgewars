@@ -51,6 +51,7 @@ public class InstantRespawn implements Listener {
 		
 		if(GameState.isState(GameState.ACTIVE)) {
 			if(cs.hasTeam(p)) {
+				Game.placeSpawns();
 				Game.spawnPlayer(p);
 				p.playSound(p.getLocation(), Sound.HURT_FLESH, 1F, 1F);
 				//base equipment

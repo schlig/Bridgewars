@@ -39,10 +39,10 @@ public class HomeRunBat implements ICustomItem, Listener {
     public ItemStack createItem(Player p) {
         ItemStack item = new ItemStack(Material.WOOD_SWORD, 1);
         item.addUnsafeEnchantment(Enchantment.KNOCKBACK, 5);
-        ItemBuilder.setName(item, "&aHome Run Bat");
+        ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        ItemBuilder.setName(item, "Home Run Bat");
         ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7Deals massive knockback"),
                 Message.chat("&r&7Only has 3 uses")));
-        ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
         return item;
     }
 }

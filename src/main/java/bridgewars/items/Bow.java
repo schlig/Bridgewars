@@ -20,8 +20,8 @@ public class Bow implements ICustomItem {
         item.addEnchantment(Enchantment.ARROW_INFINITE, 1);
         ItemBuilder.setUnbreakable(item, true);
         String team = ItemBuilder.getTeamName(p);
-        ItemBuilder.setName(item, "&r" + team.substring(0, 1).toUpperCase() + team.substring(1) + " Bow");
         ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        ItemBuilder.setName(item, "&r" + team.substring(0, 1).toUpperCase() + team.substring(1) + " Bow");
         return item;
     }
 }

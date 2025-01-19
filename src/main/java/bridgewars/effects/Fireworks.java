@@ -22,9 +22,10 @@ public class Fireworks extends BukkitRunnable {
 	@Override
 	public void run() {
 		int x = Utils.rand(5) - 2;
+		int y = 47;
 		int z = Utils.rand(5) - 2;
 		
-		Firework firework = (Firework) Bukkit.getWorld("world").spawnEntity(new Location(Bukkit.getWorld("world"), x, 47, z), EntityType.FIREWORK);
+		Firework firework = (Firework) Bukkit.getWorld("world").spawnEntity(new Location(Bukkit.getWorld("world"), x, y, z), EntityType.FIREWORK);
 		FireworkMeta effects = firework.getFireworkMeta();
 		Color color = Color.ORANGE;
 		int i = Utils.rand(4);

@@ -8,9 +8,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import bridgewars.Main;
 import bridgewars.commands.Fly;
+import bridgewars.effects.Cloak;
 import bridgewars.game.CustomScoreboard;
 import bridgewars.game.GameState;
-import bridgewars.items.SadRoom;
+import bridgewars.items.SadTear;
 import bridgewars.utils.Permissions;
 
 public class OnLeave implements Listener {
@@ -25,9 +26,10 @@ public class OnLeave implements Listener {
 	@EventHandler
 	public void onJoin(PlayerQuitEvent e) {
 		Player p = e.getPlayer();
+		Cloak.remove(p);
 		cs.resetTeam(p, false);
 		cs.removePlayerFromTimer(p);
-		SadRoom.removePlayerFromSadRoom(p);
+		SadTear.removePlayerFromSadRoom(p);
 		Permissions.flush(p.getUniqueId());
 		if(Bukkit.getOnlinePlayers().size() == 0)
 			if(GameState.isState(GameState.EDIT))

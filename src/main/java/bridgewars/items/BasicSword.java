@@ -12,13 +12,14 @@ public class BasicSword implements ICustomItem {
     public Rarity getRarity() {
         return Rarity.NONE;
     }
+    
     @Override
     public ItemStack createItem(Player p) {
         ItemStack item = new ItemStack(Material.GOLD_SWORD, 1);
         ItemBuilder.setUnbreakable(item, true);
         String team = ItemBuilder.getTeamName(p);
-        ItemBuilder.setName(item, "&r" + team.substring(0, 1).toUpperCase() + team.substring(1) + " Sword");
         ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        ItemBuilder.setName(item, "&r" + team.substring(0, 1).toUpperCase() + team.substring(1) + " Sword");
         return item;
     }
 }

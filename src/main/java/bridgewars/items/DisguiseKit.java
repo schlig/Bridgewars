@@ -26,50 +26,14 @@ import bridgewars.utils.Utils;
 public class DisguiseKit implements ICustomItem, Listener {
 	
 	private Main plugin;
-	private final UUID id = UUID.fromString("6012ca86-7d9b-4ae6-99ca-a332f6814edd");
+	private final UUID id = UUID.fromString("6012ca86-7d9b-4ae6-99ca-a332f6814edd"); //this was a fucking pain, uses the UUID of a player with the texture i wanted
 	private final String texture = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzg1Mzk1MDhlM2I2YjY5MDRjMmVhYWU3NjZhZmFlYzlhM2Q1OTRiOTc1MTFiZDEyNmY4NTc5NTZhMDRiMDUyNCJ9fX0=";
+	
+	private int duration = 20; //duration of disguise kit in seconds (multiplied by 20 for ticks per second)
 	
 	public DisguiseKit(Main plugin) {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 		this.plugin = plugin;
-	}
-	
-	@EventHandler
-	public void onUse(PlayerInteractEvent e) {
-		if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			if(!Utils.getID(e.getItem()).equals(getClass().getSimpleName().toLowerCase()))
-				return;
-			
-			Player p = e.getPlayer();
-			if(Cloak.cloakedPlayers.contains(p.getUniqueId())) {
-				p.sendMessage(Message.chat("&cYou are already disguised!"));
-				return;
-			}
-			
-			List<Player> options = new ArrayList<>();
-			for(Player o : Bukkit.getOnlinePlayers()) {
-				if(!Utils.matchTeam(p, o) && p != o)
-					options.add(o);
-			}
-			
-			if(options.size() == 0) {
-				p.sendMessage(Message.chat("&cThere is nobody online to disguise yourself as!"));
-				return;
-			}
-			
-			new Cloak(p, options.get(options.size() - 1).getUniqueId(), 60).runTaskTimer(plugin, 0L, 20L);
-			if(p.getGameMode() != GameMode.CREATIVE) {
-				ItemStack item = e.getItem();
-				item.setAmount(item.getAmount() - 1);
-				p.setItemInHand(item);
-			}
-		}
-	}
-	
-	@EventHandler
-	public void onPlace(BlockPlaceEvent e) {
-		if(Utils.getID(e.getItemInHand()).equals(getClass().getSimpleName().toLowerCase()))
-			e.setCancelled(true);
 	}
 	
     @Override
@@ -81,12 +45,50 @@ public class DisguiseKit implements ICustomItem, Listener {
     public ItemStack createItem(Player p) {
         ItemStack item = new ItemStack(Material.SKULL_ITEM, 1);
         item.setDurability((short) 3);
-        ItemBuilder.setName(item, "&aDisguise Kit");
+        ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        ItemBuilder.setName(item, "Disguise Kit");
         ItemBuilder.setSkullTexture(item, id, texture);
         ItemBuilder.setLore(item, Arrays.asList(
         		Message.chat("&r&7A special kit that transforms you"),
-        		Message.chat("&r&7into a different player for 1 minute")));
-        ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        		Message.chat("&r&7into a different player for 30 seconds")));
         return item;
     }
+	
+	@EventHandler
+	public void onPlace(BlockPlaceEvent e) {
+		if(e.getBlock().getType() == Material.SKULL)
+			e.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onUse(PlayerInteractEvent e) {
+		if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			if(!Utils.getID(e.getItem()).equals(getClass().getSimpleName().toLowerCase()))
+				return;
+			
+			Player p = e.getPlayer();
+			if(Cloak.cloakedPlayers.contains(p.getUniqueId())) {
+				p.sendMessage(Message.chat("&cYou are already disguised"));
+				return;
+			}
+			
+			List<Player> options = new ArrayList<>();
+			for(Player o : Bukkit.getOnlinePlayers()) {
+				if(!Utils.matchTeam(p, o) && p != o)
+					options.add(o);
+			}
+			
+			if(options.size() == 0) {
+				p.sendMessage(Message.chat("&cThere is nobody online to disguise yourself as."));
+				return;
+			}
+			
+			new Cloak(p, options.get(Utils.rand(options.size())).getUniqueId(), duration).runTaskTimer(plugin, 0L, 20L);
+			if(p.getGameMode() != GameMode.CREATIVE) {
+				ItemStack item = e.getItem();
+				item.setAmount(item.getAmount() - 1);
+				p.setItemInHand(item);
+			}
+		}
+	}
 }

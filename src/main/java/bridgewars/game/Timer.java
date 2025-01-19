@@ -61,7 +61,7 @@ public class Timer {
 				
 				for(Player p : Bukkit.getOnlinePlayers()) { //creates the particle trail for players that are close to winning
 					cs.updateTime(p, limit.getLimit());
-					if(cs.getTime(p) == limit.getLimit() - 15)
+					if(cs.getTime(p) == limit.revealTime())
 						particleList.add(new ParticleTrail((Entity) p, EnumParticle.EXPLOSION_NORMAL, 0, 30, 0, 0, 10 * 255, 0, 0.0001F, 20, 300, true).runTaskTimer(plugin, 0L, 1L));
 				}
 			}

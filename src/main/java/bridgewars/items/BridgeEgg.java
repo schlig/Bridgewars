@@ -41,9 +41,9 @@ public class BridgeEgg implements ICustomItem, Listener {
     @Override
     public ItemStack createItem(Player p) {
         ItemStack item = new ItemStack(Material.EGG, 1);
-        ItemBuilder.setName(item, "&fBridge Egg");
-        ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7Automatically builds a bridge for you")));
         ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        ItemBuilder.setName(item, "Bridge Egg");
+        ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7Automatically builds a bridge for you")));
         return item;
     }
 }

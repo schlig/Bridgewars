@@ -17,14 +17,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import bridgewars.commands.Fly;
+import bridgewars.effects.Cloak;
 import bridgewars.effects.Fireworks;
-import bridgewars.items.SadRoom;
+import bridgewars.items.SadTear;
 import bridgewars.settings.Blocks;
 import bridgewars.settings.Bows;
 import bridgewars.settings.DigWars;
+import bridgewars.settings.DoubleHealth;
 import bridgewars.settings.DoubleJump;
 import bridgewars.settings.GigaDrill;
 import bridgewars.settings.HotbarLayout;
+import bridgewars.settings.RandomTeams;
 import bridgewars.settings.Shears;
 import bridgewars.settings.Swords;
 import bridgewars.utils.ItemManager;
@@ -67,15 +70,18 @@ public class Game {
 		if(debugMessages)
 			p.sendMessage(Message.chat("&7Placed spawn platforms"));
 		
-		SadRoom.clearSadRoom();
+		SadTear.clearSadRoom();
+		
+		if(RandomTeams.isState(RandomTeams.ENABLED))
+			cs.clearTeams();
 		
 		for(Player player : Bukkit.getOnlinePlayers()) {
+			player.getInventory().clear();
 			Fly.allowFlight.put(player, false);
 			player.setFlying(false);
 			if(!DoubleJump.getState().isEnabled())
 				player.setAllowFlight(false);
 			cs.removePlayerFromTimer(player);
-			Game.randomizeTeam(player, true);
 			Game.spawnPlayer(player);
 			Game.grantItems(player, false);
 		}
@@ -133,6 +139,8 @@ public class Game {
 	}
 	
 	public static void spawnPlayer(Player p) {
+		if(!cs.hasTeam(p))
+			Game.randomizeTeam(p, true);
 		String s = cs.getTeam(p);
 		
 		switch(s) {
@@ -152,6 +160,7 @@ public class Game {
 	}
 	
 	public static void endGame(Player winner, Boolean forced) {
+		Cloak.cloakedPlayers.clear();
 		if(winner != null) {
 			List<Player> winners = new ArrayList<>();
 			for(Player p : Bukkit.getOnlinePlayers()) {
@@ -167,6 +176,14 @@ public class Game {
 						else
 							p.teleport(new Location(Bukkit.getWorld("world"), 0.5, 45.0, 6.5, 180, 10));
 					p.setLevel(0);
+					if(DoubleHealth.getState().isEnabled()) {
+						p.setMaxHealth(40);
+						p.setHealth(40);
+					}
+					else {
+						p.setHealth(20);
+						p.setMaxHealth(20);
+					}
 					p.getInventory().clear();
 					p.getInventory().setArmorContents(null);
 					p.setGameMode(GameMode.ADVENTURE);
@@ -207,7 +224,7 @@ public class Game {
 		if(!forced)
 			new Fireworks(7).runTaskTimer(Bukkit.getPluginManager().getPlugin("bridgewars"), 0L, 10L);
 		
-		SadRoom.clearSadRoom();
+		SadTear.clearSadRoom();
 		GameState.setState(GameState.INACTIVE);
 		cs.resetAllTimes();
 		deleteSpawns();
@@ -298,7 +315,6 @@ public class Game {
 			p.getInventory().setItem(hotbar.getSlot(p, "waterSlot"), ItemManager.getItem("BottomlessWaterBucket").createItem(null));
 			p.getInventory().setItem(hotbar.getSlot(p, "lavaSlot"), ItemManager.getItem("BottomlessLavaBucket").createItem(null));
 		}
-		p.getInventory().addItem(ItemManager.getItem("BridgeEgg").createItem(p));
 		if(p.getName().equals("nicktoot"))
 			p.getInventory().addItem(ItemManager.getItem("SadRoom").createItem(p));
 		p.setGameMode(GameMode.SURVIVAL);

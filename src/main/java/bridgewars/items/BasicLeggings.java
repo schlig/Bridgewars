@@ -19,8 +19,8 @@ public class BasicLeggings implements ICustomItem {
         String team = ItemBuilder.getTeamName(p);
         ItemBuilder.setUnbreakable(item, true);
         ItemBuilder.setLeatherColor(p, item, team);
-        ItemBuilder.setName(item, "&r" + team.substring(0, 1).toUpperCase() + team.substring(1) + " Leggings");
         ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        ItemBuilder.setName(item, "&r" + team.substring(0, 1).toUpperCase() + team.substring(1) + " Leggings");
         return item;
     }
 }

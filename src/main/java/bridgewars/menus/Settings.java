@@ -22,6 +22,7 @@ import bridgewars.settings.GigaDrill;
 import bridgewars.settings.KillstreakRewards;
 import bridgewars.settings.NaturalItemSpawning;
 import bridgewars.settings.Piggyback;
+import bridgewars.settings.RandomTeams;
 import bridgewars.settings.Shears;
 import bridgewars.settings.Swords;
 import bridgewars.settings.TimeLimit;
@@ -244,6 +245,21 @@ public class Settings {
 			}
 			break;
 			
+		case EYE_OF_ENDER:
+			if(RandomTeams.isState(RandomTeams.ENABLED)) {
+				RandomTeams.setState(RandomTeams.DISABLED);
+				p.sendMessage(Message.chat("Random Teams are now disabled"));
+				modifyButton(p.getOpenInventory().getItem(28), false);
+				p.playSound(p.getLocation(), Sound.CLICK, .8F, 1F);
+			}
+			else {
+				RandomTeams.setState(RandomTeams.ENABLED);
+				p.sendMessage(Message.chat("Random Teams are now enabled"));
+				modifyButton(p.getOpenInventory().getItem(28), true);
+				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+			}
+			break;
+			
 		default:
 			break;
 		}
@@ -300,5 +316,7 @@ public class Settings {
 			modifyButton(p.getOpenInventory().getItem(24), true);
 		if(Piggyback.isState(Piggyback.ENABLED))
 			modifyButton(p.getOpenInventory().getItem(25), true);
+		if(RandomTeams.isState(RandomTeams.ENABLED))
+			modifyButton(p.getOpenInventory().getItem(28), true);
 	}
 }

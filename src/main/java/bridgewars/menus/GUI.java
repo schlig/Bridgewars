@@ -134,6 +134,11 @@ public class GUI {
 				Message.chat("&7Right click your teammates"),
 				Message.chat("&7to ride them"))));
 		
+		settings.setItem(28, item(Material.EYE_OF_ENDER, 1, 0, "&r&6Random Teams", false, Arrays.asList(
+				Message.chat("&r&cDisabled"),
+				Message.chat("&7Always randomize teams"),
+				Message.chat("&7on game start"))));
+		
 		settings.setItem(40, button(0));
 		
 		//build the timer menu

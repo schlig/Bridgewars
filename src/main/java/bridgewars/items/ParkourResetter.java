@@ -18,8 +18,8 @@ public class ParkourResetter implements ICustomItem {
 	@Override
 	public ItemStack createItem(Player p) {
 		ItemStack item = new ItemStack(Material.REDSTONE_TORCH_ON, 1);
-		ItemBuilder.setName(item, Message.chat("&6Reset Parkour"));
 		ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+		ItemBuilder.setName(item, Message.chat("&6Reset Parkour"));
 		return item;
 	}
 }

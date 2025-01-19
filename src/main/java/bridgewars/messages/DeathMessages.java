@@ -111,7 +111,7 @@ public class DeathMessages implements Listener {
 		messages.put("Schlog", " was slain by ");
 		messages.put("Thuggishprune", " was poop socked by ");
 		messages.put("wBeard", " was promptly dealt with after attempting to lick the beard of ");
-		messages.put("Wabadaba", " wasn't sweaty enough for ");
+		messages.put("Wabadaba", " was too slow for ");
 		messages.put("onjit", " was snagged by ");
 		messages.put("TalonBX", " got EEEOOOWWW'd by ");
 		messages.put("Northwind5545", " was sanded by ");
@@ -122,6 +122,7 @@ public class DeathMessages implements Listener {
 		messages.put("Freejourner", " had inferior fishing skills to ");
 		messages.put("MookW", " wasn't gas enough for ");
 		messages.put("towwl", " was somehow killed by ");
+		messages.put("Physiological", " was violently murdered by ");
 	}
 	
 	private String getCustomMessage(String name) {

@@ -28,6 +28,9 @@ import net.minecraft.server.v1_8_R3.EnumParticle;
 
 public class Railgun implements ICustomItem, Listener {
 	
+	private final int damage = 10;
+	private final int range = 50;
+	
     public Railgun(Main plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
@@ -35,37 +38,35 @@ public class Railgun implements ICustomItem, Listener {
     @EventHandler
     public void onUse(PlayerInteractEvent e) {
         if(e.getAction() == Action.RIGHT_CLICK_AIR
-                || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+        || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             ItemStack item = e.getItem();
             if(Utils.getID(item).equals(getClass().getSimpleName().toLowerCase())) {
-                BlockIterator blockIterator = new BlockIterator(e.getPlayer(),50);
+                BlockIterator blockIterator = new BlockIterator(e.getPlayer(), range);
                 Block block;
                 Player p = e.getPlayer();
                 ArrayList<Player> hitPlayers = new ArrayList<>();
                 while (blockIterator.hasNext()){
                     block = blockIterator.next();
-                    if(p.getGameMode() == GameMode.CREATIVE || !World.inGameArea(block.getLocation()) 
-                    && block.getType() != Material.BEDROCK){
                         Location loc = block.getLocation();
                             for (Player player : Bukkit.getOnlinePlayers()) {
-                            	if(player.getLocation().distance(loc) < 1 || player.getEyeLocation().distance(loc) < 1)
+                            	if(player.getEyeLocation().distance(loc) < 1
+                            	|| player.getLocation().distance(loc) < 1) {
 	                                if(!Utils.matchTeam(player, p) && !hitPlayers.contains(player)){
-	                                    player.damage(7, p);
+	                                    player.damage(damage, p);
 	                                    hitPlayers.add(player);
 	                                }
-                                if(block.getType() != Material.AIR){
+                            	}
+                                if(block.getType() != Material.AIR)
                                     player.playSound(block.getLocation(), Sound.DIG_WOOL, 1F, 1F);
-                                }
                             }
                         Packet.sendParticle(EnumParticle.REDSTONE, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(),
-                                100, 100, 100,1, 1);
-                        block.breakNaturally(e.getItem());
-                    }
-                    else {
-                    	p.sendMessage(Message.chat("&cYou tried to shoot the Railgun, but it jammed"));
-                    	return;
-                    }
+                                100, 100, 100, 1, 1);
+                        
+                        if(block.getType() == Material.WOOL && World.inGameArea(block.getLocation()))
+                        	block.breakNaturally(e.getItem());
                 }
+                if(hitPlayers.size() > 0)
+					p.playSound(p.getLocation(), Sound.ORB_PICKUP, 100F, 0F);
                 if(p.getGameMode() != GameMode.CREATIVE) {
                     item.setAmount(item.getAmount() - 1);
                     p.setItemInHand(item);
@@ -83,11 +84,12 @@ public class Railgun implements ICustomItem, Listener {
     @Override
     public ItemStack createItem(Player p) {
         ItemStack item = new ItemStack(Material.BLAZE_ROD, 1);
-        ItemBuilder.setName(item, "&aRailgun");
-        ItemBuilder.setLore(item, Arrays.asList(
-                Message.chat("&r&7Shoots a beam that destroys"),
-                Message.chat("&r&7blocks and players.")));
 		ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        ItemBuilder.setName(item, "Railgun");
+        ItemBuilder.setLore(item, Arrays.asList(
+                Message.chat("&r&7Shoots a beam that destroys blocks,"),
+                Message.chat("&r&7dealing " + damage + " hearts of damage")));
+        ItemBuilder.disableStacking(item);
         return item;
     }
 }
