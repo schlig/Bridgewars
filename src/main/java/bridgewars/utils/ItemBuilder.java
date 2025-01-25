@@ -16,12 +16,11 @@ import org.bukkit.inventory.meta.SkullMeta;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
-import bridgewars.game.CustomScoreboard;
+import bridgewars.game.CSManager;
+import bridgewars.messages.Chat;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 
 public class ItemBuilder {
-
-	private static CustomScoreboard cs = new CustomScoreboard();
 	
 	public static ItemStack hideFlags(ItemStack item) { //hides an item's nbt data flags
 		ItemMeta meta = item.getItemMeta();
@@ -37,22 +36,22 @@ public class ItemBuilder {
 		default:
 		case NONE:
 		case WHITE:
-			name = Message.chat("&r" + name);
+			name = Chat.color("&r" + name);
 			break;
 				
 		case GREEN:
-			name = Message.chat("&a" + name);
+			name = Chat.color("&a" + name);
 			break;
 			
 		case RED:
-			name = Message.chat("&c" + name);
+			name = Chat.color("&c" + name);
 			break;
 				
 		case BLUE:
-			name = Message.chat("&9" + name);
+			name = Chat.color("&9" + name);
 			break;
 		}
-		meta.setDisplayName(Message.chat(name));
+		meta.setDisplayName(Chat.color(name));
 		item.setItemMeta(meta);
 		return item;
 	}
@@ -78,7 +77,8 @@ public class ItemBuilder {
 	public static ItemStack setLeatherColor(Player p, ItemStack item, String s) { //sets the color of leather armor
 		ItemStack armorPiece = item;
 		LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
-		meta.setColor(getColor(cs.getTeam(p)));
+		if(CSManager.hasTeam(p))
+			meta.setColor(getColor(CSManager.getTeam(p)));
 		armorPiece.setItemMeta(meta);
 		return armorPiece;
 	}
@@ -101,8 +101,8 @@ public class ItemBuilder {
 	
 	public static byte getColorID(Player p) {
 		byte value = 0;
-		if(cs.hasTeam(p)) {
-			switch(cs.getTeam(p)) {
+		if(CSManager.hasTeam(p)) {
+			switch(CSManager.getTeam(p)) {
 			case "red":
 				value = 14;
 				break;
@@ -135,7 +135,7 @@ public class ItemBuilder {
 	}
 	
 	public static String getTeamName(Player p){
-		return cs.getTeam(p);
+		return CSManager.getTeam(p);
 	}
 	
 	public static ItemStack setID(ItemStack in, String id) {

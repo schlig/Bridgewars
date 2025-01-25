@@ -17,7 +17,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import bridgewars.utils.Message;
+import bridgewars.messages.Chat;
 
 public class MapRotation {
 	
@@ -60,13 +60,13 @@ public class MapRotation {
 			if(value.contains("0")) {
 				button = updateMap(button, true);
 				f.write("1".getBytes());
-				Bukkit.broadcastMessage(Message.chat("&6&l" + mapName + "&r has been " + "&cremoved" + " &rfrom the map rotation."));
+				Bukkit.broadcastMessage(Chat.color("&6&l" + mapName + "&r has been " + "&cremoved" + " &rfrom the map rotation."));
 				p.playSound(p.getLocation(), Sound.CLICK, 0.8F, 1F);
 			}
 			else {
 				button = updateMap(button, false);
 				f.write("0".getBytes());
-				Bukkit.broadcastMessage(Message.chat("&6&l" + mapName + "&r has been " + "&aadded" + " &rto the map rotation."));
+				Bukkit.broadcastMessage(Chat.color("&6&l" + mapName + "&r has been " + "&aadded" + " &rto the map rotation."));
 				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
 			}
 				

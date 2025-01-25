@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import bridgewars.utils.Message;
+import bridgewars.messages.Chat;
 
 public class GUI {
 	
@@ -51,9 +51,9 @@ public class GUI {
 		
 		//build main menu
 		main.setItem(10, item(Material.LADDER, 1, 0, "&6&lStart Game", false, null)); // Start Game button
-		main.setItem(12, item(Material.REDSTONE_COMPARATOR, 1, 0, "&r&lGame Settings", false, Arrays.asList(Message.chat("&7Admin only")))); // Game Settings button
+		main.setItem(12, item(Material.REDSTONE_COMPARATOR, 1, 0, "&r&lGame Settings", false, Arrays.asList(Chat.color("&7Admin only")))); // Game Settings button
 		main.setItem(14, item(Material.MAP, 1, 0, "&e&lMap Rotation", false, null)); // Map Rotation button
-		main.setItem(16, item(Material.TNT, 1, 0, "&c&lEnd Game", false, Arrays.asList(Message.chat("&7Admin only")))); // End Game button
+		main.setItem(16, item(Material.TNT, 1, 0, "&c&lEnd Game", false, Arrays.asList(Chat.color("&7Admin only")))); // End Game button
 		
 		main.setItem(29, item(Material.SADDLE, 1, 0, "&a&lJoin Game", false, null)); // Join Game button
 		main.setItem(31, item(Material.BOOK, 1, 0, "&b&lHotbar Layout", false, null)); // Hotbar Layout button
@@ -72,72 +72,72 @@ public class GUI {
 		//build the settings menu
 		settings.setItem(10, item(Material.WATCH, 1, 0, "&r&6Time Limit: ?", false, null));
 		settings.setItem(11, item(Material.COMPASS, 1, 0, "&r&6Timer Acceleration", false, Arrays.asList(
-				Message.chat("&r0%"))));
+				Chat.color("&r0%"))));
 		
 		settings.setItem(12, item(Material.GOLD_SWORD, 1, 0, "&r&6Swords", false, Arrays.asList(
-				Message.chat("&r&cDisabled"),
-				Message.chat("&7Players have golden swords"))));
+				Chat.color("&r&cDisabled"),
+				Chat.color("&7Players have golden swords"))));
 		
 		settings.setItem(13, item(Material.WOOL, 1, 0, "&r&6Blocks", false, Arrays.asList(
-				Message.chat("&r&cDisabled"),
-				Message.chat("&7Players have infinite wool blocks"))));
+				Chat.color("&r&cDisabled"),
+				Chat.color("&7Players have infinite wool blocks"))));
 		
 		settings.setItem(14, item(Material.SHEARS, 1, 0, "&r&6Shears", false, Arrays.asList(
-				Message.chat("&r&cDisabled"),
-				Message.chat("&7Players have shears"),
-				Message.chat("&7Efficiency III"),
-				Message.chat("&7Unbreakable"))));
+				Chat.color("&r&cDisabled"),
+				Chat.color("&7Players have shears"),
+				Chat.color("&7Efficiency III"),
+				Chat.color("&7Unbreakable"))));
 		
 		settings.setItem(15, item(Material.IRON_SWORD, 1, 0, "&r&6Killstreak Bonuses", false, Arrays.asList(
-				Message.chat("&r&cDisabled"),
-				Message.chat("&7Determines whether players"),
-				Message.chat("&7should receive items from"),
-				Message.chat("&7killstreaks"))));
+				Chat.color("&r&cDisabled"),
+				Chat.color("&7Determines whether players"),
+				Chat.color("&7should receive items from"),
+				Chat.color("&7killstreaks"))));
 		
 		settings.setItem(16, item(Material.BOW, 1, 0, "&r&6Bows", false, Arrays.asList(
-				Message.chat("&r&cDisabled"),
-				Message.chat("&7Players have bows"),
-				Message.chat("&7Cannot be shot at or from spawn"),
-				Message.chat("&7Infinite arrows"))));
+				Chat.color("&r&cDisabled"),
+				Chat.color("&7Players have bows"),
+				Chat.color("&7Cannot be shot at or from spawn"),
+				Chat.color("&7Infinite arrows"))));
 		
 		settings.setItem(19, item(Material.GOLDEN_APPLE, 1, 0, "&r&6Double Health", false, Arrays.asList(
-				Message.chat("&r&cDisabled"),
-				Message.chat("&7Increase maximum health from"),
-				Message.chat("&710 hearts to 20"))));
+				Chat.color("&r&cDisabled"),
+				Chat.color("&7Increase maximum health from"),
+				Chat.color("&710 hearts to 20"))));
 		
 		settings.setItem(20, item(Material.RABBIT_FOOT, 1, 0, "&r&6Double Jump", false, Arrays.asList(
-				Message.chat("&r&cDisabled"),
-				Message.chat("&7Players can jump midair once"))));
+				Chat.color("&r&cDisabled"),
+				Chat.color("&7Players can jump midair once"))));
 		
 		settings.setItem(21, item(Material.DIAMOND_PICKAXE, 1, 0, "&r&6Giga Drill", false, Arrays.asList(
-				Message.chat("&r&cDisabled"),
-				Message.chat("&7Shears have Efficiency V"))));
+				Chat.color("&r&cDisabled"),
+				Chat.color("&7Shears have Efficiency V"))));
 		
 		settings.setItem(22, item(Material.WOOD, 1, 0, "&r&6Dig Wars", false, Arrays.asList(
-				Message.chat("&r&cDisabled"),
-				Message.chat("&7All crafting recipes are enabled"),
-				Message.chat("&7Start with 64 wood and a stone axe"),
-				Message.chat("&7Wood is replenished on death"))));
+				Chat.color("&r&cDisabled"),
+				Chat.color("&7All crafting recipes are enabled"),
+				Chat.color("&7Start with 64 wood and a stone axe"),
+				Chat.color("&7Wood is replenished on death"))));
 		
 		settings.setItem(23, item(Material.DIAMOND, 1, 0, "&r&6Natural Item Spawns", false, Arrays.asList(
-				Message.chat("&r&cDisabled"),
-				Message.chat("&7Items will randomly spawn anywhere"),
-				Message.chat("&7on the map"))));
+				Chat.color("&r&cDisabled"),
+				Chat.color("&7Items will randomly spawn anywhere"),
+				Chat.color("&7on the map"))));
 		
 		settings.setItem(24, item(Material.BLAZE_POWDER, 1, 0, "&r&6Friendly Fire", false, Arrays.asList(
-				Message.chat("&r&cDisabled"),
-				Message.chat("&7Allow hitting teammates without"),
-				Message.chat("&7damaging them"))));
+				Chat.color("&r&cDisabled"),
+				Chat.color("&7Allow hitting teammates without"),
+				Chat.color("&7damaging them"))));
 		
 		settings.setItem(25, item(Material.SADDLE, 1, 0, "&r&6Piggyback", false, Arrays.asList(
-				Message.chat("&r&cDisabled"),
-				Message.chat("&7Right click your teammates"),
-				Message.chat("&7to ride them"))));
+				Chat.color("&r&cDisabled"),
+				Chat.color("&7Right click your teammates"),
+				Chat.color("&7to ride them"))));
 		
 		settings.setItem(28, item(Material.EYE_OF_ENDER, 1, 0, "&r&6Random Teams", false, Arrays.asList(
-				Message.chat("&r&cDisabled"),
-				Message.chat("&7Always randomize teams"),
-				Message.chat("&7on game start"))));
+				Chat.color("&r&cDisabled"),
+				Chat.color("&7Always randomize teams"),
+				Chat.color("&7on game start"))));
 		
 		settings.setItem(40, button(0));
 		
@@ -176,7 +176,7 @@ public class GUI {
 	private ItemStack item(Material m, int amount, int damage, String name, Boolean hideFlags, List<String> tooltip) {
 		ItemStack item = new ItemStack(m, amount, (short) damage);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(Message.chat(name));
+		meta.setDisplayName(Chat.color(name));
 		if(tooltip != null)
 			meta.setLore(tooltip);
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, 
@@ -210,11 +210,13 @@ public class GUI {
 			if(pageNumber > 0)
 				page.setItem(37, item(Material.ARROW, 1, 0, "&r&lPrevious Page", false, null));
 			
+			//fucked up way to do it, however this basically starts placing the maps in slot 10 thru 17, then 19 thru 26, etc.
+			//probably should refactor this because these numbers are nonsense
 			for(int j = 10; j <= 28; j+=9)
 				for(int i = 0; i < 7; i++) {
 					if(mapList.size() == 0)
 						break;
-					ItemStack map = item(Material.MAP, 1, 0, Message.chat("&r&l") + mapList.get(0).substring(0, mapList.get(0).length() - 4), false, null);
+					ItemStack map = item(Material.MAP, 1, 0, Chat.color("&r&l") + mapList.get(0).substring(0, mapList.get(0).length() - 4), false, null);
 					map.addUnsafeEnchantment(Enchantment.LURE, 1);
 					page.setItem(i + j, map);
 					mapList.remove(0);

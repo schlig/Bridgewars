@@ -13,11 +13,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 import bridgewars.effects.ParticleTrail;
+import bridgewars.messages.Chat;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 
 public class World {
@@ -36,6 +40,8 @@ public class World {
 	
 	private static final  int maximumSpawnAttempts = 500;
 	
+	private static ArrayList<BukkitTask> itemMarkers = new ArrayList<BukkitTask>();
+	
 	public static void fill(Location origin, int x, int y, int z, int x2, int y2, int z2, Material material) {
 		for(x+=0; x < x2; x++)
 			for(y+=0; y < y2; y++)
@@ -49,6 +55,25 @@ public class World {
 	
 	public static Location getSpawn() {
 		return new Location(Bukkit.getWorld("world"), worldSpawnX, worldSpawnY, worldSpawnZ, worldSpawnYaw, worldSpawnPitch);
+	}
+	
+	public static void deleteLabel(Location loc, double radius) {
+		org.bukkit.World world = Bukkit.getWorld("world");
+		for(Entity entity : world.getNearbyEntities(loc, radius, radius, radius))
+			if(entity instanceof ArmorStand)
+				entity.remove();
+	}
+	
+	public static void placeLabel(String text, double x, double y, double z) {
+		org.bukkit.World world = Bukkit.getWorld("world");
+		Location loc = new Location(world, x, y, z);
+		ArmorStand label = (ArmorStand) Bukkit.getWorld("world").spawnEntity(loc, EntityType.ARMOR_STAND);
+		label.setCustomName(Chat.color(text));
+		label.setCustomNameVisible(true);
+		label.setVisible(false);
+		label.setGravity(false);
+		label.setSmall(true);
+		label.setMarker(true);
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -118,7 +143,12 @@ public class World {
 		
 		for(Entity e : Bukkit.getWorld("world").getEntities())
 			if(e instanceof Item)
-				e.teleport(new Location(Bukkit.getWorld("world"), 0, -100, 0));
+				e.remove();
+		deleteItemMarkers();
+	}
+	
+	public static void deleteItemMarkers() {
+		itemMarkers.clear();
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -143,10 +173,10 @@ public class World {
 				
 			} catch (IOException e) { 
 				e.printStackTrace();
-				p.sendMessage(Message.chat("&cFailed to load map \"&6" + map + "&c\""));
+				p.sendMessage(Chat.color("&cFailed to load map \"&6" + map + "&c\""));
 			}
 			if(mapList.size() == 0) {
-				Bukkit.broadcastMessage(Message.chat("&cThere aren't any maps in rotation!"));
+				Bukkit.broadcastMessage(Chat.color("&cThere aren't any maps in rotation!"));
 				return false;
 			}
 			i = Utils.rand(mapList.size());
@@ -159,14 +189,14 @@ public class World {
 			try {
 				map = file.getCanonicalFile().getName();
 			} catch (IOException e) {
-				p.sendMessage(Message.chat("&cFailed to load map \"&6" + map + "&c\""));
+				p.sendMessage(Chat.color("&cFailed to load map \"&6" + map + "&c\""));
 				return false;
 			}
 		}
 		
 		try {
 			if(!(file.exists())) {
-				p.sendMessage(Message.chat("&cFailed to load map \"&6" + map + "&c\" &7(try checking case sensitivity?)"));
+				p.sendMessage(Chat.color("&cFailed to load map \"&6" + map + "&c\" &7(try checking case sensitivity?)"));
 				return false;
 			}
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
@@ -189,7 +219,7 @@ public class World {
 		}
 		map = map.substring(0, map.length() - 4);
 		for(Player player : Bukkit.getOnlinePlayers())
-			player.sendMessage(Message.chat("&lMap: &6&l" + map));
+			player.sendMessage(Chat.color("&lMap: &6&l" + map));
 		return true;
 	}
 	
@@ -244,10 +274,10 @@ public class World {
 			item = Bukkit.getWorld("world").dropItem(new Location(Bukkit.getWorld("world"), x + 0.5, y + 1, z + 0.5), spawnableItem.createItem(null));
 			item.setVelocity(item.getVelocity().setX(0).setY(0).setZ(0));
 			if(showParticles) //if particles are turned on, it will create a colored particle above the item to easily be seen from a distance
-				new ParticleTrail((Entity) item, EnumParticle.REDSTONE, 
+				itemMarkers.add(new ParticleTrail((Entity) item, EnumParticle.REDSTONE, 
 						0, 1, 0, 
 						r, g, b, 
-						1F, 0, 6000, false).runTaskTimer(Bukkit.getPluginManager().getPlugin("bridgewars"), 0L, 1L);
+						1F, 0, 6000, false).runTaskTimer(Bukkit.getPluginManager().getPlugin("bridgewars"), 0L, 1L));
 		}
 	}
 }

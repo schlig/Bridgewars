@@ -12,6 +12,7 @@ public class ChosenKillstreaks {
 	private Objective three;
 	private Objective five;
 	private Objective seven;
+	private Objective Final;
 	private Score value;
 	
 	public ChosenKillstreaks() {
@@ -24,12 +25,11 @@ public class ChosenKillstreaks {
 			five = scoreboard.registerNewObjective("five", "dummy");
 		five = scoreboard.getObjective("five");
 		if(scoreboard.getObjective("seven") == null)
-			seven= scoreboard.registerNewObjective("seven", "dummy");
+			seven = scoreboard.registerNewObjective("seven", "dummy");
 		seven = scoreboard.getObjective("seven");
-	}
-	
-	private void restoreDefaults(Player p) {
-		
+		if(scoreboard.getObjective("final") == null)
+			Final = scoreboard.registerNewObjective("final", "dummy");
+		Final = scoreboard.getObjective("final");
 	}
 	
 	public void setThreeStreak(Player p, int amount) {
@@ -47,27 +47,28 @@ public class ChosenKillstreaks {
 		value.setScore(amount);
 	}
 	
+	public void setFinalStreak(Player p, int amount) {
+		value = Final.getScore(p.getName());
+		value.setScore(amount);
+	}
+	
 	public int getThreeStreak(Player p) {
 		value = three.getScore(p.getName());
-		if(value.getScore() == five.getScore(p.getName()).getScore()
-				|| value.getScore() == seven.getScore(p.getName()).getScore())
-			restoreDefaults(p);
 		return value.getScore();
 	}
 	
 	public int getFiveStreak(Player p) {
 		value = five.getScore(p.getName());
-		if(value.getScore() == three.getScore(p.getName()).getScore()
-				|| value.getScore() == seven.getScore(p.getName()).getScore())
-			restoreDefaults(p);
 		return value.getScore();
 	}
 	
 	public int getSevenStreak(Player p) {
 		value = seven.getScore(p.getName());
-		if(value.getScore() == three.getScore(p.getName()).getScore()
-				|| value.getScore() == five.getScore(p.getName()).getScore())
-			restoreDefaults(p);
+		return value.getScore();
+	}
+	
+	public int getFinalStreak(Player p) {
+		value = seven.getScore(p.getName());
 		return value.getScore();
 	}
 }

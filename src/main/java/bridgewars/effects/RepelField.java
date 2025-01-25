@@ -39,6 +39,8 @@ public class RepelField extends BukkitRunnable {
         Location pLoc = u.getLocation();
         List<Entity> entities = u.getNearbyEntities(d,d,d);
         for (Entity e : entities) {
+        	if(entities.size() <= 0)
+        		break;
             Location eLoc = e.getLocation();
             Vector directionVector = eLoc.toVector().subtract(pLoc.toVector());
             double magnitude = directionVector.distance(new Vector(0,0,0));
@@ -56,7 +58,7 @@ public class RepelField extends BukkitRunnable {
             if(magnitude > d) //if magnitude is less than d it will start pulling entities inward
             	continue;
             
-            e.setVelocity(e.getVelocity().add(directionVector.multiply //put this formula into desmos to understand it lol
+            e.setVelocity(e.getVelocity().add(directionVector.multiply //hugely increases pushback the closer you are to target
             		( (p / (Math.pow(d, 4))) * Math.pow(d - magnitude, 4) )));
         }
 
@@ -68,9 +70,9 @@ public class RepelField extends BukkitRunnable {
                     0, 0, 0,
                     0.05f, 5, 1000, false).runTask(plugin);
         }
+        
         t--;
-        if(t <= 0) {
+        if(t <= 0)
             this.cancel();
-        }
     }
 }

@@ -13,9 +13,9 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
 
 import bridgewars.Main;
+import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
-import bridgewars.utils.Message;
 
 public class BridgeEgg implements ICustomItem, Listener {
 	
@@ -43,7 +43,7 @@ public class BridgeEgg implements ICustomItem, Listener {
         ItemStack item = new ItemStack(Material.EGG, 1);
         ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
         ItemBuilder.setName(item, "Bridge Egg");
-        ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7Automatically builds a bridge for you")));
+        ItemBuilder.setLore(item, Arrays.asList(Chat.color("&r&7Automatically builds a bridge for you")));
         return item;
     }
 }

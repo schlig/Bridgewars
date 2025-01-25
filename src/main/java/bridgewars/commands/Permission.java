@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import bridgewars.Main;
-import bridgewars.utils.Message;
+import bridgewars.messages.Chat;
 import bridgewars.utils.Permissions;
 import bridgewars.utils.Utils;
 
@@ -19,12 +19,12 @@ public class Permission implements CommandExecutor {
 	
 	public Permission(Main plugin) {
 		plugin.getCommand("permission").setExecutor(this);
-		permissions.add("bridgewars.trusted");
-		permissions.add("bridgewars.trusted.gamemode");
-		permissions.add("bridgewars.trusted.fly");
-		permissions.add("bridgewars.trusted.label");
-		permissions.add("bridgewars.trusted.endgame");
-		permissions.add("bridgewars.trusted.settings");
+		permissions.add("trusted");
+		permissions.add("trusted.gamemode");
+		permissions.add("trusted.fly");
+		permissions.add("trusted.label");
+		permissions.add("trusted.endgame");
+		permissions.add("trusted.settings");
 		permissions.add("worldedit.*");
 		permissions.add("bukkit.command.setblock");
 		permissions.add("bukkit.command.clear");
@@ -36,12 +36,12 @@ public class Permission implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
 		if(!sender.isOp() && sender instanceof Player) {
-			sender.sendMessage(Message.chat("&cYou do not have permission to do this."));
+			sender.sendMessage(Chat.color("&cYou do not have permission to do this."));
 			return false;
 		}
 		
 		if(args.length < 2) {
-			sender.sendMessage(Message.chat("&cUsage: /permission [get|clear|give|take] <player> [permission]"));
+			sender.sendMessage(Chat.color("&cUsage: /permission [get|clear|give|take] <player> [permission]"));
 			return false;
 		}
 		
@@ -55,25 +55,25 @@ public class Permission implements CommandExecutor {
 		case "clear":
 			for(String permission : Permissions.getPermissions(uuid))
 				Permissions.setPermission(Utils.getUUID(args[1]), permission, false, true);
-			sender.sendMessage(Message.chat("&c" + Utils.getName(uuid) + " has been revoked of all permissions."));
+			sender.sendMessage(Chat.color("&c" + Utils.getName(uuid) + " has been revoked of all permissions."));
 			break;
 			
 		case "give":
 			if(!permissions.contains(args[2])) {
-				sender.sendMessage(Message.chat("&cInvalid permission."));
+				sender.sendMessage(Chat.color("&cInvalid permission."));
 				return false;
 			}
 			Permissions.setPermission(Utils.getUUID(args[1]), args[2], true, true);
-			sender.sendMessage(Message.chat("&6"+ Utils.getName(uuid) + " has been given permission \"&c" + args[2] + "&6\"."));
+			sender.sendMessage(Chat.color("&6"+ Utils.getName(uuid) + " has been given permission \"&c" + args[2] + "&6\"."));
 			break;
 			
 		case "take":
 			if(!permissions.contains(args[2])) {
-				sender.sendMessage(Message.chat("&cInvalid permission. Permissions: <trusted>.[fly, gamemode, label, endgame, settings, worldedit]"));
+				sender.sendMessage(Chat.color("&cInvalid permission. Permissions: <trusted>.[fly, gamemode, label, endgame, settings, worldedit]"));
 				return false;
 			}
 			Permissions.setPermission(Utils.getUUID(args[1]), args[2], false, true);
-			sender.sendMessage(Message.chat("&6"+ Utils.getName(uuid) + " has been revoked of permission \"&c" + args[2] + "&6\"."));
+			sender.sendMessage(Chat.color("&6"+ Utils.getName(uuid) + " has been revoked of permission \"&c" + args[2] + "&6\"."));
 			break;
 		}
 		

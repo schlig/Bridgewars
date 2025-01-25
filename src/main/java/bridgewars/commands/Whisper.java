@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import bridgewars.Main;
-import bridgewars.utils.Message;
+import bridgewars.messages.Chat;
 import bridgewars.utils.Utils;
 
 public class Whisper implements CommandExecutor {
@@ -20,7 +20,7 @@ public class Whisper implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
 		if(args.length < 2) {
-			sender.sendMessage(Message.chat("&cUsage: /whisper <player> <message>"));
+			sender.sendMessage(Chat.color("&cUsage: /whisper <player> <message>"));
 			return true;
 		}
 		
@@ -28,7 +28,7 @@ public class Whisper implements CommandExecutor {
 		String senderName = sender instanceof Player ? ((Player) sender).getDisplayName() : "&6Console";
 		
 		if(target == null || !target.isOnline()) {
-			sender.sendMessage(Message.chat("&cThat player is not online."));
+			sender.sendMessage(Chat.color("&cThat player is not online."));
 			return true;
 		}
 		
@@ -37,8 +37,8 @@ public class Whisper implements CommandExecutor {
 			for(int i = 1; i < args.length; i++)
 				message = message + args[i] + " ";
 			message = message.substring(0, message.length() - 1);
-			sender.sendMessage(Message.chat("&7[&6You &7>&r " + target.getDisplayName() + "&7]: " + message));
-			target.sendMessage(Message.chat("&7[&r" + senderName + "&7 > &6You&7]: ") + message);
+			sender.sendMessage(Chat.color("&7[&6You &7>&r " + target.getDisplayName() + "&7]: " + message));
+			target.sendMessage(Chat.color("&7[&r" + senderName + "&7 > &6You&7]: ") + message);
 		}
 		
 		return true;

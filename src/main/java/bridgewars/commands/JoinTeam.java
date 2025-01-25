@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import bridgewars.Main;
 import bridgewars.game.CustomScoreboard;
 import bridgewars.game.GameState;
-import bridgewars.utils.Message;
+import bridgewars.messages.Chat;
 
 public class JoinTeam implements CommandExecutor {
 	
@@ -28,7 +28,7 @@ public class JoinTeam implements CommandExecutor {
 		Player p = (Player) sender;
 		
 		if(GameState.isState(GameState.ACTIVE) && !p.isOp()) {
-			p.sendMessage(Message.chat("&cYou can't change teams while a game is active!"));
+			p.sendMessage(Chat.color("&cYou can't change teams while a game is active!"));
 			return true;
 		}
 		else {

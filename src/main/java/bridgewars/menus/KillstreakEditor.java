@@ -6,16 +6,11 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
+import bridgewars.messages.Chat;
 import bridgewars.settings.ChosenKillstreaks;
-import bridgewars.utils.ItemManager;
-import bridgewars.utils.Message;
+import bridgewars.utils.Utils;
 
 public class KillstreakEditor {
 
@@ -25,88 +20,81 @@ public class KillstreakEditor {
 	public static void sendInput(Player p, Inventory inv, ItemStack button) {
 		if(inv.getType().equals(InventoryType.PLAYER))
 			return;
-		
-		switch(button.getType()) {
-		case ARROW:
+		if(button.getType() == Material.ARROW) {
 			p.playSound(p.getLocation(), Sound.CLICK, 0.8F, 1F);
 			p.openInventory(menu.getMain());
-			break;
+			return;
+		}
+		
+		switch(Utils.getID(button)) {
 			
-		case EGG:
+		case "bridgeegg":
 			if(ks.getThreeStreak(p) == 0)
 				break;
 			ks.setThreeStreak(p, 0);
-			if(p.getOpenInventory().getTopInventory().getItem(28).containsEnchantment(Enchantment.LURE))
-				p.getOpenInventory().getTopInventory().getItem(28).removeEnchantment(Enchantment.LURE);
-			button.addUnsafeEnchantment(Enchantment.LURE, 1);
-			p.sendMessage(Message.chat("You will now receive 2 &f&lBridge Eggs&r every &l3&r kills."));
-			p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+			sendMenuFeedback(p, button, 28, "3");
 			break;
 			
-		case MOB_SPAWNER:
+		case "mysterypill":
 			if(ks.getThreeStreak(p) == 1)
 				break;
 			ks.setThreeStreak(p, 1);
-			if(p.getOpenInventory().getTopInventory().getItem(10).containsEnchantment(Enchantment.LURE))
-				p.getOpenInventory().getTopInventory().getItem(10).removeEnchantment(Enchantment.LURE);
-			button.addUnsafeEnchantment(Enchantment.LURE, 1);
-			p.sendMessage(Message.chat("You will now receive a &f&lPortable Doink Hut&r every &l3&r kills."));
-			p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+			sendMenuFeedback(p, button, 10, "3");
 			break;
 			
-		case WOOD_SWORD:
+		case "portabledoinkhut":
 			if(ks.getFiveStreak(p) == 0)
 				break;
 			ks.setFiveStreak(p, 0);
-			if(p.getOpenInventory().getTopInventory().getItem(30).containsEnchantment(Enchantment.LURE))
-				p.getOpenInventory().getTopInventory().getItem(30).removeEnchantment(Enchantment.LURE);
-			button.addUnsafeEnchantment(Enchantment.LURE, 1);
-			p.sendMessage(Message.chat("You will now receive a &a&lHome Run Bat&r every &l5&r kills."));
-			p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+			sendMenuFeedback(p, button, 30, "5");
 			break;
 			
-		case FIREBALL:
+		case "fireball":
 			if(ks.getFiveStreak(p) == 1)
 				break;
 			ks.setFiveStreak(p, 1);
-			if(p.getOpenInventory().getTopInventory().getItem(12).containsEnchantment(Enchantment.LURE))
-				p.getOpenInventory().getTopInventory().getItem(12).removeEnchantment(Enchantment.LURE);
-			button.addUnsafeEnchantment(Enchantment.LURE, 1);
-			p.sendMessage(Message.chat("You will now receive a &a&lFireball&r every &l5&r kills."));
-			p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+			sendMenuFeedback(p, button, 12, "5");
 			break;
 			
-		case POTION:
+		case "homerunbat":
 			if(ks.getSevenStreak(p) == 0)
 				break;
 			ks.setSevenStreak(p, 0);
-			if(p.getOpenInventory().getTopInventory().getItem(32).containsEnchantment(Enchantment.LURE))
-				p.getOpenInventory().getTopInventory().getItem(32).removeEnchantment(Enchantment.LURE);
-			PotionMeta meta = (PotionMeta) button.getItemMeta();
-			meta.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 1, 1), false);
-			button.setItemMeta(meta);
-			p.sendMessage(Message.chat("You will now receive a &c&lLifeforce Potion&r every &l7&r kills."));
-			p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+			sendMenuFeedback(p, button, 32, "7");
 			break;
 			
-		case SNOW_BALL:
+		case "blackhole":
 			if(ks.getSevenStreak(p) == 1)
 				break;
 			ks.setSevenStreak(p, 1);
-			ItemStack potion = new ItemStack(Material.POTION, 7, (short) 8192);
-			ItemMeta pmeta = potion.getItemMeta();
-			pmeta.setDisplayName(ItemManager.getItem("LifeforcePotion").createItem(null).getItemMeta().getDisplayName());
-			pmeta.setLore(ItemManager.getItem("LifeforcePotion").createItem(null).getItemMeta().getLore());
-			pmeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-			potion.setItemMeta(pmeta);
-			p.getOpenInventory().setItem(14, potion);
-			button.addUnsafeEnchantment(Enchantment.LURE, 1);
-			p.sendMessage(Message.chat("You will now receive a &c&lBlack Hole&r every &l7&r kills."));
-			p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+			sendMenuFeedback(p, button, 14, "7");
+			break;
+			
+		case "heartcontainer":
+			if(ks.getFinalStreak(p) == 0)
+				break;
+			ks.setFinalStreak(p, 1);
+			sendMenuFeedback(p, button, 34, "15");
+			break;
+			
+		case "magicstopwatch":
+			if(ks.getFinalStreak(p) == 1)
+				break;
+			ks.setFinalStreak(p, 0);
+			sendMenuFeedback(p, button, 16, "15");
 			break;
 			
 		default:
 			break;
 		}
+	}
+	
+	private static void sendMenuFeedback(Player p, ItemStack button, int slot, String streak) {
+		Inventory menu = p.getOpenInventory().getTopInventory();
+		if(menu.getItem(slot).containsEnchantment(Enchantment.LURE))
+			menu.getItem(slot).removeEnchantment(Enchantment.LURE);
+		button.addUnsafeEnchantment(Enchantment.LURE, 1);
+		p.sendMessage(Chat.color("You will now recieve a " + button.getItemMeta().getDisplayName() + "&r every " + streak + " kills."));
+		p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
 	}
 }

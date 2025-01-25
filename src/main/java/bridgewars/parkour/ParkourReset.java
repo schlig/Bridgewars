@@ -10,7 +10,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import bridgewars.Main;
-import bridgewars.utils.Message;
+import bridgewars.messages.Chat;
 import bridgewars.utils.Utils;
 
 public class ParkourReset implements Listener {
@@ -25,7 +25,7 @@ public class ParkourReset implements Listener {
 			Player p = e.getPlayer();
 			if(Checkpoints.cp.containsKey(p) 
 					&& Utils.getID(p.getItemInHand()).equals("parkourresetter")) {
-				p.sendMessage(Message.chat("&6You reset your parkour time!"));
+				p.sendMessage(Chat.color("&6You reset your parkour time!"));
 				p.teleport(Checkpoints.startPlate.get(p));
 				if(Checkpoints.cp.containsKey(p))
 					Checkpoints.cp.remove(p);

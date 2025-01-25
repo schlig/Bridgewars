@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,16 +17,19 @@ import org.bukkit.inventory.ItemStack;
 
 import bridgewars.Main;
 import bridgewars.effects.Cloak;
+import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
-import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
 public class DisguiseKit implements ICustomItem, Listener {
 	
 	private Main plugin;
 	private final UUID id = UUID.fromString("6012ca86-7d9b-4ae6-99ca-a332f6814edd"); //this was a fucking pain, uses the UUID of a player with the texture i wanted
-	private final String texture = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzg1Mzk1MDhlM2I2YjY5MDRjMmVhYWU3NjZhZmFlYzlhM2Q1OTRiOTc1MTFiZDEyNmY4NTc5NTZhMDRiMDUyNCJ9fX0=";
+	private final String texture = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0d"
+			+ "HA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzg1Mzk1MDhlM2I"
+			+ "2YjY5MDRjMmVhYWU3NjZhZmFlYzlhM2Q1OTRiOTc1MTFiZDEyNmY4NTc5NTZhM"
+			+ "DRiMDUyNCJ9fX0=";
 	
 	private int duration = 20; //duration of disguise kit in seconds (multiplied by 20 for ticks per second)
 	
@@ -49,8 +51,8 @@ public class DisguiseKit implements ICustomItem, Listener {
         ItemBuilder.setName(item, "Disguise Kit");
         ItemBuilder.setSkullTexture(item, id, texture);
         ItemBuilder.setLore(item, Arrays.asList(
-        		Message.chat("&r&7A special kit that transforms you"),
-        		Message.chat("&r&7into a different player for 30 seconds")));
+        		Chat.color("&r&7A special kit that transforms you"),
+        		Chat.color("&r&7into a different player for " + duration + " seconds")));
         return item;
     }
 	
@@ -68,7 +70,7 @@ public class DisguiseKit implements ICustomItem, Listener {
 			
 			Player p = e.getPlayer();
 			if(Cloak.cloakedPlayers.contains(p.getUniqueId())) {
-				p.sendMessage(Message.chat("&cYou are already disguised"));
+				p.sendMessage(Chat.color("&cYou are already disguised"));
 				return;
 			}
 			
@@ -79,16 +81,12 @@ public class DisguiseKit implements ICustomItem, Listener {
 			}
 			
 			if(options.size() == 0) {
-				p.sendMessage(Message.chat("&cThere is nobody online to disguise yourself as."));
+				p.sendMessage(Chat.color("&cThere is nobody online to disguise yourself as."));
 				return;
 			}
 			
 			new Cloak(p, options.get(Utils.rand(options.size())).getUniqueId(), duration).runTaskTimer(plugin, 0L, 20L);
-			if(p.getGameMode() != GameMode.CREATIVE) {
-				ItemStack item = e.getItem();
-				item.setAmount(item.getAmount() - 1);
-				p.setItemInHand(item);
-			}
+			Utils.subtractItem(p);
 		}
 	}
 }

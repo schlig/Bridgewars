@@ -10,8 +10,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import bridgewars.commands.Fly;
 import bridgewars.game.GameState;
+import bridgewars.messages.Chat;
 import bridgewars.utils.ItemManager;
-import bridgewars.utils.Message;
 
 public class Timer extends BukkitRunnable implements Listener {
 	
@@ -30,13 +30,13 @@ public class Timer extends BukkitRunnable implements Listener {
 	@Override
 	public void run() {
 		if(GameState.isState(GameState.ACTIVE)) {
-			p.sendMessage(Message.chat("&cParkour challenge aborted due to the game starting."));
+			p.sendMessage(Chat.color("&cParkour challenge aborted due to the game starting."));
 			endParkour(p);
 			return;
 		}
 		
 		if(cancelled.get(p)) {
-			p.sendMessage(Message.chat("&cYou quit the parkour challenge."));
+			p.sendMessage(Chat.color("&cYou quit the parkour challenge."));
 			endParkour(p);
 			return;
 		}
@@ -54,7 +54,7 @@ public class Timer extends BukkitRunnable implements Listener {
 			if(milliseconds < 10)
 				extraMSZero += "0";
 			
-			p.sendMessage(Message.chat("&6Parkour completed! Your time: &r"
+			p.sendMessage(Chat.color("&6Parkour completed! Your time: &r"
 					+ minutes.toString() + ":" 
 					+ extraSecondsZero + seconds.toString() + "." 
 					+ extraMSZero + milliseconds.toString() + "&6."));

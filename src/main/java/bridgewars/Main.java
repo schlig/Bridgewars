@@ -7,9 +7,9 @@ import bridgewars.behavior.DisableArmorRemoval;
 import bridgewars.behavior.DisableBasicItemDrops;
 import bridgewars.behavior.DisableChickenSpawns;
 import bridgewars.behavior.DisableFallDamage;
-import bridgewars.behavior.DisableFriendlyFire;
 import bridgewars.behavior.DisableInventoryCrafting;
 import bridgewars.behavior.DisableWeather;
+import bridgewars.behavior.HitDetection;
 import bridgewars.behavior.IndestructibleOoBBlocks;
 import bridgewars.behavior.InfiniteBlocks;
 import bridgewars.behavior.InstantVoidKill;
@@ -23,7 +23,7 @@ import bridgewars.commands.DeleteMap;
 import bridgewars.commands.EditMode;
 import bridgewars.commands.EndGame;
 import bridgewars.commands.Fly;
-import bridgewars.commands.GM;
+import bridgewars.commands.GameMode;
 import bridgewars.commands.GiveItem;
 import bridgewars.commands.JoinGame;
 import bridgewars.commands.JoinTeam;
@@ -46,6 +46,7 @@ import bridgewars.game.CustomScoreboard;
 import bridgewars.game.GameState;
 import bridgewars.game.InstantRespawn;
 import bridgewars.game.Kills;
+import bridgewars.game.Leaderboards;
 import bridgewars.game.Timer;
 import bridgewars.menus.InputHandler;
 import bridgewars.messages.Chat;
@@ -81,7 +82,7 @@ public class Main extends JavaPlugin {
 		new InfiniteBlocks(this);
 		new InstantVoidKill(this);
 		new Saturation(this);
-		new DisableFriendlyFire(this);
+		new HitDetection(this);
 		new PreventAnnoyingBowUse(this);
 		new PreventItemFrameChanges(this);
 		
@@ -105,7 +106,7 @@ public class Main extends JavaPlugin {
 		new Debug(this);
 		new Label(this);
 		new Transform(this);
-		new GM(this);
+		new GameMode(this);
 		new Permission(this);
 		new Whisper(this);
 		new ChatSetting(this);
@@ -117,6 +118,7 @@ public class Main extends JavaPlugin {
 		new Chat(this);
 
 		//game
+		new Leaderboards();
 		new CustomScoreboard().resetBoard();
 		new Kills(this);
 		new Timer(this);

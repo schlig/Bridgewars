@@ -4,14 +4,13 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import bridgewars.game.CustomScoreboard;
+import bridgewars.game.CSManager;
 import bridgewars.settings.TimeLimit;
 import bridgewars.utils.Packet;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 
 public class ParticleTrail extends BukkitRunnable {
 	
-	private CustomScoreboard cs = new CustomScoreboard();
 	private TimeLimit tl = new TimeLimit();
 	
 	private Entity target;
@@ -54,7 +53,7 @@ public class ParticleTrail extends BukkitRunnable {
 	@Override
 	public void run() {
 		if(checkTimeLimit && target instanceof Player)
-			if(cs.getTime((Player) target) < tl.revealTime())
+			if(CSManager.getTime((Player) target) < tl.revealTime())
 				this.cancel();
 		
 		if(target.isDead() || duration == 0) {

@@ -23,14 +23,15 @@ import bridgewars.items.BottomlessLavaBucket;
 import bridgewars.items.BottomlessWaterBucket;
 import bridgewars.items.Bow;
 import bridgewars.items.BridgeEgg;
+import bridgewars.items.ChanceTime;
 import bridgewars.items.DisguiseKit;
 import bridgewars.items.Eraser;
 import bridgewars.items.Fireball;
 import bridgewars.items.ForceFieldGenerator;
-import bridgewars.items.GigaShears;
 import bridgewars.items.HeartContainer;
 import bridgewars.items.HomeRunBat;
 import bridgewars.items.LifeforcePotion;
+import bridgewars.items.MagicStopwatch;
 import bridgewars.items.MysteryPill;
 import bridgewars.items.ParkourCheckpoint;
 import bridgewars.items.ParkourQuitter;
@@ -41,6 +42,7 @@ import bridgewars.items.PortableDoinkHut;
 import bridgewars.items.Railgun;
 import bridgewars.items.SadTear;
 import bridgewars.items.Shears;
+import bridgewars.items.SignalJammer;
 import bridgewars.items.UltimastPortal;
 import bridgewars.items.UnoReverse;
 import bridgewars.items.WoolBlocks;
@@ -55,7 +57,7 @@ public class ItemManager {
     //white: 70%
     //green: 20%
     //red: 9%
-    //blue: 1% (there are no blue items rn)
+    //blue: 1%
     private static final float greenPercent = 0.2f;
     private static final float redPercent = 0.09f;
     private static final float bluePercent = 0.01f;
@@ -80,6 +82,10 @@ public class ItemManager {
         allItems.add(new PitfallTrap(plugin));
         allItems.add(new HeartContainer(plugin));
         allItems.add(new MysteryPill(plugin));
+        allItems.add(new MagicStopwatch(plugin));
+        allItems.add(new ChanceTime(plugin));
+        allItems.add(new SignalJammer(plugin));
+        
         allItems.add(new Axe());
         allItems.add(new BasicBoots());
         allItems.add(new BasicChestplate());
@@ -87,7 +93,6 @@ public class ItemManager {
         allItems.add(new BasicLeggings());
         allItems.add(new BasicSword());
         allItems.add(new Bow());
-        allItems.add(new GigaShears());
         allItems.add(new Shears());
         allItems.add(new WoolBlocks());
         allItems.add(new ParkourTeleporter());

@@ -8,9 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import bridgewars.messages.Chat;
 import bridgewars.utils.Disguise;
 import bridgewars.utils.ItemManager;
-import bridgewars.utils.Message;
 
 public class Cloak extends BukkitRunnable {
 	
@@ -28,7 +28,7 @@ public class Cloak extends BukkitRunnable {
 			setArmor(Bukkit.getPlayer(t));
 		Disguise.setDisguise(p, t);
 		cloakedPlayers.add(p.getUniqueId());
-		p.sendMessage(Message.chat("&lYou have disguised yourself as " + Bukkit.getPlayer(t).getDisplayName() + "&r&l!"));
+		p.sendMessage(Chat.color("&lYou have disguised yourself as " + Bukkit.getPlayer(t).getDisplayName() + "&r&l!"));
 	}
 	
 	@Override
@@ -38,7 +38,7 @@ public class Cloak extends BukkitRunnable {
 				cloakedPlayers.remove(p.getUniqueId());
 			Disguise.setDisguise(p, p.getUniqueId());
 			setArmor(p, prevArmor);
-			p.sendMessage(Message.chat("&c&lYou are no longer disguised!"));
+			p.sendMessage(Chat.color("&c&lYou are no longer disguised!"));
 			this.cancel();
 		}
 		d--;

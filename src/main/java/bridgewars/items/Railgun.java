@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -18,9 +17,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockIterator;
 
 import bridgewars.Main;
+import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
-import bridgewars.utils.Message;
 import bridgewars.utils.Packet;
 import bridgewars.utils.Utils;
 import bridgewars.utils.World;
@@ -51,12 +50,12 @@ public class Railgun implements ICustomItem, Listener {
                             for (Player player : Bukkit.getOnlinePlayers()) {
                             	if(player.getEyeLocation().distance(loc) < 1
                             	|| player.getLocation().distance(loc) < 1) {
-	                                if(!Utils.matchTeam(player, p) && !hitPlayers.contains(player)){
+	                                if(!Utils.matchTeam(player, p) && !hitPlayers.contains(player) && p != player) {
 	                                    player.damage(damage, p);
 	                                    hitPlayers.add(player);
 	                                }
                             	}
-                                if(block.getType() != Material.AIR)
+                                if(block.getType() == Material.WOOL)
                                     player.playSound(block.getLocation(), Sound.DIG_WOOL, 1F, 1F);
                             }
                         Packet.sendParticle(EnumParticle.REDSTONE, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(),
@@ -66,12 +65,9 @@ public class Railgun implements ICustomItem, Listener {
                         	block.breakNaturally(e.getItem());
                 }
                 if(hitPlayers.size() > 0)
-					p.playSound(p.getLocation(), Sound.ORB_PICKUP, 100F, 0F);
-                if(p.getGameMode() != GameMode.CREATIVE) {
-                    item.setAmount(item.getAmount() - 1);
-                    p.setItemInHand(item);
-                }
-                p.playSound(p.getLocation(), Sound.FIREWORK_LARGE_BLAST2, 0.5F, 0.7F);
+					p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 0F);
+                Utils.subtractItem(p);
+                p.playSound(p.getLocation(), Sound.FIREWORK_LARGE_BLAST2, 0.9F, 0.7F);
             }
         }
     }
@@ -87,8 +83,8 @@ public class Railgun implements ICustomItem, Listener {
 		ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
         ItemBuilder.setName(item, "Railgun");
         ItemBuilder.setLore(item, Arrays.asList(
-                Message.chat("&r&7Shoots a beam that destroys blocks,"),
-                Message.chat("&r&7dealing " + damage + " hearts of damage")));
+                Chat.color("&r&7Shoots a beam that destroys blocks,"),
+                Chat.color("&r&7dealing 3.5 hearts of damage")));
         ItemBuilder.disableStacking(item);
         return item;
     }

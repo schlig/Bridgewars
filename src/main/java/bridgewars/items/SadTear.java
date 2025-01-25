@@ -18,9 +18,9 @@ import bridgewars.Main;
 import bridgewars.game.CustomScoreboard;
 import bridgewars.game.Game;
 import bridgewars.game.GameState;
+import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
-import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
 public class SadTear implements ICustomItem, Listener {
@@ -51,8 +51,8 @@ public class SadTear implements ICustomItem, Listener {
 		ItemStack item = new ItemStack(Material.GHAST_TEAR, 1);
 		ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
 		ItemBuilder.setName(item, "Sad Tear");
-		ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7Sends a player to the"),
-				Message.chat("&r&7Sad Room for 15 seconds")));
+		ItemBuilder.setLore(item, Arrays.asList(Chat.color("&r&7Sends a player to the"),
+				Chat.color("&r&7Sad Room for 15 seconds")));
 		ItemBuilder.disableStacking(item);
 		return item;
 	}
@@ -74,7 +74,7 @@ public class SadTear implements ICustomItem, Listener {
 					buildSadRoom();
 				
 				if(sadRoomed.contains(user) && sadRoomed.contains(target)) {
-					user.sendMessage(Message.chat("&cThat player is already in the Sad Room. You are too. L."));
+					user.sendMessage(Chat.color("&cThat player is already in the Sad Room. You are too. L."));
 					return;
 				}
 				
@@ -83,7 +83,7 @@ public class SadTear implements ICustomItem, Listener {
 				
 				Utils.subtractItem(user);
 
-				Bukkit.broadcastMessage(Message.chat(target.getDisplayName() + Message.chat(" &chas been sent to the Sad Room")));
+				Bukkit.broadcastMessage(Chat.color(target.getDisplayName() + Chat.color(" &chas been sent to the Sad Room")));
 				
 				new BukkitRunnable() {
 					@Override

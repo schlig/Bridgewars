@@ -16,15 +16,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import bridgewars.Main;
+import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
-import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
 public class Eraser implements ICustomItem, Listener {
 
-	private final int radius = 2;
-	private final int height = 4;
+	private final int radius = 3;
 	
 	private final int mapRadius = 22;
 	private final int mapHeight = 24;
@@ -39,7 +38,7 @@ public class Eraser implements ICustomItem, Listener {
 		ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
 		ItemBuilder.setName(item, "Eraser");
         ItemBuilder.setLore(item, Arrays.asList(
-        		Message.chat("&r&7Removes all the color from nearby blocks")));
+        		Chat.color("&r&7Erases all the color from nearby blocks")));
         return item;
     }
 
@@ -66,7 +65,7 @@ public class Eraser implements ICustomItem, Listener {
 				//replace nearby blocks
 				for(int x = -radius; x <= radius; x++) {
 					for(int z = -radius; z <= radius; z++) {
-						for(int y = 0; y <= height; y++) {
+						for(int y = -radius; y <= radius; y++) {
 							if(origin.getRelative(x, y, z).getType() == Material.AIR || origin.getRelative(x, y, z).getType() == Material.WOOL) {
 								if(Math.abs(origin.getRelative(x, y, z).getX()) <= mapRadius
 								&& Math.abs(origin.getRelative(x, y, z).getZ()) <= mapRadius
@@ -80,11 +79,8 @@ public class Eraser implements ICustomItem, Listener {
 					}
 				}
 				
-				if(p.getGameMode() != GameMode.CREATIVE) {
-					item.setAmount(item.getAmount() - 1);
-					p.setItemInHand(item);
-				}
-				p.playSound(p.getLocation(), Sound.DIG_WOOL, 1F, 1F);
+				Utils.subtractItem(p);
+				p.playSound(p.getLocation(), Sound.IRONGOLEM_THROW, 1.5F, 0.5F);
 			}
 		}
 	}

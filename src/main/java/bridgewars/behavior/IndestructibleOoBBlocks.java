@@ -8,8 +8,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 import bridgewars.Main;
 import bridgewars.game.GameState;
-import bridgewars.utils.Message;
-import bridgewars.utils.Utils;
+import bridgewars.messages.Chat;
+import bridgewars.utils.World;
 
 public class IndestructibleOoBBlocks implements Listener {
 	
@@ -20,8 +20,8 @@ public class IndestructibleOoBBlocks implements Listener {
 	@EventHandler
 	public void onBreak(BlockBreakEvent e) { //prevents blocks from being broken if they're out of bounds (mainly spawn plats and sad rooms)
 		if(e.getPlayer().getGameMode() != GameMode.CREATIVE && GameState.isState(GameState.ACTIVE))
-			if(Utils.isOutOfBounds(e.getBlock().getLocation(), 22, 24, 22)) {
-				e.getPlayer().sendMessage(Message.chat("&cYou can't break blocks here!"));
+			if(!World.inGameArea(e.getBlock().getLocation())) {
+				e.getPlayer().sendMessage(Chat.color("&cYou can't break blocks here!"));
 				e.setCancelled(true);
 			}
 	}

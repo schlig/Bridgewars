@@ -11,6 +11,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import bridgewars.Main;
 import bridgewars.game.GameState;
@@ -19,11 +21,13 @@ import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
 import bridgewars.utils.Utils;
 
-public class HeartContainer implements ICustomItem, Listener {
+public class MagicStopwatch implements ICustomItem, Listener {
 	
-	private final int halfHearts = 2;
+	private final int speedDuration = 999999
+									* 20;
+	private final int speedLevel = 1;
 	
-    public HeartContainer(Main plugin) {
+    public MagicStopwatch(Main plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
@@ -34,12 +38,13 @@ public class HeartContainer implements ICustomItem, Listener {
 
     @Override
     public ItemStack createItem(Player p) {
-        ItemStack item = new ItemStack(Material.EMERALD, 1);
+        ItemStack item = new ItemStack(Material.WATCH, 1);
         ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
-        ItemBuilder.setName(item, "Heart Container");
+        ItemBuilder.setName(item, "Magic Stopwatch");
         ItemBuilder.setLore(item, Arrays.asList(
-                Chat.color("&r&7Increases maximum health"),
-                Chat.color("&r&7Permanent upgrade")));
+                Chat.color("&r&7Grants Speed II until death"),
+                Chat.color("&r&7Note: This item currently sucks for its rarity"),
+                Chat.color("&r&7It will be buffed heavily when I stop being lazy")));
         return item;
     }
     
@@ -51,9 +56,8 @@ public class HeartContainer implements ICustomItem, Listener {
             if(Utils.getID(item).equals(getClass().getSimpleName().toLowerCase())
             && GameState.isState(GameState.ACTIVE)) {
             	Player p = e.getPlayer();
-            	p.playSound(p.getLocation(), Sound.LEVEL_UP, 1F, 1F);
-            	p.setMaxHealth(p.getMaxHealth() + halfHearts);
-            	p.setHealth(p.getHealth() + halfHearts);
+            	p.playSound(p.getLocation(), Sound.CLICK, 1F, 1F);
+            	p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, speedDuration, speedLevel));
             	
             	Utils.subtractItem(p);
             }

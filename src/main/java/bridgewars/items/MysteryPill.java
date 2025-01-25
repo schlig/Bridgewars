@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,19 +17,26 @@ import org.bukkit.potion.PotionEffectType;
 
 import bridgewars.Main;
 import bridgewars.game.GameState;
+import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
-import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
 public class MysteryPill implements ICustomItem, Listener{
 	
-	private final int halfHearts = 6;
-	private final int duration = 8
-							   * 20;
-	private final int level = 1;
+	private final static int halfHearts = 6;
 	
-	private final float explosionPower = 15;
+	private final static int witherDuration = 10 * 20;
+	private final static int nauseaDuration = 15 * 20;
+	private final static int absorptionDuration = 300 * 20;
+	private final static int speedDuration = 15 * 20;
+	
+	private final static int witherLevel = 5;
+	private final static int nauseaLevel = 1;
+	private final static int absorptionLevel = 5;
+	private final static int speedLevel = 1;
+	
+	private final static float explosionPower = 20;
 	
     public MysteryPill(Main plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -45,8 +53,9 @@ public class MysteryPill implements ICustomItem, Listener{
         ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
         ItemBuilder.setName(item, "Mystery Pill");
         ItemBuilder.setLore(item, Arrays.asList(
-                Message.chat("&r&750% chance to heal " + (halfHearts / 2) +" hearts"),
-                Message.chat("&r&750% chance to die instantly")));
+                Chat.color("&r&7Taking random pills"),
+                Chat.color("&r&7may be a bad idea")));
+        ItemBuilder.disableStacking(item);
         return item;
     }
     
@@ -57,39 +66,50 @@ public class MysteryPill implements ICustomItem, Listener{
             ItemStack item = e.getItem();
             if(Utils.getID(item).equals(getClass().getSimpleName().toLowerCase())
             && GameState.isState(GameState.ACTIVE)) {
-            	Player p = e.getPlayer();
-            	double val = Math.random();
-            	
-            	if(val < 0.01) {
-            		World world = p.getWorld();
-            		world.createExplosion(p.getLocation(), explosionPower);
-            		p.sendMessage(Message.chat("&lHOLY SHIT"));
-            	}
-            	else if(val < 0.20) {
-            		p.damage(69420, p);
-            		p.sendMessage(Message.chat("&lYou took a cyanide pill."));
-            	}
-            	else if(val < 0.50) {
-            		p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, duration, level - 1), true);
-            		p.sendMessage(Message.chat("&lYou feel sick."));
-            	}
-            	else if(val < 0.75) {
-            		if(p.getHealth() + halfHearts > p.getMaxHealth())
-            			p.setHealth(p.getMaxHealth());
-            		else
-            			p.setHealth(p.getHealth() + halfHearts);
-            		p.sendMessage(Message.chat("&lYou feel a little better."));
-            	}
-            	else {
-            		if(p.getHealth() + (halfHearts * 2) > p.getMaxHealth())
-            			p.setHealth(p.getMaxHealth());
-            		else
-            			p.setHealth(p.getHealth() + (halfHearts * 2));
-            		p.sendMessage(Message.chat("&lYou feel a lot better."));
-            	}
-            	Utils.subtractItem(p);
+            	Player user = e.getPlayer();
+            	activateEffect(user);
+            	Utils.subtractItem(user);
             }
         }
     }
 
+    public static void activateEffect(Player user) {
+    	double val = Math.random();
+    	
+    	if(val < 0.005) {
+    		World world = user.getWorld();
+    		user.sendMessage(Chat.color("&lYou swallowed a bomb."));
+    		world.createExplosion(user.getLocation(), explosionPower);
+    	}
+    	else if(val < 0.20) {
+    		user.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, witherDuration, witherLevel - 1), true);
+    		user.sendMessage(Chat.color("&lYou took a cyanide pill."));
+    	}
+    	else if(val < 0.50) {
+    		user.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, speedDuration, speedLevel - 1), true);
+    		user.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, nauseaDuration, nauseaLevel - 1), true);
+    		user.sendMessage(Chat.color("&lYou start freaking out."));
+    	}
+    	else if(val < 0.85) {
+    		if(user.getHealth() + halfHearts > user.getMaxHealth())
+    			user.setHealth(user.getMaxHealth());
+    		else
+    			user.setHealth(user.getHealth() + halfHearts);
+    		user.sendMessage(Chat.color("&lYou feel a little better. " + "&r&8(Healed " + halfHearts / 2 + " hearts)"));
+    	}
+    	else if(val < 0.98){
+    		if(user.getHealth() + (halfHearts * 2) > user.getMaxHealth())
+    			user.setHealth(user.getMaxHealth());
+    		else
+    			user.setHealth(user.getHealth() + (halfHearts * 2));
+    		user.sendMessage(Chat.color("&lYou feel a lot better. " + "&r&8(Healed " + halfHearts + " hearts)"));
+    	}
+    	else {
+    		user.setHealth(user.getMaxHealth());
+    		user.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, absorptionDuration, absorptionLevel - 1), true);
+    		user.sendMessage(Chat.color("&lYou feel unstoppable! &r&8(Fully healed + 10 absorption hearts)"));
+    	}
+    	
+    	user.playSound(user.getLocation(), Sound.EAT, 1F, 1F);
+    }
 }

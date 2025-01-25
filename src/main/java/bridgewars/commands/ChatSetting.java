@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import bridgewars.Main;
-import bridgewars.utils.Message;
+import bridgewars.messages.Chat;
 
 public class ChatSetting implements CommandExecutor {
 	
@@ -33,21 +33,21 @@ public class ChatSetting implements CommandExecutor {
 			else if(label.equals("ac"))
 				args = new String[] { "all" };
 			else {
-				p.sendMessage(Message.chat("&cUsage: /chat <all|team>, /tc | /ac"));
+				p.sendMessage(Chat.color("&cUsage: /chat <all|team>, /tc | /ac"));
 				return false;
 			}
 		}
 		
 		if(args[0].equals("all")) {
-			p.sendMessage(Message.chat("&6You are now in &cAll Chat"));
+			p.sendMessage(Chat.color("&6You are now in &cAll Chat"));
 			allChat.put(p, true);
 		}
 		else if(args[0].equals("team")) {
-			p.sendMessage(Message.chat("&6You are now in &cTeam Chat"));
+			p.sendMessage(Chat.color("&6You are now in &cTeam Chat"));
 			allChat.put(p, false);
 		}
 		else {
-			p.sendMessage(Message.chat("&cUsage: /chat <all|team>, /tc | /ac"));
+			p.sendMessage(Chat.color("&cUsage: /chat <all|team>, /tc | /ac"));
 			return false;
 		}
 		

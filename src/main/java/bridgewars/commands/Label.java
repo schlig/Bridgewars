@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 
 import bridgewars.Main;
 import bridgewars.game.GameState;
-import bridgewars.utils.Message;
+import bridgewars.messages.Chat;
 
 public class Label implements CommandExecutor {
 	
@@ -33,24 +33,24 @@ public class Label implements CommandExecutor {
 		Player p = (Player) sender;
 		
 		if(!p.hasPermission("trusted.label")) {
-			p.sendMessage(Message.chat("&cYou do not have permission to do this."));
+			p.sendMessage(Chat.color("&cYou do not have permission to do this."));
 			return false;
 		}
 		
 		if(!p.isOp() && GameState.isState(GameState.ACTIVE)) {
-			p.sendMessage(Message.chat("&cYou cannot do this while a game is active."));
+			p.sendMessage(Chat.color("&cYou cannot do this while a game is active."));
 			return false;
 		}
 		
 		if(args.length == 0) {
-			p.sendMessage(Message.chat("&cUsage: /label [offset|undo] <text>"));
+			p.sendMessage(Chat.color("&cUsage: /label [offset|undo] <text>"));
 			return false;
 		}
 		
 		if(args[0].equals("undo")) {
 			
 			if(entries.size() <= 0) {
-				p.sendMessage(Message.chat("&cThere are no labels to remove."));
+				p.sendMessage(Chat.color("&cThere are no labels to remove."));
 				return false;
 			}
 			
@@ -70,7 +70,7 @@ public class Label implements CommandExecutor {
 		}
 		
 		try {
-			offset = (double) Integer.parseInt(args[0]);
+			offset = Double.parseDouble(args[0]);
 			i = 1;
 		} 
 		catch (Exception e) { 
@@ -87,18 +87,19 @@ public class Label implements CommandExecutor {
 			
 		Location loc = p.getLocation();
 		loc.setX(loc.getBlockX() + 0.5);
-		loc.setY(loc.getY() + (offset * 0.3) + 1);
+		loc.setY(loc.getY() + (offset) + 1);
 		loc.setZ(loc.getBlockZ() + 0.5);
 			
 		ArmorStand Label = (ArmorStand) p.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
-		Label.setCustomName(Message.chat(text));
+		Label.setCustomName(Chat.color(text));
 		Label.setCustomNameVisible(true);
 		Label.setVisible(false);
 		Label.setGravity(false);
 		Label.setSmall(true);
+		Label.setMarker(true);
 		entries.add(Label);
 			
-		p.sendMessage(Message.chat("Placed label with text \"" + text + "\""));
+		p.sendMessage(Chat.color("Placed label with text \"" + text + "\""));
 		
 		return false;
 	}

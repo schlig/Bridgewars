@@ -1,21 +1,21 @@
 package bridgewars.commands;
 
-import bridgewars.utils.ItemManager;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-
-import bridgewars.Main;
-import bridgewars.utils.Message;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.StringUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import bridgewars.Main;
+import bridgewars.messages.Chat;
+import bridgewars.utils.ItemManager;
 
 public class GiveItem implements CommandExecutor, TabCompleter {
 
@@ -55,11 +55,11 @@ public class GiveItem implements CommandExecutor, TabCompleter {
 					return false;
 				}
 			}
-			p.sendMessage(Message.chat("&cThis item does not exist!"));
+			p.sendMessage(Chat.color("&cThis item does not exist!"));
 		}
 		
 		else
-			p.sendMessage(Message.chat("&cYou do not have permission to do this."));
+			p.sendMessage(Chat.color("&cYou do not have permission to do this."));
 		
 		return false;
 	}

@@ -10,7 +10,7 @@ import bridgewars.Main;
 import bridgewars.game.CustomScoreboard;
 import bridgewars.game.GameState;
 import bridgewars.menus.GUI;
-import bridgewars.utils.Message;
+import bridgewars.messages.Chat;
 
 public class Menu implements CommandExecutor {
 	
@@ -34,7 +34,7 @@ public class Menu implements CommandExecutor {
 		&& p.getGameMode() != GameMode.CREATIVE
 		&& cs.hasTeam(p)
 		&& !p.isOp()) {
-			p.sendMessage(Message.chat("&cYou can't open the menu while in a game!"));
+			p.sendMessage(Chat.color("&cYou can't open the menu while in a game!"));
 			return true;
 		}
 		else

@@ -14,8 +14,9 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import bridgewars.effects.Cloak;
+import bridgewars.effects.ScoreboardJam;
+import bridgewars.messages.Chat;
 import bridgewars.settings.TimeLimit;
-import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
 public class CustomScoreboard {
@@ -40,7 +41,7 @@ public class CustomScoreboard {
 		if(scoreboard.getObjective("time") == null) {
 			time = scoreboard.registerNewObjective("time", "dummy");
 			time.setDisplaySlot(DisplaySlot.SIDEBAR);
-			time.setDisplayName(Message.chat("&6Time"));
+			time.setDisplayName(Chat.color("&6Time"));
 		}
 		
 		teamSetup("red", "&c", "&r");
@@ -62,8 +63,8 @@ public class CustomScoreboard {
 		this.team = scoreboard.getTeam(team);
 		this.team.setAllowFriendlyFire(true);
 		this.team.setCanSeeFriendlyInvisibles(true);
-		this.team.setPrefix(Message.chat(prefix));
-		this.team.setSuffix(Message.chat(suffix));
+		this.team.setPrefix(Chat.color(prefix));
+		this.team.setSuffix(Chat.color(suffix));
 	}
 	
 	public void sendScoreboard(Player p) {
@@ -75,7 +76,8 @@ public class CustomScoreboard {
 			display.put(p.getUniqueId(), Utils.getName(p.getUniqueId()));
 		time.setDisplaySlot(DisplaySlot.SIDEBAR);
 		if(hasTeam(p)) {
-			p.setScoreboard(scoreboard);
+			if(!ScoreboardJam.blacklist.contains(p))
+				p.setScoreboard(scoreboard);
 			score = time.getScore(display.get(p.getUniqueId()));
 			int points = score.getScore();
 			
@@ -86,28 +88,29 @@ public class CustomScoreboard {
 			
 			if(p.getLocation().getY() > boundingHeight  //decrease time by 1 if above y=30 to prevent platform stalling
 			&& p.getGameMode() != GameMode.CREATIVE
-            && points > 0)
+            && points > 0) {
 				score.setScore(points - 1);
+				return;
+			}
 			
-			if(points == TimeLimit - firstWarning && TimeLimit > firstWarning) {
-				Bukkit.broadcastMessage(Message.chat("&l" + p.getDisplayName() + " &rhas &l&e60&r seconds remaining!"));
+			if(points == TimeLimit - firstWarning) {
+				Bukkit.broadcastMessage(Chat.color("&l" + p.getDisplayName() + " &rhas &l&e60&r seconds remaining!"));
 				for(Player player : Bukkit.getOnlinePlayers())
 					player.playSound(player.getLocation(), Sound.NOTE_PLING, 1F, 1F);
 			}
 			
-			else if(points == TimeLimit - secondWarning && TimeLimit > secondWarning) {
-				Bukkit.broadcastMessage(Message.chat("&l" + p.getDisplayName() + " &rhas &l&630&r seconds remaining! Their location has been revealed!"));
+			else if(points == TimeLimit - secondWarning) {
+				Bukkit.broadcastMessage(Chat.color("&l" + p.getDisplayName() + " &rhas &l&630&r seconds remaining! Their location has been revealed!"));
 				for(Player player : Bukkit.getOnlinePlayers())
 					player.playSound(player.getLocation(), Sound.NOTE_PLING, 1F, 1F);
 				if(Cloak.cloakedPlayers.contains(p.getUniqueId()))
 					Cloak.cloakedPlayers.remove(p.getUniqueId());
 			}
 			
-			else if(points >= TimeLimit - finalWarning && TimeLimit > finalWarning) {
-				if(points == TimeLimit - finalWarning) {
-					Bukkit.broadcastMessage(Message.chat("&l" + p.getDisplayName() + " &rhas &l&c15&r seconds remaining!"));
-				}
-				if(score.getScore() == TimeLimit - 15 && TimeLimit - 15 > 0 || score.getScore() >= TimeLimit - 9 && TimeLimit - 15 > 0)
+			else if(points >= TimeLimit - finalWarning) {
+				if(points == TimeLimit - finalWarning)
+					Bukkit.broadcastMessage(Chat.color("&l" + p.getDisplayName() + " &rhas &l&c15&r seconds remaining!"));
+				if(points == TimeLimit - finalWarning || points >= TimeLimit - 9 && TimeLimit - finalWarning > 0)
 					for(Player player : Bukkit.getOnlinePlayers())
 						player.playSound(player.getLocation(), Sound.NOTE_PLING, 1F, 1F);
 				}
@@ -121,6 +124,13 @@ public class CustomScoreboard {
 			display.put(p.getUniqueId(), Utils.getName(p.getUniqueId()));
 		return time.getScore(display.get(p.getUniqueId())).getScore();
 	}
+	
+	public void setTime(Player p, int value) {
+		if(!display.containsKey(p.getUniqueId()))
+			display.put(p.getUniqueId(), Utils.getName(p.getUniqueId()));
+		score = time.getScore(display.get(p.getUniqueId()));
+		score.setScore(value);
+	}
 
 	public void resetTime(Player p) {
 		if(!display.containsKey(p.getUniqueId()))
@@ -130,7 +140,9 @@ public class CustomScoreboard {
 	}
 	
 	public void removePlayerFromTimer(Player p) {
-		Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "scoreboard players reset " + Utils.getName(p.getUniqueId()) + " time");
+		if(!display.containsKey(p.getUniqueId()))
+			display.put(p.getUniqueId(), Utils.getName(p.getUniqueId()));
+		Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "scoreboard players reset " + display.get(p.getUniqueId()) + " time");
 	}
 	
 	public void resetAllTimes() {
@@ -146,10 +158,10 @@ public class CustomScoreboard {
 			this.team = scoreboard.getTeam(team);
 			this.team.addEntry(p.getUniqueId().toString());
 			p.setDisplayName(this.team.getPrefix() + Utils.getName(p.getUniqueId()) + this.team.getSuffix());
-			p.sendMessage(Message.chat("&r&lYou joined the " + this.team.getPrefix() + "&l" + this.team.getName().toUpperCase() + "&r&l team."));
+			p.sendMessage(Chat.color("&r&lYou joined the " + this.team.getPrefix() + "&l" + this.team.getName().toUpperCase() + "&r&l team."));
 		}
 		else
-			p.sendMessage(Message.chat("&cThat team does not exist."));
+			p.sendMessage(Chat.color("&cThat team does not exist."));
 	}
 	
 	public String getTeam(Player p) {
@@ -160,7 +172,7 @@ public class CustomScoreboard {
 	
 	public Boolean matchTeam(Player p1, Player p2) {
 		if(getTeam(p1) == getTeam(p2))
-			if(getTeam(p1) == null)
+			if(getTeam(p1) == null || getTeam(p2) == null)
 				return false;
 			else
 				return true;
@@ -208,7 +220,7 @@ public class CustomScoreboard {
 			team.removeEntry(p.getUniqueId().toString());
 			p.setDisplayName(p.getName());
 			if(message)
-				p.sendMessage(Message.chat("&lYou left your team."));
+				p.sendMessage(Chat.color("&lYou left your team."));
 		}
 	}
 	

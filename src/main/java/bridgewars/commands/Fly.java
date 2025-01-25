@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 import bridgewars.Main;
 import bridgewars.game.GameState;
-import bridgewars.utils.Message;
+import bridgewars.messages.Chat;
 import bridgewars.utils.Utils;
 
 public class Fly implements CommandExecutor {
@@ -29,17 +29,17 @@ public class Fly implements CommandExecutor {
 		Player p = (Player) sender;
 		
 		if(!p.hasPermission("trusted.fly")) {
-			p.sendMessage(Message.chat("&cYou do not have permission to do this."));
+			p.sendMessage(Chat.color("&cYou do not have permission to do this."));
 			return false;
 		}
 		
 		if(GameState.isState(GameState.ACTIVE)
 		&& !Utils.isOutOfBounds(p.getLocation(), 200, 40, 200)
 		&& !p.isOp())
-			p.sendMessage(Message.chat("&cYou can't fly while in a game!"));
+			p.sendMessage(Chat.color("&cYou can't fly while in a game!"));
 		else if(bridgewars.parkour.Timer.parkourList.contains(p)
 				&& !p.isOp()) {
-			p.sendMessage(Message.chat("&cYou can't fly during a parkour challenge!"));
+			p.sendMessage(Chat.color("&cYou can't fly during a parkour challenge!"));
 		}
 		
 		else
@@ -57,8 +57,8 @@ public class Fly implements CommandExecutor {
 		
 		if(showMessage)
 			if(state)
-				p.sendMessage(Message.chat("&6Turned on flight"));
+				p.sendMessage(Chat.color("&6Turned on flight"));
 			else
-				p.sendMessage(Message.chat("&6Turned off flight"));
+				p.sendMessage(Chat.color("&6Turned off flight"));
 	}
 }

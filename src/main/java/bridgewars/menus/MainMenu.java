@@ -8,20 +8,15 @@ import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import bridgewars.game.CustomScoreboard;
 import bridgewars.game.Game;
 import bridgewars.game.GameState;
+import bridgewars.messages.Chat;
 import bridgewars.settings.ChosenKillstreaks;
 import bridgewars.settings.HotbarLayout;
 import bridgewars.utils.ItemManager;
-import bridgewars.utils.Message;
 
 public class MainMenu {
 
@@ -57,27 +52,27 @@ public class MainMenu {
 			if(p.isOp()) {
 				p.playSound(p.getLocation(), Sound.CLICK, 0.8F, 1F);
 				if(GameState.isState(GameState.INACTIVE)) {
-					p.sendMessage(Message.chat("&cThere is no game in progress."));
+					p.sendMessage(Chat.color("&cThere is no game in progress."));
 					p.getOpenInventory().close();
 					return;
 				}
 				
 				Game.endGame(p, true);
-				p.sendMessage(Message.chat("&7Ended the game"));
+				p.sendMessage(Chat.color("&7Ended the game"));
 			}
 			else
-				p.sendMessage(Message.chat("&cYou do not have permission to do this."));
+				p.sendMessage(Chat.color("&cYou do not have permission to do this."));
 			break;
 			
 		case SADDLE:
 			p.playSound(p.getLocation(), Sound.CLICK, 0.8F, 1F);
 			if(GameState.isState(GameState.INACTIVE)) {
-				p.sendMessage(Message.chat("&cThere is no game in progress."));
+				p.sendMessage(Chat.color("&cThere is no game in progress."));
 				p.getOpenInventory().close();
 				return;
 			}
 			Game.joinGame(p);
-			p.sendMessage(Message.chat("&6You joined the game."));
+			p.sendMessage(Chat.color("&6You joined the game."));
 			break;
 			
 		case BOOK:
@@ -100,39 +95,35 @@ public class MainMenu {
 			
 			break;
 			
-		case IRON_SWORD:
+		case IRON_SWORD: //killstreak menu
 			p.playSound(p.getLocation(), Sound.CLICK, 0.8F, 1F);
 			Inventory killstreakEditor = Bukkit.createInventory(null, 45, "Killstreak Bonuses");
 			killstreakEditor.setContents(menu.getKS().getContents());
 			p.openInventory(killstreakEditor);
 			
 			//main items
-			p.getOpenInventory().setItem(10, ItemManager.getItem("BridgeEgg").createItem(null));
+			p.getOpenInventory().setItem(10, ItemManager.getItem("BridgeEgg").createItem(null)); //bridge eggs, slot 10
 			if(ks.getThreeStreak(p) == 0)
 				p.getOpenInventory().getItem(10).addUnsafeEnchantment(Enchantment.LURE, 1);
+
+			p.getOpenInventory().setItem(12, ItemManager.getItem("PortableDoinkHut").createItem(null));
+			if(ks.getFiveStreak(p) == 0)
+				p.getOpenInventory().getItem(12).addUnsafeEnchantment(Enchantment.LURE, 1);
 			
 			ItemStack bat = ItemManager.getItem("HomeRunBat").createItem(null);
 			bat.setDurability((short) 0);
 			bat.removeEnchantment(Enchantment.KNOCKBACK);
-			p.getOpenInventory().setItem(12, bat);
-			if(ks.getFiveStreak(p) == 0)
-				p.getOpenInventory().getItem(12).addUnsafeEnchantment(Enchantment.LURE, 1);
+			p.getOpenInventory().setItem(14, bat);
+			if(ks.getSevenStreak(p) == 0)
+				p.getOpenInventory().getItem(14).addUnsafeEnchantment(Enchantment.LURE, 1);
 			
-			ItemStack potion = new ItemStack(Material.POTION, 7, (short) 8192);
-			ItemMeta meta = potion.getItemMeta();
-			meta.setDisplayName(ItemManager.getItem("LifeforcePotion").createItem(null).getItemMeta().getDisplayName());
-			meta.setLore(ItemManager.getItem("LifeforcePotion").createItem(null).getItemMeta().getLore());
-			meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-			potion.setItemMeta(meta);
-			p.getOpenInventory().setItem(14, potion);
-			if(ks.getSevenStreak(p) == 0) {
-				PotionMeta effect = (PotionMeta) potion.getItemMeta();
-				effect.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 1, 1), false);
-			}
-			p.getOpenInventory().setItem(16, new ItemStack(Material.BARRIER, 1));
+			p.getOpenInventory().setItem(16, ItemManager.getItem("HeartContainer").createItem(null));
+			if(ks.getFinalStreak(p) == 0)
+				p.getOpenInventory().getItem(16).addUnsafeEnchantment(Enchantment.LURE, 1);
 			
 			//alt items
-			p.getOpenInventory().setItem(28, ItemManager.getItem("PortableDoinkHut").createItem(null));
+			
+			p.getOpenInventory().setItem(28, ItemManager.getItem("Eraser").createItem(null));
 			if(ks.getThreeStreak(p) == 1)
 				p.getOpenInventory().getItem(28).addUnsafeEnchantment(Enchantment.LURE, 1);
 			
@@ -143,8 +134,10 @@ public class MainMenu {
 			p.getOpenInventory().setItem(32, ItemManager.getItem("BlackHole").createItem(null));
 			if(ks.getSevenStreak(p) == 1)
 				p.getOpenInventory().getItem(32).addUnsafeEnchantment(Enchantment.LURE, 1);
-			
-			p.getOpenInventory().setItem(34, new ItemStack(Material.BARRIER, 1));
+
+			p.getOpenInventory().setItem(34, ItemManager.getItem("MagicStopwatch").createItem(null));
+			if(ks.getFinalStreak(p) == 1)
+				p.getOpenInventory().getItem(34).addUnsafeEnchantment(Enchantment.LURE, 1);
 			break;
 			
 		case WOOL:

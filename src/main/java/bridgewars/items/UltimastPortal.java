@@ -17,15 +17,15 @@ import org.bukkit.inventory.ItemStack;
 
 import bridgewars.Main;
 import bridgewars.game.GameState;
+import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
-import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
 public class UltimastPortal implements ICustomItem, Listener {
 
-	private final int radius = 35;
-	private final int height = 30;
+	private final static int radius = 35;
+	private final static int height = 30;
 	
     public UltimastPortal(Main plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -37,7 +37,7 @@ public class UltimastPortal implements ICustomItem, Listener {
 		ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
 		ItemBuilder.setName(item, "Ultimast Portal");
         ItemBuilder.setLore(item, Arrays.asList(
-                Message.chat("&r&7Will teleport you literally anywhere")));
+                Chat.color("&r&7Will teleport you literally anywhere")));
         ItemBuilder.disableStacking(item);
         return item;
     }
@@ -53,18 +53,12 @@ public class UltimastPortal implements ICustomItem, Listener {
     
 	@EventHandler
 	public void onUse(PlayerInteractEvent e) {
-		Player p = e.getPlayer();
-		ItemStack item = p.getItemInHand();
+		Player user = e.getPlayer();
+		ItemStack item = user.getItemInHand();
 		if(e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			if(Utils.getID(item).equals(getClass().getSimpleName().toLowerCase())) {
-				double x = Utils.rand(radius * 2) - radius;
-				double y = Utils.rand(height) - 2;
-				double z = Utils.rand(radius * 2) - radius;
-				float pitch = p.getLocation().getPitch();
-				float yaw = p.getLocation().getYaw();
-				p.teleport(new Location(Bukkit.getWorld("world"), x, y, z, yaw, pitch));
-				p.playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT, 1F, 1F);
-				Utils.subtractItem(p);
+				activateEffect(user);
+				Utils.subtractItem(user);
 			}
 		}
 	}
@@ -74,5 +68,15 @@ public class UltimastPortal implements ICustomItem, Listener {
 		if(e.getEntity() instanceof EnderSignal
 		&& GameState.isState(GameState.ACTIVE))
 			e.setCancelled(true);
+	}
+	
+	public static void activateEffect(Player user) {
+		double x = Utils.rand(radius * 2) - radius;
+		double y = Utils.rand(height) - 2;
+		double z = Utils.rand(radius * 2) - radius;
+		float pitch = user.getLocation().getPitch();
+		float yaw = user.getLocation().getYaw();
+		user.teleport(new Location(Bukkit.getWorld("world"), x, y, z, yaw, pitch));
+		user.playSound(user.getLocation(), Sound.ENDERMAN_TELEPORT, 1F, 1F);
 	}
 }

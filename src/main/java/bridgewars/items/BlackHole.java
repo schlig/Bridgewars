@@ -13,9 +13,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import bridgewars.Main;
+import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
-import bridgewars.utils.Message;
 
 public class BlackHole implements ICustomItem, Listener {
 	
@@ -36,8 +36,8 @@ public class BlackHole implements ICustomItem, Listener {
         ItemStack item = new ItemStack(Material.SNOW_BALL, 1);
         ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
         ItemBuilder.setName(item, "Black Hole");
-        ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7A throwable black hole that eats"),
-                								Message.chat("&r&7every block in its path")));
+        ItemBuilder.setLore(item, Arrays.asList(Chat.color("&r&7A throwable black hole that eats"),
+                								Chat.color("&r&7every block in its path")));
         ItemBuilder.disableStacking(item);
         return item;
     }

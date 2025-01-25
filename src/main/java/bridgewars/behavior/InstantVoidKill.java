@@ -30,8 +30,12 @@ public class InstantVoidKill implements Listener {
 
 	@EventHandler
 	public void onDamage(EntityDamageEvent e) {
-		if(e.getEntity() instanceof Player && e.getCause() == DamageCause.VOID)
-			if(((Player) e.getEntity()).getGameMode() != GameMode.CREATIVE)
-				e.setDamage(500);
+		if(e.getEntity() instanceof Player && e.getCause() == DamageCause.VOID) {
+			Player player = (Player) e.getEntity();
+			if(player.getGameMode() == GameMode.CREATIVE)
+				e.setCancelled(true);
+			else
+				e.setDamage(player.getMaxHealth());
+		}
 	}
 }

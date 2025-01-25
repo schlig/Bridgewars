@@ -14,8 +14,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import bridgewars.Main;
 import bridgewars.commands.Fly;
+import bridgewars.messages.Chat;
 import bridgewars.utils.ItemManager;
-import bridgewars.utils.Message;
 
 public class Checkpoints implements Listener {
 	
@@ -55,7 +55,7 @@ public class Checkpoints implements Listener {
 			Fly.setFlight(p, false, false);
 			
 			if(!Timer.parkourList.contains(p)) {
-				p.sendMessage(Message.chat("&6Parkour challenge started!"));
+				p.sendMessage(Chat.color("&6Parkour challenge started!"));
 				new Timer(p).runTaskTimer(plugin, 0L, 0L);
 			}
 		}

@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import bridgewars.Main;
 import bridgewars.game.Game;
 import bridgewars.game.GameState;
-import bridgewars.utils.Message;
+import bridgewars.messages.Chat;
 
 public class EndGame implements CommandExecutor {
 	
@@ -30,16 +30,16 @@ public class EndGame implements CommandExecutor {
 		
 		if(p.hasPermission("trusted.endgame")) {
 			if(GameState.isState(GameState.INACTIVE)) {
-				p.sendMessage(Message.chat("&cThere is no game in progress."));
+				p.sendMessage(Chat.color("&cThere is no game in progress."));
 				return true;
 			}
 
 			Game.endGame(p, true);
-			p.sendMessage(Message.chat("&7Ended the game"));
+			p.sendMessage(Chat.color("&7Ended the game"));
 		}
 		
 		else
-			p.sendMessage(Message.chat("&cYou do not have permission to do this."));
+			p.sendMessage(Chat.color("&cYou do not have permission to do this."));
 		
 		return false;
 	}

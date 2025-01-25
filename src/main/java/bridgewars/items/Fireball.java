@@ -17,16 +17,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import bridgewars.Main;
-import bridgewars.game.CustomScoreboard;
+import bridgewars.game.CSManager;
 import bridgewars.game.GameState;
+import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
-import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
 public class Fireball implements ICustomItem, Listener {
-	
-    private CustomScoreboard cs = new CustomScoreboard();
 
     public Fireball(Main plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -38,7 +36,7 @@ public class Fireball implements ICustomItem, Listener {
                 || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if(Utils.getID(e.getItem()).equals(getClass().getSimpleName().toLowerCase())) {
                 if(GameState.isState(GameState.ACTIVE))
-                    if(cs.getTime(e.getPlayer()) == 0) {
+                    if(CSManager.getTime(e.getPlayer()) == 0) {
                         e.setCancelled(true);
                         return;
                     }
@@ -72,7 +70,7 @@ public class Fireball implements ICustomItem, Listener {
                 && e.getDamager() instanceof org.bukkit.entity.Fireball) {
             org.bukkit.entity.Fireball fb = (org.bukkit.entity.Fireball) e.getDamager();
             Player p = (Player) e.getEntity();
-            if(cs.getTeam(p).equals(cs.getTeam((Player) fb.getShooter())) && p != (Player) fb.getShooter())
+            if(CSManager.getTeam(p).equals(CSManager.getTeam((Player) fb.getShooter())) && p != (Player) fb.getShooter())
                 e.setCancelled(true);
             else {
                 Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("bridgewars"), () -> p.setVelocity(p.getVelocity().multiply(3).setY(2)), 1L);
@@ -101,8 +99,8 @@ public class Fireball implements ICustomItem, Listener {
         ItemStack item = new ItemStack(Material.FIREBALL, 1);
         ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
         ItemBuilder.setName(item, "Fireball");
-        ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7Throws an exploding fireball"),
-                Message.chat("&r&7that deals heavy knockback")));
+        ItemBuilder.setLore(item, Arrays.asList(Chat.color("&r&7Throws an exploding fireball"),
+                Chat.color("&r&7that deals heavy knockback")));
         return item;
     }
 }

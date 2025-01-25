@@ -20,6 +20,7 @@ import bridgewars.commands.Fly;
 import bridgewars.effects.Cloak;
 import bridgewars.effects.Fireworks;
 import bridgewars.items.SadTear;
+import bridgewars.messages.Chat;
 import bridgewars.settings.Blocks;
 import bridgewars.settings.Bows;
 import bridgewars.settings.DigWars;
@@ -31,7 +32,6 @@ import bridgewars.settings.RandomTeams;
 import bridgewars.settings.Shears;
 import bridgewars.settings.Swords;
 import bridgewars.utils.ItemManager;
-import bridgewars.utils.Message;
 import bridgewars.utils.Packet;
 import bridgewars.utils.Utils;
 import bridgewars.utils.World;
@@ -45,37 +45,43 @@ public class Game {
 	public static void startGame(Player p, boolean debugMessages) {
 		
 		if(GameState.isState(GameState.EDIT)) {
-			p.sendMessage(Message.chat("&cYou can't start a game while Edit Mode is active."));
+			p.sendMessage(Chat.color("&cYou can't start a game while Edit Mode is active."));
 			return;
 		}
 		if(GameState.isState(GameState.ACTIVE)) {
-			p.sendMessage(Message.chat("&cThere is already a game in progress."));
+			p.sendMessage(Chat.color("&cThere is already a game in progress."));
 			return;
 		}
 		
 		World.clearMap();
 		if(debugMessages)
-			p.sendMessage(Message.chat("&7Cleared the map"));
+			p.sendMessage(Chat.color("&7Cleared the map"));
 		
 		if(!(World.loadMap(null, p, false)))
 			return;
 		if(debugMessages)
-			p.sendMessage(Message.chat("&7Built the map"));
+			p.sendMessage(Chat.color("&7Built the map"));
 		
 		Timer.runTimer();
 		if(debugMessages)
-			p.sendMessage(Message.chat("&7Started the timer"));
+			p.sendMessage(Chat.color("&7Started the timer"));
 		
 		Game.placeSpawns();
 		if(debugMessages)
-			p.sendMessage(Message.chat("&7Placed spawn platforms"));
+			p.sendMessage(Chat.color("&7Placed spawn platforms"));
 		
 		SadTear.clearSadRoom();
+		
+		Leaderboards.deleteLabels();
+		Leaderboards.clearKills();
 		
 		if(RandomTeams.isState(RandomTeams.ENABLED))
 			cs.clearTeams();
 		
 		for(Player player : Bukkit.getOnlinePlayers()) {
+			if(player.getGameMode() == GameMode.CREATIVE
+			|| player.getGameMode() == GameMode.SPECTATOR)
+				continue;
 			player.getInventory().clear();
 			Fly.allowFlight.put(player, false);
 			player.setFlying(false);
@@ -86,9 +92,9 @@ public class Game {
 			Game.grantItems(player, false);
 		}
 		if(debugMessages) {
-			p.sendMessage(Message.chat("&7Randomized teams"));
-			p.sendMessage(Message.chat("&7Teleported players"));
-			p.sendMessage(Message.chat("&7Granted starting items"));
+			p.sendMessage(Chat.color("&7Randomized teams"));
+			p.sendMessage(Chat.color("&7Teleported players"));
+			p.sendMessage(Chat.color("&7Granted starting items"));
 		}
 		
 		GameState.setState(GameState.ACTIVE);
@@ -161,6 +167,7 @@ public class Game {
 	
 	public static void endGame(Player winner, Boolean forced) {
 		Cloak.cloakedPlayers.clear();
+		Leaderboards.placeLabels();
 		if(winner != null) {
 			List<Player> winners = new ArrayList<>();
 			for(Player p : Bukkit.getOnlinePlayers()) {
@@ -188,8 +195,8 @@ public class Game {
 					p.getInventory().setArmorContents(null);
 					p.setGameMode(GameMode.ADVENTURE);
 					if(!forced) {
-						Packet.sendTitle(p, Message.chat("&6&lGAME OVER"), 
-								Message.chat("&l" + cs.getTeam(winner).substring(0, 1).toUpperCase()
+						Packet.sendTitle(p, Chat.color("&6&lGAME OVER"), 
+								Chat.color("&l" + cs.getTeam(winner).substring(0, 1).toUpperCase()
 										          + cs.getTeam(winner).substring(1, cs.getTeam(winner).length()) 
 										          + " team wins!"), 5, 20, 5);
 						if(cs.getTeam(p) == cs.getTeam(winner))

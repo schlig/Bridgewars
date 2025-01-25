@@ -15,7 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import bridgewars.Main;
-import bridgewars.utils.Message;
+import bridgewars.messages.Chat;
 
 public class OverwriteMap implements CommandExecutor {
 	
@@ -35,7 +35,7 @@ public class OverwriteMap implements CommandExecutor {
 		
 		if(p.isOp()) {
 			if(args.length == 0) {
-				p.sendMessage(Message.chat("&cYou must specify a map name."));
+				p.sendMessage(Chat.color("&cYou must specify a map name."));
 				return false;
 			}
 			
@@ -48,7 +48,7 @@ public class OverwriteMap implements CommandExecutor {
 			
 			File file = new File(filepath + mapName + ".map");
 			if(!file.exists()) {
-				p.sendMessage(Message.chat("&cThat map does not exist."));
+				p.sendMessage(Chat.color("&cThat map does not exist."));
 				return false;
 			}
 			try {
@@ -71,14 +71,14 @@ public class OverwriteMap implements CommandExecutor {
 						}
 				bw.flush();
 				bw.close();
-				p.sendMessage(Message.chat("&7Saved new version of map \"&6" + mapName + "&7\"."));
+				p.sendMessage(Chat.color("&7Saved new version of map \"&6" + mapName + "&7\"."));
 			} catch (IOException e) {
-				p.sendMessage(Message.chat("&cFailed to save the map."));
+				p.sendMessage(Chat.color("&cFailed to save the map."));
 			}
 		}
 	
 		else
-			p.sendMessage(Message.chat("&cYou do not have permission to do this."));
+			p.sendMessage(Chat.color("&cYou do not have permission to do this."));
 		
 		return false;
 	}

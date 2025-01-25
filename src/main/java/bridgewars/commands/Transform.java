@@ -9,8 +9,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import bridgewars.Main;
+import bridgewars.messages.Chat;
 import bridgewars.utils.Disguise;
-import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
 public class Transform implements CommandExecutor {
@@ -27,7 +27,7 @@ public class Transform implements CommandExecutor {
 		
 		Player p = (Player) sender;
 		if(!p.hasPermission("trusted.disguise")) {
-			p.sendMessage(Message.chat("&cYou do not have permission to do this."));
+			p.sendMessage(Chat.color("&cYou do not have permission to do this."));
 			return false;
 		}
 

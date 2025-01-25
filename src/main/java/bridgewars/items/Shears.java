@@ -1,5 +1,6 @@
 package bridgewars.items;
 
+import bridgewars.settings.GigaDrill;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
 import org.bukkit.Material;
@@ -16,7 +17,10 @@ public class Shears implements ICustomItem {
     @Override
     public ItemStack createItem(Player p) {
         ItemStack item = new ItemStack(Material.SHEARS, 1);
-        item.addEnchantment(Enchantment.DIG_SPEED, 3);
+        if(GigaDrill.isState(GigaDrill.ENABLED))
+        	item.addEnchantment(Enchantment.DIG_SPEED, 5);
+        else
+        	item.addEnchantment(Enchantment.DIG_SPEED, 3);
 		ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
 		ItemBuilder.setName(item, "Shears");
         ItemBuilder.setUnbreakable(item, true);

@@ -2,7 +2,6 @@ package bridgewars.messages;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,29 +10,31 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import bridgewars.Main;
 import bridgewars.commands.ChatSetting;
 import bridgewars.commands.Fly;
-import bridgewars.game.CustomScoreboard;
+import bridgewars.game.CSManager;
+import bridgewars.game.Leaderboards;
 import bridgewars.settings.DoubleHealth;
-import bridgewars.utils.Message;
 import bridgewars.utils.Permissions;
+import bridgewars.utils.World;
 
 public class OnJoin implements Listener {
 	
-	private CustomScoreboard cs;
-	
 	public OnJoin(Main plugin) {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
-		cs = new CustomScoreboard();
 	}
 	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
-		cs.sendScoreboard(e.getPlayer());
-		
 		Player p = e.getPlayer();
-		cs.resetTeam(p, false);
+		
+		
+		CSManager.sendScoreboard(p);
+		CSManager.resetTeam(p, false);
+		CSManager.removePlayerFromTimer(p);
+		
+		Leaderboards.clearKills(p);
+		
 		p.setLevel(0);
-		p.sendMessage(Message.chat("Welcome to &6Bridgewars&r! Type &c/menu&r to get started."));
-		cs.removePlayerFromTimer(p);
+		p.sendMessage(Chat.color("Welcome to &6Bridgewars&r! Type &c/menu&r to get started."));
 		Fly.allowFlight.put(p, false);
 		if(!ChatSetting.allChat.containsKey(p))
 			ChatSetting.allChat.put(p, true);
@@ -48,16 +49,11 @@ public class OnJoin implements Listener {
 			p.setMaxHealth(20);
 		}
 		
-		if(p.getGameMode() == GameMode.CREATIVE || p.getGameMode() == GameMode.SPECTATOR)
-			Fly.allowFlight.put(p, true);
-		
-		else {
-			p.setAllowFlight(false);
-			p.setFlying(false);
-			p.teleport(new Location(Bukkit.getWorld("world"), 1062.5, 52, 88.5, -90, 10));
-			p.getInventory().clear();
-			p.getInventory().setArmorContents(null);
-			p.setGameMode(GameMode.ADVENTURE);
-		}
+		p.setAllowFlight(false);
+		p.setFlying(false);
+		p.teleport(World.getSpawn()); //uses bridgewars.utils.World, not bukkit.org.World
+		p.getInventory().clear();
+		p.getInventory().setArmorContents(null);
+		p.setGameMode(GameMode.ADVENTURE);
 	}
 }

@@ -1,29 +1,49 @@
 package bridgewars.effects;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
 
 import bridgewars.Main;
-import bridgewars.game.CustomScoreboard;
+import bridgewars.game.CSManager;
+import bridgewars.utils.Utils;
 
 public class ScoreboardJam extends BukkitRunnable {
 	
-	private CustomScoreboard cs;
-	
-    private Player u; //user
-    private int t;    //duration
+    private int timer;    //duration
     
-    private Main plugin;
+    public static Boolean forceCancel = false;
+    public static List<Player> blacklist = new ArrayList<Player>();
     
-    public ScoreboardJam(Player u, double d, double p, int t, Main plugin){
-        cs = new CustomScoreboard();
-        this.u = u;
-        this.t = t;
-        this.plugin = plugin;
+    private static Scoreboard scrambledScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+    
+    public ScoreboardJam(Player user, int duration, Main plugin){
+        this.timer = duration;
+        
+        blacklist.clear();
+        forceCancel = false;
+        
+        for(Player target : Bukkit.getOnlinePlayers())
+        	if(!Utils.matchTeam(target, user)) {
+        		blacklist.add(target);
+        		target.setScoreboard(scrambledScoreboard);
+        	}
+        	else
+        		CSManager.sendScoreboard(target);
     }
     
     @Override
     public void run(){
-    	this.cancel();
+    	timer--;
+    	if(timer <= 0 || forceCancel) {
+    		timer = 0;
+    		forceCancel = false;
+    		blacklist.clear();
+    		this.cancel();
+    	}
     }
 }

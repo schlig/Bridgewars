@@ -113,7 +113,7 @@ public class DeathMessages implements Listener {
 		messages.put("wBeard", " was promptly dealt with after attempting to lick the beard of ");
 		messages.put("Wabadaba", " was too slow for ");
 		messages.put("onjit", " was snagged by ");
-		messages.put("TalonBX", " got EEEOOOWWW'd by ");
+		messages.put("TalonBX", " got bonked by ");
 		messages.put("Northwind5545", " was sanded by ");
 		messages.put("nicktoot", " was sad roomed by ");
 		messages.put("EmergenCheese", " blundered horribly against ");

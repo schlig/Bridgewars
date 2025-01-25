@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import bridgewars.Main;
-import bridgewars.utils.Message;
+import bridgewars.messages.Chat;
 import bridgewars.utils.Utils;
 
 public class ParkourCheckpoint implements Listener {
@@ -25,7 +25,7 @@ public class ParkourCheckpoint implements Listener {
 			if(Checkpoints.cp.containsKey(p) 
 					&& Utils.getID(p.getItemInHand()).equals("parkourcheckpoint")) {
 				Checkpoints.cp.put(p, p.getLocation());
-				p.sendMessage(Message.chat("&6Your checkpoint has been saved to your location!"));
+				p.sendMessage(Chat.color("&6Your checkpoint has been saved to your location!"));
 			}
 		}
 	}

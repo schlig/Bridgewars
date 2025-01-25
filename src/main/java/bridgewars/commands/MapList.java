@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import bridgewars.Main;
-import bridgewars.utils.Message;
+import bridgewars.messages.Chat;
 
 public class MapList implements CommandExecutor {
 	public MapList(Main plugin) {
@@ -24,9 +24,9 @@ public class MapList implements CommandExecutor {
 		Player p = (Player) sender;
 		File file = new File("./plugins/bridgewars/maps/");
 		String[] mapList = file.list();
-		String message = Message.chat("&lMap List &7(" + mapList.length + ")&r&l: " + "&r&6");
+		String message = Chat.color("&lMap List &7(" + mapList.length + ")&r&l: " + "&r&6");
 		for(int i = 0; i < mapList.length; i++)
-			message = message + mapList[i].substring(0, mapList[i].length() - 4) + Message.chat("&r,&6 ");
+			message = message + mapList[i].substring(0, mapList[i].length() - 4) + Chat.color("&r,&6 ");
 		message = message.substring(0, message.length() - 6);
 		p.sendMessage(message);
 		

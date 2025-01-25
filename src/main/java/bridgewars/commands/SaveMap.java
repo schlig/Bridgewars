@@ -15,7 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import bridgewars.Main;
-import bridgewars.utils.Message;
+import bridgewars.messages.Chat;
 
 public class SaveMap implements CommandExecutor {
 
@@ -35,7 +35,7 @@ public class SaveMap implements CommandExecutor {
 		
 		if(p.isOp()) {
 			if(args.length == 0) {
-				p.sendMessage(Message.chat("&cYou must specify a map name."));
+				p.sendMessage(Chat.color("&cYou must specify a map name."));
 				return false;
 			}
 			
@@ -48,7 +48,7 @@ public class SaveMap implements CommandExecutor {
 			
 			File file = new File(filepath + mapName + ".map");
 			if(file.exists()) {
-				p.sendMessage(Message.chat("&cA map with the name \"" + mapName + "\" already exists. Use &l/overwrite&r&c&l to overwrite it."));
+				p.sendMessage(Chat.color("&cA map with the name \"" + mapName + "\" already exists. Use &l/overwrite&r&c&l to overwrite it."));
 				return false;
 			}
 			try {
@@ -71,14 +71,14 @@ public class SaveMap implements CommandExecutor {
 						}
 				bw.flush();
 				bw.close();
-				p.sendMessage(Message.chat("&7Map saved as \"&6" + mapName + "&7\"."));
+				p.sendMessage(Chat.color("&7Map saved as \"&6" + mapName + "&7\"."));
 			} catch (IOException e) {
-				p.sendMessage(Message.chat("&cFailed to save the map."));
+				p.sendMessage(Chat.color("&cFailed to save the map."));
 			}
 		}
 	
 		else
-			p.sendMessage(Message.chat("&cYou do not have permission to do this."));
+			p.sendMessage(Chat.color("&cYou do not have permission to do this."));
 		
 		return false;
 	}

@@ -10,12 +10,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.event.entity.PlayerDeathEvent;
 
 import bridgewars.Main;
-import bridgewars.utils.Message;
+import bridgewars.messages.Chat;
 
 public class PlotArmor implements Listener {
 
@@ -40,10 +40,10 @@ public class PlotArmor implements Listener {
 		
 		p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, duration, level - 1), true);
 
-		p.sendMessage(Message.chat("&cYou withstood a fatal attack!"));
+		p.sendMessage(Chat.color("&cYou withstood a fatal attack!"));
 		p.playSound(p.getLocation(), Sound.LAVA_POP, 0.5F, 0.8F);
 		if(p.getKiller() instanceof Player)  {
-			p.getKiller().sendMessage(Message.chat(p.getDisplayName() + " &cwithstood your blow!"));
+			p.getKiller().sendMessage(Chat.color(p.getDisplayName() + " &cwithstood your blow!"));
 			p.getKiller().playSound(p.getKiller().getLocation(), Sound.ENDERDRAGON_HIT, 0.8F, 1F);
 		}
 	}

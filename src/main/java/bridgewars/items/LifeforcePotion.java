@@ -19,9 +19,9 @@ import org.bukkit.potion.PotionEffectType;
 
 import bridgewars.Main;
 import bridgewars.effects.PlotArmor;
+import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
-import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
 public class LifeforcePotion implements ICustomItem, Listener {
@@ -56,10 +56,8 @@ public class LifeforcePotion implements ICustomItem, Listener {
         item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
         ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
         ItemBuilder.setName(item, "Lifeforce Potion");
-        ItemBuilder.setLore(item, Arrays.asList(Message.chat("&r&7Strength I (0:10)"),
-                Message.chat("&r&7Plot Armor"),
-                Message.chat("&r&7Revive on death with"),
-                Message.chat("&r&7full health")));
+        ItemBuilder.setLore(item, Arrays.asList(Chat.color("&r&7Strength I (0:10)"),
+                Chat.color("&r&7Revive on death with full health")));
         ItemBuilder.hideFlags(item);
         return item;
     }

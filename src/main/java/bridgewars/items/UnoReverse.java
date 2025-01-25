@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,9 +14,9 @@ import org.bukkit.inventory.ItemStack;
 
 import bridgewars.Main;
 import bridgewars.game.GameState;
+import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
-import bridgewars.utils.Message;
 import bridgewars.utils.Utils;
 
 public class UnoReverse implements ICustomItem, Listener {
@@ -35,8 +36,8 @@ public class UnoReverse implements ICustomItem, Listener {
         ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
         ItemBuilder.setName(item, "Uno Reverse Card");
         ItemBuilder.setLore(item, Arrays.asList(
-                Message.chat("&r&7Flips another player to face the opposite"),
-                Message.chat("&r&7direction")));
+                Chat.color("&r&7Flips another player to face the opposite"),
+                Chat.color("&r&7direction")));
         return item;
     }
     
@@ -69,6 +70,10 @@ public class UnoReverse implements ICustomItem, Listener {
 				//note: pitch goes from -180 to 180 (360 degrees, idk why its handled like this)
 				
 				target.teleport(new Location(Bukkit.getWorld("world"), x, y, z, yaw, pitch));
+				
+				user.playSound(user.getLocation(), Sound.IRONGOLEM_HIT, 1.0F, 2F);
+				target.playSound(user.getLocation(), Sound.IRONGOLEM_HIT, 1.0F, 2F);
+				
 				Utils.subtractItem(user);
 			}
 		}

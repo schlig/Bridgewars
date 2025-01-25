@@ -6,8 +6,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import bridgewars.messages.Chat;
 import bridgewars.settings.HotbarLayout;
-import bridgewars.utils.Message;
 
 public class HotbarEditor {
 
@@ -61,7 +61,7 @@ public class HotbarEditor {
 				}
 			
 			e.setCancelled(true);
-			p.sendMessage(Message.chat("&aSaved your hotbar layout!"));
+			p.sendMessage(Chat.color("&aSaved your hotbar layout!"));
 			p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
 			break;
 

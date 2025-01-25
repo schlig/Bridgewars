@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import bridgewars.Main;
-import bridgewars.utils.Message;
+import bridgewars.messages.Chat;
 import bridgewars.utils.World;
 
 public class LoadMap implements CommandExecutor {
@@ -40,7 +40,7 @@ public class LoadMap implements CommandExecutor {
 		}
 		
 		else
-			p.sendMessage(Message.chat("&cI'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is in error."));
+			p.sendMessage(Chat.color("&cI'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is in error."));
 		
 		return true;
 	}

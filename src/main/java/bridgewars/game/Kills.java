@@ -38,41 +38,48 @@ public class Kills implements Listener {
 		
 		if(GameState.isState(GameState.ACTIVE))
 			if(e.getEntity().getKiller() instanceof Player) {
+
+				Player player = e.getEntity().getKiller();   //killer
+				Player victim = e.getEntity();				 //victim
 				
-				Player p = e.getEntity(); //victim
-				Player k = e.getEntity().getKiller(); //killer
-				
-				if(p == k || !cs.matchTeam(p, k))
+				if(player == victim || cs.matchTeam(player, victim))
 					return;
 				
-				k.setLevel(k.getLevel() + 1);
+				Leaderboards.addKill(player);
+				player.setLevel(player.getLevel() + 1);
 				if(KillstreakRewards.getState().isEnabled()) {
-					if(k.getLevel() % 3 == 0)
-						if(ks.getThreeStreak(k) == 0)
-							k.getInventory().addItem(ItemManager.getItem("BridgeEgg").createItem(p));
-						else if(ks.getThreeStreak(k) == 1)
-							k.getInventory().addItem(ItemManager.getItem("PortableDoinkHut").createItem(p));
-					if(k.getLevel() % 5 == 0)
-						if(ks.getFiveStreak(k) == 0)
-							k.getInventory().addItem(ItemManager.getItem("HomeRunBat").createItem(p));
-						else if(ks.getFiveStreak(k) == 1)
-							k.getInventory().addItem(ItemManager.getItem("Fireball").createItem(p));
-					if(k.getLevel() % 7 == 0)
-						if(ks.getSevenStreak(k) == 0)
-							k.getInventory().addItem(ItemManager.getItem("LifeforcePotion").createItem(p));
-						else if(ks.getSevenStreak(k) == 1)
-							k.getInventory().addItem(ItemManager.getItem("BlackHole").createItem(p));
+					if(player.getLevel() % 3 == 0)
+						if(ks.getThreeStreak(player) == 0)
+							player.getInventory().addItem(ItemManager.getItem("BridgeEgg").createItem(player));
+						else if(ks.getThreeStreak(player) == 1)
+							player.getInventory().addItem(ItemManager.getItem("MysteryPill").createItem(player));
+					if(player.getLevel() % 5 == 0)
+						if(ks.getFiveStreak(player) == 0)
+							player.getInventory().addItem(ItemManager.getItem("PortableDoinkHut").createItem(player));
+						else if(ks.getFiveStreak(player) == 1)
+							player.getInventory().addItem(ItemManager.getItem("Fireball").createItem(player));
+					if(player.getLevel() % 7 == 0)
+						if(ks.getSevenStreak(player) == 0)
+							player.getInventory().addItem(ItemManager.getItem("HomeRunBat").createItem(player));
+						else if(ks.getSevenStreak(player) == 1)
+							player.getInventory().addItem(ItemManager.getItem("BlackHole").createItem(player));
+					if(player.getLevel() % 15 == 0)
+						if(ks.getFinalStreak(player) == 0)
+							player.getInventory().addItem(ItemManager.getItem("HeartContainer").createItem(player));
+						else if(ks.getFinalStreak(player) == 1)
+							player.getInventory().addItem(ItemManager.getItem("MagicStopwatch").createItem(player));
+						
 				}
 				
-				if(cs.getTime(p) < tl.getLimit() - 15)
-					k.playSound(k.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+				if(cs.getTime(victim) < tl.getLimit() - 15)
+					player.playSound(player.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
 				else
-					k.playSound(k.getLocation(), Sound.LEVEL_UP, 1F, 1F);
+					player.playSound(player.getLocation(), Sound.LEVEL_UP, 1F, 1F);
 				
-				if(k.getHealth() + 7 > k.getMaxHealth())
-					k.setHealth(k.getMaxHealth());
+				if(player.getHealth() + 7 > player.getMaxHealth())
+					player.setHealth(player.getMaxHealth());
 				else
-					k.setHealth(k.getHealth() + 7);
+					player.setHealth(player.getHealth() + 7);
 				
 				ct.setAttacker((Player)e.getEntity(), null);
 			}

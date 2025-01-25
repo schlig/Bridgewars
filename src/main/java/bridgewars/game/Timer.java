@@ -10,9 +10,9 @@ import org.bukkit.scheduler.BukkitTask;
 
 import bridgewars.Main;
 import bridgewars.effects.ParticleTrail;
+import bridgewars.messages.Chat;
 import bridgewars.settings.NaturalItemSpawning;
 import bridgewars.settings.TimeLimit;
-import bridgewars.utils.Message;
 import bridgewars.utils.World;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 
@@ -20,7 +20,6 @@ public class Timer {
 	
 	private static ArrayList<BukkitTask> particleList = new ArrayList<>();
 	
-	private static CustomScoreboard cs;
 	private static TimeLimit limit;
 	private static final int itemSpawnLimit = 10;
 	private static int itemSpawnTimer = itemSpawnLimit;
@@ -29,14 +28,13 @@ public class Timer {
 	
 	public Timer(Main plugin) {
 		Timer.plugin = plugin;
-		cs = new CustomScoreboard();
 		limit = new TimeLimit();
 	}
 	
 	public static void runTimer() {
 		for(Player p : Bukkit.getOnlinePlayers())
-			cs.resetTime(p);
-		Bukkit.broadcastMessage(Message.chat("&r&lTime Limit: &6&l" + limit.getLimit()));
+			CSManager.resetTime(p);
+		Bukkit.broadcastMessage(Chat.color("&r&lTime Limit: &6&l" + limit.getLimit()));
 		
 		new BukkitRunnable() {
 			@Override
@@ -60,9 +58,9 @@ public class Timer {
 				}
 				
 				for(Player p : Bukkit.getOnlinePlayers()) { //creates the particle trail for players that are close to winning
-					cs.updateTime(p, limit.getLimit());
-					if(cs.getTime(p) == limit.revealTime())
-						particleList.add(new ParticleTrail((Entity) p, EnumParticle.EXPLOSION_NORMAL, 0, 30, 0, 0, 10 * 255, 0, 0.0001F, 20, 300, true).runTaskTimer(plugin, 0L, 1L));
+					if(CSManager.getTime(p) == limit.revealTime())
+						particleList.add(new ParticleTrail((Entity) p, EnumParticle.EXPLOSION_NORMAL, 0, 30, 0, 0, 10 * 255, 0, 0.0001F, 20, 30 * 20, true).runTaskTimer(plugin, 0L, 1L));
+					CSManager.updateTime(p, limit.getLimit());
 				}
 			}
 		}.runTaskTimer(Bukkit.getPluginManager().getPlugin("bridgewars"), 0L, 20L);
