@@ -36,9 +36,11 @@ public class SaveMap implements CommandExecutor {
 		if(p.isOp()) {
 			if(args.length == 0) {
 				p.sendMessage(Chat.color("&cYou must specify a map name."));
-				return false;
+				return true;
 			}
-			
+			else {
+				
+			}
 			String mapName = "";
 			
 			for(int i = 0; i < args.length; i++)
@@ -49,7 +51,7 @@ public class SaveMap implements CommandExecutor {
 			File file = new File(filepath + mapName + ".map");
 			if(file.exists()) {
 				p.sendMessage(Chat.color("&cA map with the name \"" + mapName + "\" already exists. Use &l/overwrite&r&c&l to overwrite it."));
-				return false;
+				return true;
 			}
 			try {
 				Block block;
@@ -80,6 +82,6 @@ public class SaveMap implements CommandExecutor {
 		else
 			p.sendMessage(Chat.color("&cYou do not have permission to do this."));
 		
-		return false;
+		return true;
 	}
 }

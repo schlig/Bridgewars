@@ -19,18 +19,21 @@ import org.bukkit.inventory.ItemStack;
 import bridgewars.commands.Fly;
 import bridgewars.effects.Cloak;
 import bridgewars.effects.Fireworks;
+import bridgewars.items.MagicStopwatch;
 import bridgewars.items.SadTear;
 import bridgewars.messages.Chat;
-import bridgewars.settings.Blocks;
-import bridgewars.settings.Bows;
-import bridgewars.settings.DigWars;
-import bridgewars.settings.DoubleHealth;
-import bridgewars.settings.DoubleJump;
-import bridgewars.settings.GigaDrill;
-import bridgewars.settings.HotbarLayout;
-import bridgewars.settings.RandomTeams;
-import bridgewars.settings.Shears;
-import bridgewars.settings.Swords;
+import bridgewars.settings.PlayerSettings;
+import bridgewars.settings.enums.Blocks;
+import bridgewars.settings.enums.Bows;
+import bridgewars.settings.enums.DigWars;
+import bridgewars.settings.enums.DoubleHealth;
+import bridgewars.settings.enums.DoubleJump;
+import bridgewars.settings.enums.GigaDrill;
+import bridgewars.settings.enums.HidePlayers;
+import bridgewars.settings.enums.RandomTeams;
+import bridgewars.settings.enums.Shears;
+import bridgewars.settings.enums.Swords;
+import bridgewars.utils.Disguise;
 import bridgewars.utils.ItemManager;
 import bridgewars.utils.Packet;
 import bridgewars.utils.Utils;
@@ -38,9 +41,7 @@ import bridgewars.utils.World;
 
 public class Game {
 	
-	private static CustomScoreboard cs = new CustomScoreboard();
-	private static HotbarLayout hotbar = new HotbarLayout();
-	
+	private static CustomScoreboard CSManager = new CustomScoreboard();
 	
 	public static void startGame(Player p, boolean debugMessages) {
 		
@@ -54,6 +55,11 @@ public class Game {
 		}
 		
 		World.clearMap();
+		World.fill(-15, 41, -15, 
+					15, 47,  15, Material.AIR);
+		
+		World.indestructibleBlockList.clear();
+		
 		if(debugMessages)
 			p.sendMessage(Chat.color("&7Cleared the map"));
 		
@@ -71,14 +77,15 @@ public class Game {
 			p.sendMessage(Chat.color("&7Placed spawn platforms"));
 		
 		SadTear.clearSadRoom();
+		MagicStopwatch.speedModifier.clear();
+		Leaderboards.clearInstanceLeaderboardsLabels();
 		
-		Leaderboards.deleteLabels();
-		Leaderboards.clearKills();
-		
-		if(RandomTeams.isState(RandomTeams.ENABLED))
-			cs.clearTeams();
+		if(RandomTeams.getState().isEnabled())
+			CSManager.clearTeams();
+		String hidePlayers = Disguise.randomDisguiseList.get(Utils.rand(Disguise.randomDisguiseList.size()));
 		
 		for(Player player : Bukkit.getOnlinePlayers()) {
+			CSManager.removePlayerFromTimer(player);
 			if(player.getGameMode() == GameMode.CREATIVE
 			|| player.getGameMode() == GameMode.SPECTATOR)
 				continue;
@@ -87,7 +94,8 @@ public class Game {
 			player.setFlying(false);
 			if(!DoubleJump.getState().isEnabled())
 				player.setAllowFlight(false);
-			cs.removePlayerFromTimer(player);
+			if(HidePlayers.getState().isEnabled())
+				Disguise.setDisguise(player, Utils.getUUID(hidePlayers));
 			Game.spawnPlayer(player);
 			Game.grantItems(player, false);
 		}
@@ -109,8 +117,8 @@ public class Game {
 	}
 	
 	public static void leaveGame(Player p) {
-		cs.resetTeam(p, false);
-		cs.removePlayerFromTimer(p);
+		CSManager.resetTeam(p, false);
+		CSManager.removePlayerFromTimer(p);
 		if(p.getGameMode() != GameMode.CREATIVE) {
 			p.getInventory().clear();
 			p.teleport(new Location(Bukkit.getWorld("world"), 1062.5, 52, 88.5, -90, 10));
@@ -119,18 +127,18 @@ public class Game {
 	
 	public static void randomizeTeam(Player p, Boolean override) {
 		if(override)
-			cs.resetTeam(p, false);
+			CSManager.resetTeam(p, false);
 		
-		if(cs.hasTeam(p))
+		if(CSManager.hasTeam(p))
 			return;
 		
 		Map<String, Integer> teamSizes = new HashMap<>();
 		List<String> options = new ArrayList<>();
 		
-		teamSizes.put("red", (cs.getTeamSize("red")));
-		teamSizes.put("blue", (cs.getTeamSize("blue")));
-		teamSizes.put("green", (cs.getTeamSize("green")));
-		teamSizes.put("yellow", (cs.getTeamSize("yellow")));
+		teamSizes.put("red", (CSManager.getTeamSize("red")));
+		teamSizes.put("blue", (CSManager.getTeamSize("blue")));
+		teamSizes.put("green", (CSManager.getTeamSize("green")));
+		teamSizes.put("yellow", (CSManager.getTeamSize("yellow")));
 
 		options.addAll(teamSizes.keySet());
 		
@@ -141,13 +149,13 @@ public class Game {
 		
 		if(options.size() == 0)
 			options.addAll(teamSizes.keySet());
-		cs.setTeam(p, options.get(Utils.rand(options.size())));
+		CSManager.setTeam(p, options.get(Utils.rand(options.size())));
 	}
 	
 	public static void spawnPlayer(Player p) {
-		if(!cs.hasTeam(p))
+		if(!CSManager.hasTeam(p))
 			Game.randomizeTeam(p, true);
-		String s = cs.getTeam(p);
+		String s = CSManager.getTeam(p);
 		
 		switch(s) {
 		case "red":
@@ -166,23 +174,34 @@ public class Game {
 	}
 	
 	public static void endGame(Player winner, Boolean forced) {
+		World.loadObject("observatory", 0, 41, 0);
 		Cloak.cloakedPlayers.clear();
-		Leaderboards.placeLabels();
+		Leaderboards.buildInstanceLeaderboards();
 		if(winner != null) {
 			List<Player> winners = new ArrayList<>();
 			for(Player p : Bukkit.getOnlinePlayers()) {
 				if(p.getGameMode() != GameMode.CREATIVE
-				&& cs.hasTeam(p)) {
-					if(cs.getTeam(p) == cs.getTeam(winner))
+				&& CSManager.hasTeam(p)) {
+					if(CSManager.getTeam(p) == CSManager.getTeam(winner))
 						winners.add(p);
 					if(forced)
-						p.teleport(new Location(Bukkit.getWorld("world"), 0.5, 45.0, 0.5, 0, 10));
+						p.teleport(new Location(Bukkit.getWorld("world"), 0.5, 44.5, 0.5, 0, 10));
 					else
 						if(Utils.matchTeam(p, winner))
 							p.teleport(new Location(Bukkit.getWorld("world"), 0.5, 48.0, -5.5, 0, 10));
-						else
+						else {
 							p.teleport(new Location(Bukkit.getWorld("world"), 0.5, 45.0, 6.5, 180, 10));
+							Leaderboards.addPoint(p, "lifetimeLosses");
+						}
+					
+					SadTear.removePlayerFromSadRoom(p);
+					if(HidePlayers.getState().isEnabled())
+						Disguise.setDisguise(p, p.getUniqueId());
 					p.setLevel(0);
+					p.getInventory().clear();
+					p.getInventory().setArmorContents(null);
+					p.setGameMode(GameMode.ADVENTURE);
+					
 					if(DoubleHealth.getState().isEnabled()) {
 						p.setMaxHealth(40);
 						p.setHealth(40);
@@ -191,15 +210,12 @@ public class Game {
 						p.setHealth(20);
 						p.setMaxHealth(20);
 					}
-					p.getInventory().clear();
-					p.getInventory().setArmorContents(null);
-					p.setGameMode(GameMode.ADVENTURE);
 					if(!forced) {
 						Packet.sendTitle(p, Chat.color("&6&lGAME OVER"), 
-								Chat.color("&l" + cs.getTeam(winner).substring(0, 1).toUpperCase()
-										          + cs.getTeam(winner).substring(1, cs.getTeam(winner).length()) 
+								Chat.color("&l" + CSManager.getTeam(winner).substring(0, 1).toUpperCase()
+										          + CSManager.getTeam(winner).substring(1, CSManager.getTeam(winner).length()) 
 										          + " team wins!"), 5, 20, 5);
-						if(cs.getTeam(p) == cs.getTeam(winner))
+						if(CSManager.getTeam(p) == CSManager.getTeam(winner))
 							p.playSound(p.getLocation(), Sound.LEVEL_UP, 1F, 1F);
 						else
 							p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
@@ -231,9 +247,10 @@ public class Game {
 		if(!forced)
 			new Fireworks(7).runTaskTimer(Bukkit.getPluginManager().getPlugin("bridgewars"), 0L, 10L);
 		
-		SadTear.clearSadRoom();
 		GameState.setState(GameState.INACTIVE);
-		cs.resetAllTimes();
+		CSManager.resetBoard();
+		Leaderboards.clearInstanceLeaderboards();
+		Leaderboards.refreshLifetimeLeaderboards();
 		deleteSpawns();
 	}
 	
@@ -274,24 +291,20 @@ public class Game {
 	
 	public static void deleteSpawns() {
 		//red spawn platform
-		for(int x = -1; x <= 1; x++)
-			for(int z = -23; z <= -21; z++)
-				Bukkit.getWorld("world").getBlockAt(new Location(Bukkit.getWorld("world"), x, 33, z)).setType(Material.AIR);
+		World.fill(-1, 33, -23,
+				    1, 33, -21, Material.AIR);
 		
 		//blue spawn platform
-		for(int x = -1; x <= 1; x++)
-			for(int z = 21; z <= 23; z++)
-				Bukkit.getWorld("world").getBlockAt(new Location(Bukkit.getWorld("world"), x, 33, z)).setType(Material.AIR);
+		World.fill(-1, 33, 21, 
+				    1, 33, 23, Material.AIR);
 		
 		//green spawn platform
-		for(int x = -23; x <= -21; x++)
-			for(int z = -1; z <= 1; z++)
-				Bukkit.getWorld("world").getBlockAt(new Location(Bukkit.getWorld("world"), x, 33, z)).setType(Material.AIR);
+		World.fill(-23, 33, -1,
+				   -21, 33,  1, Material.AIR);
 			
 		//yellow spawn platform
-		for(int x = 21; x <= 23; x++)
-			for(int z = -1; z <= 1; z++)
-				Bukkit.getWorld("world").getBlockAt(new Location(Bukkit.getWorld("world"), x, 33, z)).setType(Material.AIR);
+		World.fill(21, 33, -1,
+				   23, 33,  1, Material.AIR);
 	}
 	
 	public static void grantItems(Player p, boolean override) {
@@ -302,25 +315,25 @@ public class Game {
 		p.getInventory().setChestplate(ItemManager.getItem("BasicChestplate").createItem(p));
 		p.getInventory().setLeggings(ItemManager.getItem("BasicLeggings").createItem(p));
 		p.getInventory().setBoots(ItemManager.getItem("BasicBoots").createItem(p));
-		if(Swords.isState(Swords.ENABLED))
-			p.getInventory().setItem(hotbar.getSlot(p, "swordSlot"),ItemManager.getItem("BasicSword").createItem(p));
-		if(Shears.isState(Shears.ENABLED) && !GigaDrill.getState().isEnabled())
-			p.getInventory().setItem(hotbar.getSlot(p, "shearsSlot"), ItemManager.getItem("Shears").createItem(p));
-		if(Blocks.isState(Blocks.ENABLED))
-			p.getInventory().setItem(hotbar.getSlot(p, "woolSlot"), ItemManager.getItem("WoolBlocks").createItem(p));
+		if(Swords.getState().isEnabled())
+			p.getInventory().setItem(Integer.parseInt(PlayerSettings.getSetting(p, "SwordSlot")), ItemManager.getItem("BasicSword").createItem(p));
+		if(Shears.getState().isEnabled())
+			p.getInventory().setItem(Integer.parseInt(PlayerSettings.getSetting(p, "ShearsSlot")), ItemManager.getItem("Shears").createItem(p));
+		if(Blocks.getState().isEnabled())
+			p.getInventory().setItem(Integer.parseInt(PlayerSettings.getSetting(p, "WoolSlot")), ItemManager.getItem("WoolBlocks").createItem(p));
 		
-		if(GigaDrill.isState(GigaDrill.ENABLED))
-			p.getInventory().setItem(hotbar.getSlot(p, "shearsSlot"), ItemManager.getItem("GigaShears").createItem(p));
+		if(GigaDrill.getState().isEnabled())
+			p.getInventory().addItem(ItemManager.getItem("GigaShears").createItem(p));
 		
-		if(Bows.isState(Bows.ENABLED)) {
+		if(Bows.getState().isEnabled()) {
 			p.getInventory().addItem(ItemManager.getItem("Bow").createItem(p));
 			p.getInventory().setItem(9, new ItemStack(Material.ARROW, 1));;
 		}
 		if(DigWars.getState().isEnabled()) {
-			p.getInventory().setItem(hotbar.getSlot(p, "axeSlot"), ItemManager.getItem("Axe").createItem(p));
-			p.getInventory().setItem(hotbar.getSlot(p, "woodSlot"), new ItemStack(Material.WOOD, 64));
-			p.getInventory().setItem(hotbar.getSlot(p, "waterSlot"), ItemManager.getItem("BottomlessWaterBucket").createItem(null));
-			p.getInventory().setItem(hotbar.getSlot(p, "lavaSlot"), ItemManager.getItem("BottomlessLavaBucket").createItem(null));
+			p.getInventory().addItem(ItemManager.getItem("Axe").createItem(p));
+			p.getInventory().addItem(new ItemStack(Material.WOOD, 64));
+			p.getInventory().addItem(ItemManager.getItem("BottomlessWaterBucket").createItem(null));
+			p.getInventory().addItem(ItemManager.getItem("BottomlessLavaBucket").createItem(null));
 		}
 		if(p.getName().equals("nicktoot"))
 			p.getInventory().addItem(ItemManager.getItem("SadRoom").createItem(p));

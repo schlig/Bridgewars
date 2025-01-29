@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
 import bridgewars.Main;
+import bridgewars.game.Leaderboards;
 import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
@@ -22,15 +23,6 @@ public class HomeRunBat implements ICustomItem, Listener {
 
     public HomeRunBat(Main plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
-    }
-
-    @EventHandler
-    public void onHit(PlayerItemDamageEvent e) {
-        if(e.getItem().getType() == Material.WOOD_SWORD)
-            if(Utils.getID(e.getItem()).equals(getClass().getSimpleName().toLowerCase())) {
-            	e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ANVIL_LAND, 1F, 1.8F);
-                e.setDamage(20);
-            }
     }
 
     @Override
@@ -47,5 +39,14 @@ public class HomeRunBat implements ICustomItem, Listener {
         ItemBuilder.setLore(item, Arrays.asList(Chat.color("&r&7Deals massive knockback"),
                 Chat.color("&r&7Only has 3 uses")));
         return item;
+    }
+
+    @EventHandler
+    public void onHit(PlayerItemDamageEvent e) {
+	    if(Utils.getID(e.getItem()).equals(getClass().getSimpleName().toLowerCase())) {
+		    e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ANVIL_LAND, 1F, 1.8F);
+		    e.setDamage(20);
+		    Leaderboards.addPoint(e.getPlayer(), "items");
+	    }
     }
 }

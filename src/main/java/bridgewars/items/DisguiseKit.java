@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,10 +15,14 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import bridgewars.Main;
 import bridgewars.effects.Cloak;
+import bridgewars.game.GameState;
 import bridgewars.messages.Chat;
+import bridgewars.settings.enums.HidePlayers;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
 import bridgewars.utils.Utils;
@@ -58,7 +63,7 @@ public class DisguiseKit implements ICustomItem, Listener {
 	
 	@EventHandler
 	public void onPlace(BlockPlaceEvent e) {
-		if(e.getBlock().getType() == Material.SKULL)
+		if(e.getBlock().getType() == Material.SKULL && GameState.isState(GameState.ACTIVE))
 			e.setCancelled(true);
 	}
 	
@@ -69,24 +74,38 @@ public class DisguiseKit implements ICustomItem, Listener {
 				return;
 			
 			Player p = e.getPlayer();
-			if(Cloak.cloakedPlayers.contains(p.getUniqueId())) {
-				p.sendMessage(Chat.color("&cYou are already disguised"));
+			
+			if(HidePlayers.getState().isEnabled()) {
+				p.sendMessage(Chat.color("i was too lazy to disable this for hideplayers, so it's just a ghead now"));
+				p.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 2400, 1), true);
+				p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 2), true);
+				p.playSound(p.getLocation(), Sound.EAT, 1f, 1f);
+				Utils.subtractItem(p);
 				return;
 			}
-			
-			List<Player> options = new ArrayList<>();
-			for(Player o : Bukkit.getOnlinePlayers()) {
-				if(!Utils.matchTeam(p, o) && p != o)
-					options.add(o);
-			}
-			
-			if(options.size() == 0) {
-				p.sendMessage(Chat.color("&cThere is nobody online to disguise yourself as."));
-				return;
-			}
-			
-			new Cloak(p, options.get(Utils.rand(options.size())).getUniqueId(), duration).runTaskTimer(plugin, 0L, 20L);
-			Utils.subtractItem(p);
+			else
+				activateEffect(p);
 		}
+	}
+	
+	private void activateEffect(Player p) {
+		if(Cloak.cloakedPlayers.contains(p.getUniqueId())) {
+			p.sendMessage(Chat.color("&cYou are already disguised."));
+			return;
+		}
+		
+		List<Player> options = new ArrayList<>();
+		for(Player o : Bukkit.getOnlinePlayers()) {
+			if(!Utils.matchTeam(p, o) && p != o)
+				options.add(o);
+		}
+		
+		if(options.size() == 0) {
+			p.sendMessage(Chat.color("&cThere is nobody online to disguise yourself as."));
+			return;
+		}
+		
+		new Cloak(p, options.get(Utils.rand(options.size())).getUniqueId(), duration).runTaskTimer(plugin, 0L, 20L);
+		Utils.subtractItem(p);
 	}
 }

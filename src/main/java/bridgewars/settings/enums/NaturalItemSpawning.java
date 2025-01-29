@@ -1,4 +1,4 @@
-package bridgewars.settings;
+package bridgewars.settings.enums;
 
 public enum NaturalItemSpawning {
 	ENABLED(true), DISABLED(false);
@@ -15,12 +15,12 @@ public enum NaturalItemSpawning {
 		return isEnabled;
 	}
 	
-	public static void setState(NaturalItemSpawning state) {
-		NaturalItemSpawning.currentState = state;
+	public static void toggle() {
+		setState(getState().isEnabled() ? DISABLED : ENABLED);
 	}
 	
-	public static boolean isState(NaturalItemSpawning state) {
-		return NaturalItemSpawning.currentState == state;
+	public static void setState(NaturalItemSpawning state) {
+		NaturalItemSpawning.currentState = state;
 	}
 	
 	public static NaturalItemSpawning getState() {

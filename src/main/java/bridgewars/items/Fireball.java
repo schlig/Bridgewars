@@ -3,7 +3,6 @@ package bridgewars.items;
 import java.util.Arrays;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -12,7 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -46,13 +44,9 @@ public class Fireball implements ICustomItem, Listener {
                 fireball.setVelocity(fireball.getVelocity().multiply(1.5));
                 fireball.setYield(4);
                 fireball.setIsIncendiary(false);
+                fireball.setFireTicks(0);
                 fireball.setShooter(e.getPlayer());
-                if(e.getPlayer().getGameMode() != GameMode.CREATIVE) {
-                    if(e.getPlayer().getItemInHand().getAmount() == 1)
-                        e.getPlayer().setItemInHand(new ItemStack(Material.AIR, 1));
-                    else
-                        e.getPlayer().getItemInHand().setAmount(e.getPlayer().getItemInHand().getAmount() - 1);
-                }
+                Utils.subtractItem(e.getPlayer());
             }
         }
     }
@@ -79,15 +73,15 @@ public class Fireball implements ICustomItem, Listener {
         }
     }
 
-    @EventHandler
-    public void onBurn(EntityDamageEvent e) {
-        if(e.getEntity() instanceof Player)
-            if(e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK
-                    || e.getCause() == EntityDamageEvent.DamageCause.FIRE) {
-                e.setCancelled(true);
-                Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("bridgewars"), () -> ((Player)e.getEntity()).setFireTicks(0), 1L);
-            }
-    }
+//    @EventHandler
+//    public void onBurn(EntityDamageEvent e) {
+//        if(e.getEntity() instanceof Player)
+//            if(e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK
+//                    || e.getCause() == EntityDamageEvent.DamageCause.FIRE) {
+//                e.setCancelled(true);
+//                Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("bridgewars"), () -> ((Player)e.getEntity()).setFireTicks(0), 1L);
+//            }
+//    }
     
     @Override
     public Rarity getRarity() {

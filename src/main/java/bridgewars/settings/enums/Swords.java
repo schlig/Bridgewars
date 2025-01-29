@@ -1,4 +1,4 @@
-package bridgewars.settings;
+package bridgewars.settings.enums;
 
 public enum Swords {
 	ENABLED(true), DISABLED(false);
@@ -15,12 +15,12 @@ public enum Swords {
 		return isEnabled;
 	}
 	
-	public static void setState(Swords state) {
-		Swords.currentState = state;
+	public static void toggle() {
+		setState(getState().isEnabled() ? DISABLED : ENABLED);
 	}
 	
-	public static boolean isState(Swords state) {
-		return Swords.currentState == state;
+	public static void setState(Swords state) {
+		Swords.currentState = state;
 	}
 	
 	public static Swords getState() {

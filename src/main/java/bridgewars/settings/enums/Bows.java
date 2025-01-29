@@ -1,4 +1,4 @@
-package bridgewars.settings;
+package bridgewars.settings.enums;
 
 public enum Bows {
 	ENABLED(true), DISABLED(false);
@@ -14,12 +14,12 @@ public enum Bows {
 		return isEnabled;
 	}
 	
-	public static void setState(Bows state) {
-		Bows.currentState = state;
+	public static void toggle() {
+		setState(getState().isEnabled() ? DISABLED : ENABLED);
 	}
 	
-	public static boolean isState(Bows state) {
-		return Bows.currentState == state;
+	public static void setState(Bows state) {
+		Bows.currentState = state;
 	}
 	
 	public static Bows getState() {

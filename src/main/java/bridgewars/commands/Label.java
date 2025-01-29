@@ -34,24 +34,24 @@ public class Label implements CommandExecutor {
 		
 		if(!p.hasPermission("trusted.label")) {
 			p.sendMessage(Chat.color("&cYou do not have permission to do this."));
-			return false;
+			return true;
 		}
 		
 		if(!p.isOp() && GameState.isState(GameState.ACTIVE)) {
 			p.sendMessage(Chat.color("&cYou cannot do this while a game is active."));
-			return false;
+			return true;
 		}
 		
 		if(args.length == 0) {
 			p.sendMessage(Chat.color("&cUsage: /label [offset|undo] <text>"));
-			return false;
+			return true;
 		}
 		
 		if(args[0].equals("undo")) {
 			
 			if(entries.size() <= 0) {
 				p.sendMessage(Chat.color("&cThere are no labels to remove."));
-				return false;
+				return true;
 			}
 			
 			ArmorStand Label = null;
@@ -66,7 +66,7 @@ public class Label implements CommandExecutor {
 			entries.remove(Label);
 			Label.remove();
 			p.sendMessage("Removed label \"" + Label.getCustomName() + "\"");
-			return false;
+			return true;
 		}
 		
 		try {
@@ -101,6 +101,6 @@ public class Label implements CommandExecutor {
 			
 		p.sendMessage(Chat.color("Placed label with text \"" + text + "\""));
 		
-		return false;
+		return true;
 	}
 }

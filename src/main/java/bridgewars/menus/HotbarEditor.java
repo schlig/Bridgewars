@@ -1,5 +1,7 @@
 package bridgewars.menus;
 
+import java.io.IOException;
+
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -7,14 +9,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import bridgewars.messages.Chat;
-import bridgewars.settings.HotbarLayout;
+import bridgewars.settings.PlayerSettings;
 
 public class HotbarEditor {
 
 	private static GUI menu = new GUI();
-	private static HotbarLayout hotbar = new HotbarLayout();
 	
-	public static void sendInput(Player p, Inventory inv, ItemStack button, InventoryClickEvent e) {
+	public static void sendInput(Player p, Inventory inv, ItemStack button, InventoryClickEvent e) throws IOException {
 		
 		switch(e.getAction()) {
 		case DROP_ONE_SLOT:
@@ -30,32 +31,17 @@ public class HotbarEditor {
 		case WOOL:
 			if(!button.getItemMeta().hasDisplayName())
 				return;
-
-			for(int i = 0; i < 9; i++)
+			
+			for(int i = 0; i <= 8; i++)
 				switch(p.getOpenInventory().getItem(i + 18).getType()) {
 				case GOLD_SWORD:
-					hotbar.setSlot(p, i, "swordSlot");
+					PlayerSettings.setSetting(p, "SwordSlot", ((Integer)i).toString());
 					break;
 				case SHEARS:
-					hotbar.setSlot(p, i, "shearsSlot");
+					PlayerSettings.setSetting(p, "ShearsSlot", ((Integer)i).toString());
 					break;
 				case WOOL:
-					hotbar.setSlot(p, i, "woolSlot");
-					break;
-				case STONE_AXE:
-					hotbar.setSlot(p, i, "axeSlot");
-					break;
-				case WOOD:
-					hotbar.setSlot(p, i, "woodSlot");
-					break;
-				case BOW:
-					hotbar.setSlot(p, i, "bowSlot");
-					break;
-				case WATER_BUCKET:
-					hotbar.setSlot(p, i, "waterSlot");
-					break;
-				case LAVA_BUCKET:
-					hotbar.setSlot(p, i, "lavaSlot");
+					PlayerSettings.setSetting(p, "WoolSlot", ((Integer)i).toString());
 					break;
 				default:
 				}

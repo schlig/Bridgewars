@@ -41,6 +41,6 @@ public class EndGame implements CommandExecutor {
 		else
 			p.sendMessage(Chat.color("&cYou do not have permission to do this."));
 		
-		return false;
+		return true;
 	}
 }

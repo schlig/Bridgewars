@@ -8,7 +8,25 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class Settings {
+import bridgewars.settings.enums.Blocks;
+import bridgewars.settings.enums.Bows;
+import bridgewars.settings.enums.DigWars;
+import bridgewars.settings.enums.DoubleHealth;
+import bridgewars.settings.enums.DoubleJump;
+import bridgewars.settings.enums.FriendlyFire;
+import bridgewars.settings.enums.GigaDrill;
+import bridgewars.settings.enums.HidePlayers;
+import bridgewars.settings.enums.IndestructibleMap;
+import bridgewars.settings.enums.KillstreakRewards;
+import bridgewars.settings.enums.NaturalItemSpawning;
+import bridgewars.settings.enums.Piggyback;
+import bridgewars.settings.enums.RandomTeams;
+import bridgewars.settings.enums.Shears;
+import bridgewars.settings.enums.Swords;
+import bridgewars.settings.enums.UnlockedInventory;
+import bridgewars.settings.enums.WoolDecay;
+
+public class GameSettings {
 	
 	private static String filepath = "./plugins/bridgewars/options.ini";
 
@@ -32,6 +50,10 @@ public class Settings {
 			friendlyFire(Boolean.parseBoolean(br.readLine()));
 			piggyback(Boolean.parseBoolean(br.readLine()));
 			chosenTeams(Boolean.parseBoolean(br.readLine()));
+			hidePlayers(Boolean.parseBoolean(br.readLine()));
+			indestructibleMap(Boolean.parseBoolean(br.readLine()));
+			woolDecay(Boolean.parseBoolean(br.readLine()));
+			unlockedInventory(Boolean.parseBoolean(br.readLine()));
 			
 			br.close();
 		} catch (IOException e) { }
@@ -69,6 +91,14 @@ public class Settings {
 			bw.write(Piggyback.getState().isEnabled().toString());
 			bw.newLine();
 			bw.write(RandomTeams.getState().isEnabled().toString());
+			bw.newLine();
+			bw.write(HidePlayers.getState().isEnabled().toString());
+			bw.newLine();
+			bw.write(IndestructibleMap.getState().isEnabled().toString());
+			bw.newLine();
+			bw.write(WoolDecay.getState().isEnabled().toString());
+			bw.newLine();
+			bw.write(UnlockedInventory.getState().isEnabled().toString());
 			bw.newLine();
 			
 			bw.flush();
@@ -165,5 +195,33 @@ public class Settings {
 			RandomTeams.setState(RandomTeams.ENABLED);
 		else
 			RandomTeams.setState(RandomTeams.DISABLED);
+	}
+	
+	private static void hidePlayers(boolean value) {
+		if(value)
+			HidePlayers.setState(HidePlayers.ENABLED);
+		else
+			HidePlayers.setState(HidePlayers.DISABLED);
+	}
+	
+	private static void indestructibleMap(boolean value) {
+		if(value)
+			IndestructibleMap.setState(IndestructibleMap.ENABLED);
+		else
+			IndestructibleMap.setState(IndestructibleMap.DISABLED);
+	}
+	
+	private static void woolDecay(boolean value) {
+		if(value)
+			WoolDecay.setState(WoolDecay.ENABLED);
+		else
+			WoolDecay.setState(WoolDecay.DISABLED);
+	}
+	
+	private static void unlockedInventory(boolean value) {
+		if(value)
+			UnlockedInventory.setState(UnlockedInventory.ENABLED);
+		else
+			UnlockedInventory.setState(UnlockedInventory.DISABLED);
 	}
 }

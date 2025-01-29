@@ -1,6 +1,8 @@
 package bridgewars.menus;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -10,20 +12,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import bridgewars.game.CustomScoreboard;
+import bridgewars.game.CSManager;
 import bridgewars.game.Game;
 import bridgewars.game.GameState;
 import bridgewars.messages.Chat;
-import bridgewars.settings.ChosenKillstreaks;
-import bridgewars.settings.HotbarLayout;
+import bridgewars.settings.PlayerSettings;
+import bridgewars.utils.ItemBuilder;
 import bridgewars.utils.ItemManager;
 
 public class MainMenu {
 
 	private static GUI menu = new GUI();
-	private static HotbarLayout hotbar = new HotbarLayout();
-	private static ChosenKillstreaks ks = new ChosenKillstreaks();
-	private static CustomScoreboard cs = new CustomScoreboard();
 	
 	public static void sendInput(Player p, Inventory inv, ItemStack button) throws IOException {
 		switch(button.getType()) {
@@ -36,7 +35,7 @@ public class MainMenu {
 		case REDSTONE_COMPARATOR:
 			p.playSound(p.getLocation(), Sound.CLICK, 0.8F, 1F);
 			p.openInventory(menu.getSettings());
-			Settings.loadSettings(p);
+			GameSettingsEditor.loadSettings(p);
 			
 			break;
 			
@@ -80,18 +79,10 @@ public class MainMenu {
 			Inventory hotbarEditor = Bukkit.createInventory(null, 45, "Hotbar Layout");
 			hotbarEditor.setContents(menu.getHotbar().getContents());
 			p.openInventory(hotbarEditor);
-
-			if(!hotbar.slotsAreValid(p))
-				hotbar.restoreDefaults(p);
 			
-			p.getOpenInventory().setItem(hotbar.getSlot(p, "swordSlot") + 18, new ItemStack(Material.GOLD_SWORD));
-			p.getOpenInventory().setItem(hotbar.getSlot(p, "shearsSlot") + 18, new ItemStack(Material.SHEARS));
-			p.getOpenInventory().setItem(hotbar.getSlot(p, "woolSlot") + 18, new ItemStack(Material.WOOL));
-			p.getOpenInventory().setItem(hotbar.getSlot(p, "bowSlot") + 18, new ItemStack(Material.BOW));
-			p.getOpenInventory().setItem(hotbar.getSlot(p, "woodSlot") + 18, new ItemStack(Material.WOOD));
-			p.getOpenInventory().setItem(hotbar.getSlot(p, "axeSlot") + 18, new ItemStack(Material.STONE_AXE));
-			p.getOpenInventory().setItem(hotbar.getSlot(p, "waterSlot") + 18, new ItemStack(Material.WATER_BUCKET));
-			p.getOpenInventory().setItem(hotbar.getSlot(p, "lavaSlot") + 18, new ItemStack(Material.LAVA_BUCKET));
+			p.getOpenInventory().setItem(Integer.parseInt(PlayerSettings.getSetting(p, "SwordSlot")) + 18, new ItemStack(Material.GOLD_SWORD));
+			p.getOpenInventory().setItem(Integer.parseInt(PlayerSettings.getSetting(p, "ShearsSlot")) + 18, new ItemStack(Material.SHEARS));
+			p.getOpenInventory().setItem(Integer.parseInt(PlayerSettings.getSetting(p, "WoolSlot")) + 18, new ItemStack(Material.WOOL));
 			
 			break;
 			
@@ -102,42 +93,17 @@ public class MainMenu {
 			p.openInventory(killstreakEditor);
 			
 			//main items
-			p.getOpenInventory().setItem(10, ItemManager.getItem("BridgeEgg").createItem(null)); //bridge eggs, slot 10
-			if(ks.getThreeStreak(p) == 0)
-				p.getOpenInventory().getItem(10).addUnsafeEnchantment(Enchantment.LURE, 1);
+			loadSlot(p, 10, "BridgeEgg", "KillstreakRewardWhite");
+			loadSlot(p, 28, "MysteryPill", "KillstreakRewardWhite");
 
-			p.getOpenInventory().setItem(12, ItemManager.getItem("PortableDoinkHut").createItem(null));
-			if(ks.getFiveStreak(p) == 0)
-				p.getOpenInventory().getItem(12).addUnsafeEnchantment(Enchantment.LURE, 1);
+			loadSlot(p, 12, "PortableDoinkHut", "KillstreakRewardGreen");
+			loadSlot(p, 30, "Fireball", "KillstreakRewardGreen");
 			
-			ItemStack bat = ItemManager.getItem("HomeRunBat").createItem(null);
-			bat.setDurability((short) 0);
-			bat.removeEnchantment(Enchantment.KNOCKBACK);
-			p.getOpenInventory().setItem(14, bat);
-			if(ks.getSevenStreak(p) == 0)
-				p.getOpenInventory().getItem(14).addUnsafeEnchantment(Enchantment.LURE, 1);
-			
-			p.getOpenInventory().setItem(16, ItemManager.getItem("HeartContainer").createItem(null));
-			if(ks.getFinalStreak(p) == 0)
-				p.getOpenInventory().getItem(16).addUnsafeEnchantment(Enchantment.LURE, 1);
-			
-			//alt items
-			
-			p.getOpenInventory().setItem(28, ItemManager.getItem("Eraser").createItem(null));
-			if(ks.getThreeStreak(p) == 1)
-				p.getOpenInventory().getItem(28).addUnsafeEnchantment(Enchantment.LURE, 1);
-			
-			p.getOpenInventory().setItem(30, ItemManager.getItem("Fireball").createItem(null));
-			if(ks.getFiveStreak(p) == 1)
-				p.getOpenInventory().getItem(30).addUnsafeEnchantment(Enchantment.LURE, 1);
-			
-			p.getOpenInventory().setItem(32, ItemManager.getItem("BlackHole").createItem(null));
-			if(ks.getSevenStreak(p) == 1)
-				p.getOpenInventory().getItem(32).addUnsafeEnchantment(Enchantment.LURE, 1);
+			loadSlot(p, 14, "HomeRunBat", "KillstreakRewardRed");
+			loadSlot(p, 32, "BlackHole", "KillstreakRewardRed");
 
-			p.getOpenInventory().setItem(34, ItemManager.getItem("MagicStopwatch").createItem(null));
-			if(ks.getFinalStreak(p) == 1)
-				p.getOpenInventory().getItem(34).addUnsafeEnchantment(Enchantment.LURE, 1);
+			loadSlot(p, 16, "HeartContainer", "KillstreakRewardBlue");
+			loadSlot(p, 34, "MagicStopwatch", "KillstreakRewardBlue");
 			break;
 			
 		case WOOL:
@@ -145,11 +111,7 @@ public class MainMenu {
 			Inventory inventory = menu.getTeam();
 			p.openInventory(inventory);
 
-			String team;
-			if(cs.hasTeam(p))
-				team = cs.getTeam(p);
-			else
-				team = "none";
+			String team = CSManager.getTeam(p);
 			
 			for(int s = 19; s <= 25; s += 2)
 				if(inventory.getItem(s).getItemMeta().getDisplayName().toLowerCase().contains(team))
@@ -162,6 +124,23 @@ public class MainMenu {
 			
 		default:
 			break;
+		}
+	}
+	
+	private static void loadSlot(Player p, int slot, String itemID, String setting) {
+		ItemStack item = ItemManager.getItem(itemID).createItem(null);
+		ItemBuilder.hideFlags(item);
+		p.getOpenInventory().setItem(slot, item);
+		ItemStack button = p.getOpenInventory().getItem(slot);
+		
+		if(PlayerSettings.getSetting(p, setting).equalsIgnoreCase(itemID))
+			button.addUnsafeEnchantment(Enchantment.LURE, 1);
+		else {
+			List<Enchantment> enchantments = new ArrayList<>();
+			for(Enchantment enchantment : button.getEnchantments().keySet())
+				enchantments.add(enchantment);
+			for(Enchantment enchantment : enchantments)
+				button.removeEnchantment(enchantment);
 		}
 	}
 }

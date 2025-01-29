@@ -10,7 +10,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import bridgewars.Main;
 import bridgewars.game.CSManager;
 import bridgewars.game.GameState;
-import bridgewars.settings.FriendlyFire;
+import bridgewars.items.SadTear;
+import bridgewars.settings.enums.FriendlyFire;
 
 public class HitDetection implements Listener {
 	
@@ -43,7 +44,8 @@ public class HitDetection implements Listener {
 					e.setCancelled(true);
 			}
 			else
-				if(GameState.isState(GameState.INACTIVE))
+				if(GameState.isState(GameState.INACTIVE)
+				|| SadTear.sadRoomed.contains(target))
 					e.setDamage(0);
 		}
 	}

@@ -77,8 +77,7 @@ public class ItemBuilder {
 	public static ItemStack setLeatherColor(Player p, ItemStack item, String s) { //sets the color of leather armor
 		ItemStack armorPiece = item;
 		LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
-		if(CSManager.hasTeam(p))
-			meta.setColor(getColor(CSManager.getTeam(p)));
+		meta.setColor(getColor(CSManager.getTeam(p)));
 		armorPiece.setItemMeta(meta);
 		return armorPiece;
 	}
@@ -121,6 +120,9 @@ public class ItemBuilder {
 	}
 	
 	private static Color getColor(String s) { //gets a color from a specified team name
+		if(s == null)
+			return Color.fromRGB(255, 255, 255);
+		
 		switch(s) {
 		case "red":
 			return Color.fromRGB(255, 0, 0);
@@ -130,12 +132,16 @@ public class ItemBuilder {
 			return Color.fromRGB(0, 255, 0);
 		case "yellow":
 			return Color.fromRGB(255, 255, 0);
+		default:
+			return Color.fromRGB(255, 255, 255);
 		}
-		return Color.fromRGB(255, 255, 255);
 	}
 	
 	public static String getTeamName(Player p){
-		return CSManager.getTeam(p);
+		String out = CSManager.getTeam(p);
+		if(out == null)
+			return "Blank";
+		else return out;
 	}
 	
 	public static ItemStack setID(ItemStack in, String id) {

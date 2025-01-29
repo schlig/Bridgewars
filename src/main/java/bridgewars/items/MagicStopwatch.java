@@ -1,18 +1,20 @@
 package bridgewars.items;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import bridgewars.Main;
 import bridgewars.game.GameState;
@@ -20,12 +22,16 @@ import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
 import bridgewars.utils.Utils;
+import net.minecraft.server.v1_8_R3.NBTTagCompound;
+import net.minecraft.server.v1_8_R3.NBTTagDouble;
+import net.minecraft.server.v1_8_R3.NBTTagInt;
+import net.minecraft.server.v1_8_R3.NBTTagList;
+import net.minecraft.server.v1_8_R3.NBTTagLong;
+import net.minecraft.server.v1_8_R3.NBTTagString;
 
 public class MagicStopwatch implements ICustomItem, Listener {
 	
-	private final int speedDuration = 999999
-									* 20;
-	private final int speedLevel = 1;
+	public static Map<Player, Double> speedModifier = new HashMap<>();
 	
     public MagicStopwatch(Main plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -42,9 +48,9 @@ public class MagicStopwatch implements ICustomItem, Listener {
         ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
         ItemBuilder.setName(item, "Magic Stopwatch");
         ItemBuilder.setLore(item, Arrays.asList(
-                Chat.color("&r&7Grants Speed II until death"),
-                Chat.color("&r&7Note: This item currently sucks for its rarity"),
-                Chat.color("&r&7It will be buffed heavily when I stop being lazy")));
+                Chat.color("&r&7Increases movement speed"),
+                Chat.color("&r&7Disabled while disguised"),
+                Chat.color("&r&7Permanent upgrade")));
         return item;
     }
     
@@ -56,11 +62,40 @@ public class MagicStopwatch implements ICustomItem, Listener {
             if(Utils.getID(item).equals(getClass().getSimpleName().toLowerCase())
             && GameState.isState(GameState.ACTIVE)) {
             	Player p = e.getPlayer();
-            	p.playSound(p.getLocation(), Sound.CLICK, 1F, 1F);
-            	p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, speedDuration, speedLevel));
+            	p.playSound(p.getLocation(), Sound.ANVIL_USE, 1F, 2F);
+            	
+            	if(!speedModifier.containsKey(p))
+            		speedModifier.put(p, 0.0);
+            	
+            	speedModifier.put(p, speedModifier.get(p) + 0.05);
+            	
+            	ItemStack boots = p.getInventory().getBoots();
+            	boots = addSpeed(boots, p);
+            	p.getInventory().setBoots(boots);
             	
             	Utils.subtractItem(p);
             }
         }
     }
+	
+	public static ItemStack addSpeed(ItemStack item, Player p) {
+		
+		net.minecraft.server.v1_8_R3.ItemStack itemTags = CraftItemStack.asNMSCopy(item);
+		NBTTagCompound compound = itemTags.getTag();
+		NBTTagList list = new NBTTagList();
+		NBTTagCompound speed = new NBTTagCompound();
+		speed.set("AttributeName", new NBTTagString("generic.movementSpeed"));
+		speed.set("Name", new NBTTagString("generic.movementSpeed"));
+		speed.set("Amount", new NBTTagDouble(speedModifier.get(p)));
+		speed.set("Operation", new NBTTagInt(1));
+		UUID uuid = UUID.randomUUID();
+		speed.set("UUIDLeast", new NBTTagLong(uuid.getLeastSignificantBits()));
+		speed.set("UUIDMost", new NBTTagLong(uuid.getMostSignificantBits()));
+		list.add(speed);
+		compound.set("AttributeModifiers", list);
+		itemTags.setTag(compound);
+		item = CraftItemStack.asBukkitCopy(itemTags);
+		
+		return item;
+	}
 }

@@ -25,9 +25,11 @@ import bridgewars.items.Bow;
 import bridgewars.items.BridgeEgg;
 import bridgewars.items.ChanceTime;
 import bridgewars.items.DisguiseKit;
+import bridgewars.items.EnderPearl;
 import bridgewars.items.Eraser;
 import bridgewars.items.Fireball;
 import bridgewars.items.ForceFieldGenerator;
+import bridgewars.items.GigaShears;
 import bridgewars.items.HeartContainer;
 import bridgewars.items.HomeRunBat;
 import bridgewars.items.LifeforcePotion;
@@ -43,9 +45,13 @@ import bridgewars.items.Railgun;
 import bridgewars.items.SadTear;
 import bridgewars.items.Shears;
 import bridgewars.items.SignalJammer;
+import bridgewars.items.TemporaryIron;
+import bridgewars.items.TemporaryWood;
 import bridgewars.items.UltimastPortal;
 import bridgewars.items.UnoReverse;
+import bridgewars.items.UpgradeBook;
 import bridgewars.items.WoolBlocks;
+import bridgewars.utils.ICustomItem.Rarity;
 
 public class ItemManager {
 	
@@ -85,7 +91,13 @@ public class ItemManager {
         allItems.add(new MagicStopwatch(plugin));
         allItems.add(new ChanceTime(plugin));
         allItems.add(new SignalJammer(plugin));
-        
+        allItems.add(new TemporaryWood(plugin));
+        allItems.add(new TemporaryIron(plugin));
+        allItems.add(new GigaShears(plugin));
+        allItems.add(new UpgradeBook(plugin));
+        allItems.add(new EnderPearl(plugin));
+
+        allItems.add(new WoolBlocks(plugin)); //this is a listener solely for leaderboards purposes
         allItems.add(new Axe());
         allItems.add(new BasicBoots());
         allItems.add(new BasicChestplate());
@@ -94,7 +106,6 @@ public class ItemManager {
         allItems.add(new BasicSword());
         allItems.add(new Bow());
         allItems.add(new Shears());
-        allItems.add(new WoolBlocks());
         allItems.add(new ParkourTeleporter());
         allItems.add(new ParkourResetter());
         allItems.add(new ParkourQuitter());
@@ -107,7 +118,7 @@ public class ItemManager {
         }
         generateItemPool(greenPercent, redPercent, bluePercent);
     }
-    
+
     public static void generateItemPool(float greenPercent, float redPercent, float bluePercent){
         activeItems = getActivePool(greenPercent, redPercent, bluePercent);
     }
@@ -170,6 +181,21 @@ public class ItemManager {
             }
             return out;
         }
+        
+        public ICustomItem getRandomItem(Rarity rarity) {
+        	switch(rarity) {
+        	case BLUE:
+        		return getFromGroup(blueItems);
+        	case RED:
+        		return getFromGroup(redItems);
+        	case GREEN:
+        		return getFromGroup(greenItems);
+        	case WHITE:
+        		return getFromGroup(whiteItems);
+        	default:
+        		return getRandomItem();
+        	}
+        }
     }
     
     private static void validateConfig() throws IOException {
@@ -222,6 +248,10 @@ public class ItemManager {
     
     public static ICustomItem getRandomItem(){
         return activeItems.getRandomItem();
+    }
+    
+    public static ICustomItem getRandomItem(Rarity rarity) {
+    	return activeItems.getRandomItem(rarity);
     }
     
     public static ArrayList<String> getItemNames(){

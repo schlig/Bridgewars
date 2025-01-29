@@ -19,6 +19,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import bridgewars.Main;
 import bridgewars.effects.PlotArmor;
+import bridgewars.game.Leaderboards;
 import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
@@ -28,16 +29,6 @@ public class LifeforcePotion implements ICustomItem, Listener {
 
 	public LifeforcePotion(Main plugin) {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
-	}
-	
-	@EventHandler
-	public void onDrink(PlayerItemConsumeEvent e) {
-		if(Utils.getID(e.getItem()).equals(getClass().getSimpleName().toLowerCase())) {
-			Player p = e.getPlayer();
-			PlotArmor.armoredPlayers.add(p);
-			Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("bridgewars"), () -> 
-				p.getInventory().remove(Material.GLASS_BOTTLE), 0L);
-		}
 	}	
 	
     @Override
@@ -61,4 +52,15 @@ public class LifeforcePotion implements ICustomItem, Listener {
         ItemBuilder.hideFlags(item);
         return item;
     }
+	
+	@EventHandler
+	public void onDrink(PlayerItemConsumeEvent e) {
+		if(Utils.getID(e.getItem()).equals(getClass().getSimpleName().toLowerCase())) {
+			Player p = e.getPlayer();
+			PlotArmor.armoredPlayers.add(p);
+			Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("bridgewars"), () -> 
+				p.getInventory().remove(Material.GLASS_BOTTLE), 0L);
+			Leaderboards.addPoint(p, "items");
+		}
+	}
 }

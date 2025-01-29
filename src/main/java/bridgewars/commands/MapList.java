@@ -11,6 +11,7 @@ import bridgewars.Main;
 import bridgewars.messages.Chat;
 
 public class MapList implements CommandExecutor {
+	
 	public MapList(Main plugin) {
 		plugin.getCommand("maplist").setExecutor(this);
 	}
@@ -30,6 +31,6 @@ public class MapList implements CommandExecutor {
 		message = message.substring(0, message.length() - 6);
 		p.sendMessage(message);
 		
-		return false;
+		return true;
 	}
 }

@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import bridgewars.Main;
+import bridgewars.game.Leaderboards;
 import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
@@ -51,6 +52,7 @@ public class BlackHole implements ICustomItem, Listener {
 			v.multiply(1.5);
 			e.getEntity().setVelocity(v);
 			
+			Leaderboards.addPoint( (Player) e.getEntity().getShooter(), "items");
 			new bridgewars.effects.BlackHole(e.getEntity(), 1, false).runTaskTimer(plugin, 0L, 0L);
 		}
 	}

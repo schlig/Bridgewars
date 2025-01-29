@@ -20,10 +20,12 @@ import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
 import bridgewars.utils.Utils;
+import bridgewars.utils.World;
 
 public class PitfallTrap implements ICustomItem, Listener {
 	
-	private final int mapHeight = 24;
+	private final int maxRadius = 32;
+	private final int maxHeight = 32;
 	
     public PitfallTrap(Main plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -55,14 +57,15 @@ public class PitfallTrap implements ICustomItem, Listener {
             	Block targetBlock = e.getClickedBlock();
             	int x = targetBlock.getX();
             	int z = targetBlock.getZ();
+
+            	if(Math.abs(x) > maxRadius || Math.abs(z) > maxRadius)
+            		return;
             	
             	Block block = p.getWorld().getBlockAt(new Location(p.getWorld(), x, 0, z));
             	
-            	if(!bridgewars.utils.World.inGameArea(block.getLocation()))
-            		return;
             	
-            	for(int i = 0; i < mapHeight; i++)
-            		if(block.getRelative(0, i, 0).getType() == Material.WOOL)
+            	for(int i = 0; i <= maxHeight; i++)
+            		if(block.getRelative(0, i, 0).getType() != Material.BEDROCK && !World.blockIsIndestructible(block.getRelative(0, i, 0)))
             			block.getRelative(0, i, 0).breakNaturally();
             	
             	p.playSound(p.getLocation(), Sound.FIZZ, 1F, 2F);

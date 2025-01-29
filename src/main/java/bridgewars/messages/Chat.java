@@ -9,11 +9,9 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import bridgewars.Main;
 import bridgewars.commands.ChatSetting;
-import bridgewars.game.CustomScoreboard;
+import bridgewars.game.CSManager;
 
 public class Chat implements Listener {
-
-	private CustomScoreboard cs = new CustomScoreboard();
 	
 	public Chat(Main plugin) {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -23,15 +21,14 @@ public class Chat implements Listener {
 	public void onMessage(AsyncPlayerChatEvent e) {
 		Player p = e.getPlayer();
 		if(ChatSetting.allChat.containsKey(p)) {
-			if(ChatSetting.allChat.get(p) || !cs.hasTeam(p))
+			if(ChatSetting.allChat.get(p) || !CSManager.hasTeam(p))
 				return;
 			else {
 				e.setCancelled(true);
 				String m = color("&7[&6Team&7]&r ") + "<" + p.getDisplayName() + "> " + e.getMessage();
 				for(Player player : Bukkit.getOnlinePlayers())
-					if(cs.hasTeam(p))
-						if(cs.getTeam(p).equals(cs.getTeam(player)))
-							player.sendMessage(m);
+					if(CSManager.matchTeam(p, player))
+						player.sendMessage(m);
 				System.out.print(m);
 			}
 		}

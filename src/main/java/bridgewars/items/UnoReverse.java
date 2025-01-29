@@ -71,8 +71,8 @@ public class UnoReverse implements ICustomItem, Listener {
 				
 				target.teleport(new Location(Bukkit.getWorld("world"), x, y, z, yaw, pitch));
 				
-				user.playSound(user.getLocation(), Sound.IRONGOLEM_HIT, 1.0F, 2F);
-				target.playSound(user.getLocation(), Sound.IRONGOLEM_HIT, 1.0F, 2F);
+				user.playSound(user.getLocation(), Sound.IRONGOLEM_HIT, 0.8F, 2F);
+				target.playSound(user.getLocation(), Sound.IRONGOLEM_HIT, 0.8F, 2F);
 				
 				Utils.subtractItem(user);
 			}

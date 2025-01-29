@@ -1,4 +1,4 @@
-package bridgewars.settings;
+package bridgewars.settings.enums;
 
 public enum Piggyback {
 	ENABLED(true), DISABLED(false);
@@ -14,12 +14,12 @@ public enum Piggyback {
 		return isEnabled;
 	}
 	
-	public static void setState(Piggyback state) {
-		Piggyback.currentState = state;
+	public static void toggle() {
+		setState(getState().isEnabled() ? DISABLED : ENABLED);
 	}
 	
-	public static boolean isState(Piggyback state) {
-		return Piggyback.currentState == state;
+	public static void setState(Piggyback state) {
+		Piggyback.currentState = state;
 	}
 	
 	public static Piggyback getState() {

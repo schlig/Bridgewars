@@ -26,22 +26,22 @@ public class JoinGame implements CommandExecutor {
 		
 		if(GameState.isState(GameState.INACTIVE)) {
 			p.sendMessage(Chat.color("&cThere is no game in progress."));
-			return false;
+			return true;
 		}
 		
 		else if(GameState.isState(GameState.EDIT)) {
 			p.sendMessage(Chat.color("&cThe game is currently in Edit mode."));
-			return false;
+			return true;
 		}
 		
 		if(!Utils.isOutOfBounds(p.getLocation(), 80, 40, 80)) {
 			p.sendMessage(Chat.color("&cYou are already in a game."));
-			return false;
+			return true;
 		}
 			
 		Game.joinGame(p);
 		p.sendMessage(Chat.color("&6You joined the game."));
 		
-		return false;
+		return true;
 	}
 }

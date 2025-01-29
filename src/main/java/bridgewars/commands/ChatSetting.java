@@ -34,7 +34,7 @@ public class ChatSetting implements CommandExecutor {
 				args = new String[] { "all" };
 			else {
 				p.sendMessage(Chat.color("&cUsage: /chat <all|team>, /tc | /ac"));
-				return false;
+				return true;
 			}
 		}
 		
@@ -48,7 +48,7 @@ public class ChatSetting implements CommandExecutor {
 		}
 		else {
 			p.sendMessage(Chat.color("&cUsage: /chat <all|team>, /tc | /ac"));
-			return false;
+			return true;
 		}
 		
 		return true;

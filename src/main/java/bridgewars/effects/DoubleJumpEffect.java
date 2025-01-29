@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 import bridgewars.Main;
 import bridgewars.commands.Fly;
-import bridgewars.settings.DoubleJump;
+import bridgewars.settings.enums.DoubleJump;
 
 public class DoubleJumpEffect implements Listener {
 	

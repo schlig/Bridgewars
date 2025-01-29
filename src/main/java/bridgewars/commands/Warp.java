@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import bridgewars.Main;
 import bridgewars.game.GameState;
 import bridgewars.messages.Chat;
+import bridgewars.utils.World;
 
 public class Warp implements CommandExecutor {
 	
@@ -33,7 +34,7 @@ public class Warp implements CommandExecutor {
 		if(args.length < 1)
 			args = new String[] {"none"};
 		
-		if(label.contains("hub"))
+		if(label.contains("hub") || label.contains("l"))
 			args = new String[] {"hub"};
 		
 		if(args[0] == "none") {
@@ -45,7 +46,7 @@ public class Warp implements CommandExecutor {
 		switch(args[0]) {
 		case "hub":
 		case "spawn":
-			p.teleport(new Location(Bukkit.getWorld("world"), 1062.5, 52, 88.5, -90, 10));
+			p.teleport(World.getSpawn());
 			p.sendMessage(Chat.color("&7Teleported to Spawn"));
 			break;
 			
@@ -53,6 +54,8 @@ public class Warp implements CommandExecutor {
 		case "observatory":
 			p.teleport(new Location(Bukkit.getWorld("world"), 0.5, 46.0, 6.5, 180, 10));
 			p.sendMessage(Chat.color("&7Teleported to the Observatory"));
+			if(GameState.isState(GameState.ACTIVE))
+				p.setGameMode(org.bukkit.GameMode.SPECTATOR);
 			break;
 			
 		case "bmcl":
@@ -61,6 +64,6 @@ public class Warp implements CommandExecutor {
 			break;
 		}
 		
-		return false;
+		return true;
 	}
 }

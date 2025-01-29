@@ -28,7 +28,7 @@ public class Transform implements CommandExecutor {
 		Player p = (Player) sender;
 		if(!p.hasPermission("trusted.disguise")) {
 			p.sendMessage(Chat.color("&cYou do not have permission to do this."));
-			return false;
+			return true;
 		}
 
 		ArrayList<Player> players = new ArrayList<>();
@@ -42,6 +42,6 @@ public class Transform implements CommandExecutor {
 		else
 			Disguise.setDisguise(p, Utils.getUUID(args[0]));
 		
-		return false;
+		return true;
 	}
 }

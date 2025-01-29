@@ -1,4 +1,4 @@
-package bridgewars.settings;
+package bridgewars.settings.enums;
 
 public enum Shears {
 	ENABLED(true), DISABLED(false);
@@ -14,12 +14,12 @@ public enum Shears {
 		return isEnabled;
 	}
 	
-	public static void setState(Shears state) {
-		Shears.currentState = state;
+	public static void toggle() {
+		setState(getState().isEnabled() ? DISABLED : ENABLED);
 	}
 	
-	public static boolean isState(Shears state) {
-		return Shears.currentState == state;
+	public static void setState(Shears state) {
+		Shears.currentState = state;
 	}
 	
 	public static Shears getState() {

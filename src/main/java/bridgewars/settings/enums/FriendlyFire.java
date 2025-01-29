@@ -1,4 +1,4 @@
-package bridgewars.settings;
+package bridgewars.settings.enums;
 
 public enum FriendlyFire {
 	ENABLED(true), DISABLED(false);
@@ -14,12 +14,12 @@ public enum FriendlyFire {
 		return isEnabled;
 	}
 	
-	public static void setState(FriendlyFire state) {
-		FriendlyFire.currentState = state;
+	public static void toggle() {
+		setState(getState().isEnabled() ? DISABLED : ENABLED);
 	}
 	
-	public static boolean isState(FriendlyFire state) {
-		return FriendlyFire.currentState == state;
+	public static void setState(FriendlyFire state) {
+		FriendlyFire.currentState = state;
 	}
 	
 	public static FriendlyFire getState() {

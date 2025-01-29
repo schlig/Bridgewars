@@ -29,11 +29,12 @@ public class CustomScoreboard {
 	private TimeLimit limit = new TimeLimit();
 	private HashMap<UUID, String> display = new HashMap<>();
 	
-	private int firstWarning = 60;
-	private int secondWarning = 30; //time remaining to notify players
-	private int finalWarning = 15;
+	private final int firstWarning = 60;
+	private final int secondWarning = 30; //time remaining to notify players
+	private final int finalWarning = 15;
 	
-	private int boundingHeight = 30; // max y elevation for timer to tick down
+	private final int boundingRadius = 25; // max X and Z before timer starts ticking downwards
+	private final int boundingHeight = 30; // max y elevation for timer to tick down
 	
 	public CustomScoreboard() {
 		scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
@@ -81,16 +82,21 @@ public class CustomScoreboard {
 			score = time.getScore(display.get(p.getUniqueId()));
 			int points = score.getScore();
 			
-			if(p.getLocation().getY() <= boundingHeight //increase time by 1 if below y=30          
-					&& !p.getGameMode().equals(GameMode.CREATIVE)
-					&& points < TimeLimit)
+			if(p.getLocation().getY() <= boundingHeight //increase time by 1 if within bounds
+			&& Math.abs(p.getLocation().getX()) <= boundingRadius
+			&& Math.abs(p.getLocation().getZ()) <= boundingRadius
+			&& !p.getGameMode().equals(GameMode.CREATIVE)
+			&& points < TimeLimit)
 				score.setScore(points + 1);
 			
-			if(p.getLocation().getY() > boundingHeight  //decrease time by 1 if above y=30 to prevent platform stalling
-			&& p.getGameMode() != GameMode.CREATIVE
-            && points > 0) {
-				score.setScore(points - 1);
-				return;
+			if(p.getLocation().getY() > boundingHeight  //decrease time by 1 if out of bounds
+			|| Math.abs(p.getLocation().getX()) > boundingRadius
+			|| Math.abs(p.getLocation().getZ()) > boundingRadius) {
+				if(p.getGameMode() != GameMode.CREATIVE
+				&& points > 0) {
+					score.setScore(points - 1);
+					return;
+				}
 			}
 			
 			if(points == TimeLimit - firstWarning) {
@@ -140,9 +146,7 @@ public class CustomScoreboard {
 	}
 	
 	public void removePlayerFromTimer(Player p) {
-		if(!display.containsKey(p.getUniqueId()))
-			display.put(p.getUniqueId(), Utils.getName(p.getUniqueId()));
-		Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "scoreboard players reset " + display.get(p.getUniqueId()) + " time");
+		Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "scoreboard players reset " + Utils.getName(p.getUniqueId()) + " time");
 	}
 	
 	public void resetAllTimes() {

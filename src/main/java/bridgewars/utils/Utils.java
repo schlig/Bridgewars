@@ -21,6 +21,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import bridgewars.game.CustomScoreboard;
+import bridgewars.game.Leaderboards;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 
 public class Utils {
@@ -107,6 +108,7 @@ public class Utils {
 		if(p.getGameMode() != GameMode.CREATIVE) {
 			item.setAmount(item.getAmount() - 1);
 			p.setItemInHand(item);
+			Leaderboards.addPoint(p, "items");
 		}
 		else return;
 	}

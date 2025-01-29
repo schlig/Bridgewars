@@ -37,12 +37,12 @@ public class Permission implements CommandExecutor {
 		
 		if(!sender.isOp() && sender instanceof Player) {
 			sender.sendMessage(Chat.color("&cYou do not have permission to do this."));
-			return false;
+			return true;
 		}
 		
 		if(args.length < 2) {
 			sender.sendMessage(Chat.color("&cUsage: /permission [get|clear|give|take] <player> [permission]"));
-			return false;
+			return true;
 		}
 		
 		UUID uuid = Utils.getUUID(args[1]);
@@ -61,7 +61,7 @@ public class Permission implements CommandExecutor {
 		case "give":
 			if(!permissions.contains(args[2])) {
 				sender.sendMessage(Chat.color("&cInvalid permission."));
-				return false;
+				return true;
 			}
 			Permissions.setPermission(Utils.getUUID(args[1]), args[2], true, true);
 			sender.sendMessage(Chat.color("&6"+ Utils.getName(uuid) + " has been given permission \"&c" + args[2] + "&6\"."));
@@ -70,13 +70,13 @@ public class Permission implements CommandExecutor {
 		case "take":
 			if(!permissions.contains(args[2])) {
 				sender.sendMessage(Chat.color("&cInvalid permission. Permissions: <trusted>.[fly, gamemode, label, endgame, settings, worldedit]"));
-				return false;
+				return true;
 			}
 			Permissions.setPermission(Utils.getUUID(args[1]), args[2], false, true);
 			sender.sendMessage(Chat.color("&6"+ Utils.getName(uuid) + " has been revoked of permission \"&c" + args[2] + "&6\"."));
 			break;
 		}
 		
-		return false;
+		return true;
 	}
 }

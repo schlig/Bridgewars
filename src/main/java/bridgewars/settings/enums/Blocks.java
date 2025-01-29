@@ -1,4 +1,4 @@
-package bridgewars.settings;
+package bridgewars.settings.enums;
 
 public enum Blocks {
 	ENABLED(true), DISABLED(false);
@@ -14,12 +14,12 @@ public enum Blocks {
 		return isEnabled;
 	}
 	
-	public static void setState(Blocks state) {
-		Blocks.currentState = state;
+	public static void toggle() {
+		setState(getState().isEnabled() ? DISABLED : ENABLED);
 	}
 	
-	public static boolean isState(Blocks state) {
-		return Blocks.currentState == state;
+	public static void setState(Blocks state) {
+		Blocks.currentState = state;
 	}
 	
 	public static Blocks getState() {

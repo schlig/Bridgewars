@@ -11,18 +11,19 @@ import bridgewars.game.GameState;
 import bridgewars.messages.Chat;
 import bridgewars.utils.World;
 
-public class IndestructibleOoBBlocks implements Listener {
+public class IndestructibleBlocks implements Listener {
 	
-	public IndestructibleOoBBlocks(Main plugin) {
+	public IndestructibleBlocks(Main plugin) {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
 	public void onBreak(BlockBreakEvent e) { //prevents blocks from being broken if they're out of bounds (mainly spawn plats and sad rooms)
-		if(e.getPlayer().getGameMode() != GameMode.CREATIVE && GameState.isState(GameState.ACTIVE))
-			if(!World.inGameArea(e.getBlock().getLocation())) {
-				e.getPlayer().sendMessage(Chat.color("&cYou can't break blocks here!"));
+		if(e.getPlayer().getGameMode() != GameMode.CREATIVE && GameState.isState(GameState.ACTIVE)) {
+			if(!World.inGameArea(e.getBlock().getLocation()) || World.blockIsIndestructible(e.getBlock())) {
+				e.getPlayer().sendMessage(Chat.color("&cYou can't break this!"));
 				e.setCancelled(true);
 			}
+		}
 	}
 }

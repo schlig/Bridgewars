@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 import bridgewars.Main;
+import bridgewars.settings.enums.UnlockedInventory;
 
 public class DisableBasicItemDrops implements Listener {
 	
@@ -35,7 +36,7 @@ public class DisableBasicItemDrops implements Listener {
 	public void onDrop(PlayerDropItemEvent e) { //prevent players from dropping items
 		ItemStack item = e.getItemDrop().getItemStack();
 		if(e.getPlayer().getGameMode() != GameMode.CREATIVE)
-			if(bannedItems.contains(item.getType()))
+			if(bannedItems.contains(item.getType()) && !UnlockedInventory.getState().isEnabled())
 				e.setCancelled(true);
 		if(e.getPlayer().getOpenInventory() != null)
 			if(e.getPlayer().getOpenInventory().getTitle() == "Hotbar Layout")

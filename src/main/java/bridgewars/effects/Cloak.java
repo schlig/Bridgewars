@@ -8,9 +8,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import bridgewars.game.CSManager;
 import bridgewars.messages.Chat;
 import bridgewars.utils.Disguise;
 import bridgewars.utils.ItemManager;
+import bridgewars.utils.Utils;
 
 public class Cloak extends BukkitRunnable {
 	
@@ -29,6 +31,11 @@ public class Cloak extends BukkitRunnable {
 		Disguise.setDisguise(p, t);
 		cloakedPlayers.add(p.getUniqueId());
 		p.sendMessage(Chat.color("&lYou have disguised yourself as " + Bukkit.getPlayer(t).getDisplayName() + "&r&l!"));
+		for(Player players : Bukkit.getOnlinePlayers()) {
+			if(CSManager.matchTeam(p, players)) {
+				players.sendMessage(Chat.color(p.getName() + " has disguised as " + Utils.getName(t)));
+			}
+		}
 	}
 	
 	@Override

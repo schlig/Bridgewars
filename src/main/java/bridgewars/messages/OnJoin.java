@@ -6,13 +6,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.potion.PotionEffect;
 
 import bridgewars.Main;
 import bridgewars.commands.ChatSetting;
 import bridgewars.commands.Fly;
 import bridgewars.game.CSManager;
 import bridgewars.game.Leaderboards;
-import bridgewars.settings.DoubleHealth;
+import bridgewars.items.MagicStopwatch;
+import bridgewars.settings.enums.DoubleHealth;
 import bridgewars.utils.Permissions;
 import bridgewars.utils.World;
 
@@ -31,7 +33,10 @@ public class OnJoin implements Listener {
 		CSManager.resetTeam(p, false);
 		CSManager.removePlayerFromTimer(p);
 		
-		Leaderboards.clearKills(p);
+		Leaderboards.clearPoints(p, "kills");
+		Leaderboards.clearPoints(p, "items");
+		if(MagicStopwatch.speedModifier.containsKey(p))
+			MagicStopwatch.speedModifier.remove(p);
 		
 		p.setLevel(0);
 		p.sendMessage(Chat.color("Welcome to &6Bridgewars&r! Type &c/menu&r to get started."));
@@ -49,11 +54,15 @@ public class OnJoin implements Listener {
 			p.setMaxHealth(20);
 		}
 		
+		for(PotionEffect effect : p.getActivePotionEffects())
+			p.removePotionEffect(effect.getType());
+		
 		p.setAllowFlight(false);
 		p.setFlying(false);
 		p.teleport(World.getSpawn()); //uses bridgewars.utils.World, not bukkit.org.World
 		p.getInventory().clear();
 		p.getInventory().setArmorContents(null);
 		p.setGameMode(GameMode.ADVENTURE);
+		e.setJoinMessage(Chat.color("&e" + p.getName() + " joined the game"));
 	}
 }

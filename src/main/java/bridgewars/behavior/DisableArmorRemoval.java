@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.InventoryType.SlotType;
 
 import bridgewars.Main;
 import bridgewars.game.GameState;
+import bridgewars.settings.enums.UnlockedInventory;
 
 public class DisableArmorRemoval implements Listener {
 	
@@ -20,7 +21,8 @@ public class DisableArmorRemoval implements Listener {
 	public void onClick(InventoryClickEvent e) { //prevents armor from being dropped or removed from inventory while in game
 		if(GameState.isState(GameState.ACTIVE) 
 				&& e.getWhoClicked().getGameMode() != GameMode.CREATIVE
-				&& e.getSlotType() == SlotType.ARMOR)
+				&& e.getSlotType() == SlotType.ARMOR
+				&& !UnlockedInventory.getState().isEnabled())
 					e.setCancelled(true);
 	}
 }

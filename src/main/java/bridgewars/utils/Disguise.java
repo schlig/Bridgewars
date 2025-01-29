@@ -1,6 +1,8 @@
 package bridgewars.utils;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -11,6 +13,28 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
 public class Disguise {
+	
+	public static List<String> randomDisguiseList = Arrays.asList(
+			"Schlog",
+			"Wabadaba",
+			"MookW",
+			"Physiological",
+			"nicktoot",
+			"TalonBX",
+			"Freejourner",
+			"Northwind5545",
+			"ThuggishPrune",
+			"EmergenCheese",
+			"towwl",
+			"eggwave",
+			"MrFrexxy",
+			"onjit",
+			"tiralmo",
+			"turewjyg",
+			"SirLeo__",
+			"Ohhkkay",
+			"SirJosh3917",
+			"Anch");
 	
 	public static void setDisguise(Player p, UUID target) {
 		CraftPlayer player = (CraftPlayer) p;

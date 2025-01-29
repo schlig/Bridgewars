@@ -38,6 +38,6 @@ public class JoinTeam implements CommandExecutor {
 				cs.resetTeam(p, true);
 		}
 		
-		return false;
+		return true;
 	}
 }

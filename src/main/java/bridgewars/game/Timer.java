@@ -11,8 +11,8 @@ import org.bukkit.scheduler.BukkitTask;
 import bridgewars.Main;
 import bridgewars.effects.ParticleTrail;
 import bridgewars.messages.Chat;
-import bridgewars.settings.NaturalItemSpawning;
 import bridgewars.settings.TimeLimit;
+import bridgewars.settings.enums.NaturalItemSpawning;
 import bridgewars.utils.World;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 

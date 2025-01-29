@@ -62,7 +62,7 @@ public class InputHandler implements Listener {
 				MainMenu.sendInput(p, inv, button);
 				break;
 			case "Game Settings":
-				Settings.sendInput(p, inv, button);
+				GameSettingsEditor.sendInput(p, inv, button);
 				break;
 			case "Time Limit":
 				TimeLimitEditor.sendInput(p, inv, button);

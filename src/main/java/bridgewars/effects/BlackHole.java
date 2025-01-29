@@ -7,6 +7,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import bridgewars.utils.Utils;
+import bridgewars.utils.World;
 
 public class BlackHole extends BukkitRunnable {
 
@@ -29,10 +30,15 @@ public class BlackHole extends BukkitRunnable {
 		for(int x = -radius; x <= radius; x++)
 			for(int y = -radius; y <= radius; y++)
 				for(int z = -radius; z <= radius; z++)
-					if(block.getRelative(x, y, z).getType() == Material.WOOL
+					if(block.getRelative(x, y, z).getType() != Material.BEDROCK
 					&& !Utils.isOutOfBounds(block.getLocation(), 22, 24, 22)
-					|| override)
+					|| override) {
+						if(World.blockIsIndestructible(block.getRelative(x, y, z))) {
+							continue;
+						}
 						block.getRelative(x, y, z).setType(Material.AIR);
+						
+					}
 		if(radius == 1)
 			Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("bridgewars"), () -> radius = 2, 2L);
 	}

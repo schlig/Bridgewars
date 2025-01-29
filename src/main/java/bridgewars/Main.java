@@ -10,7 +10,8 @@ import bridgewars.behavior.DisableFallDamage;
 import bridgewars.behavior.DisableInventoryCrafting;
 import bridgewars.behavior.DisableWeather;
 import bridgewars.behavior.HitDetection;
-import bridgewars.behavior.IndestructibleOoBBlocks;
+import bridgewars.behavior.ImmediateRespawn;
+import bridgewars.behavior.IndestructibleBlocks;
 import bridgewars.behavior.InfiniteBlocks;
 import bridgewars.behavior.InstantVoidKill;
 import bridgewars.behavior.PreventAnnoyingBowUse;
@@ -34,6 +35,7 @@ import bridgewars.commands.MapList;
 import bridgewars.commands.Menu;
 import bridgewars.commands.OverwriteMap;
 import bridgewars.commands.Permission;
+import bridgewars.commands.PlayerSetting;
 import bridgewars.commands.SaveMap;
 import bridgewars.commands.StartGame;
 import bridgewars.commands.Transform;
@@ -44,7 +46,6 @@ import bridgewars.effects.Piggyback;
 import bridgewars.effects.PlotArmor;
 import bridgewars.game.CustomScoreboard;
 import bridgewars.game.GameState;
-import bridgewars.game.InstantRespawn;
 import bridgewars.game.Kills;
 import bridgewars.game.Leaderboards;
 import bridgewars.game.Timer;
@@ -58,7 +59,8 @@ import bridgewars.parkour.ParkourCheckpoint;
 import bridgewars.parkour.ParkourQuit;
 import bridgewars.parkour.ParkourReset;
 import bridgewars.parkour.ParkourTeleport;
-import bridgewars.settings.Settings;
+import bridgewars.settings.GameSettings;
+import bridgewars.settings.PlayerSettings;
 import bridgewars.utils.ItemManager;
 import bridgewars.utils.Permissions;
 
@@ -78,9 +80,8 @@ public class Main extends JavaPlugin {
 		new DisableInventoryCrafting(this);
 		new DisableBasicItemDrops(this);
 		new DisableWeather(this);
-		new IndestructibleOoBBlocks(this);
+		new IndestructibleBlocks(this);
 		new InfiniteBlocks(this);
-		new InstantVoidKill(this);
 		new Saturation(this);
 		new HitDetection(this);
 		new PreventAnnoyingBowUse(this);
@@ -110,6 +111,7 @@ public class Main extends JavaPlugin {
 		new Permission(this);
 		new Whisper(this);
 		new ChatSetting(this);
+		new PlayerSetting(this);
 		
 		//messages
 		new DeathMessages(this);
@@ -122,7 +124,10 @@ public class Main extends JavaPlugin {
 		new CustomScoreboard().resetBoard();
 		new Kills(this);
 		new Timer(this);
-		new InstantRespawn(this);
+		new ImmediateRespawn(this);
+		
+		//this is actually a behavior class, it's just here so the code runs after the game.Kills class (makes things register properly on void kill)
+		new InstantVoidKill(this);
 		
 		//effects
 		new DoubleJumpEffect(this);
@@ -142,7 +147,8 @@ public class Main extends JavaPlugin {
 		//utils
 		new Permissions(this);
 
-		Settings.load();
+		GameSettings.load();
+		PlayerSettings.load();
 		GameState.setState(GameState.INACTIVE);
 	}
 	

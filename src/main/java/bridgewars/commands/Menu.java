@@ -40,6 +40,6 @@ public class Menu implements CommandExecutor {
 		else
 			p.openInventory(menu.getMain());
 		
-		return false;
+		return true;
 	}
 }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import bridgewars.commands.Fly;
@@ -66,14 +67,15 @@ public class Timer extends BukkitRunnable implements Listener {
 	}
 	
 	private void removeParkourItems(Player p) {
-		if(p.getInventory().contains(ItemManager.getItem("ParkourTeleporter").createItem(null)))
-			p.getInventory().remove(ItemManager.getItem("ParkourTeleporter").createItem(null));
-		if(p.getInventory().contains(ItemManager.getItem("ParkourResetter").createItem(null)))
-			p.getInventory().remove(ItemManager.getItem("ParkourResetter").createItem(null));
-		if(p.getInventory().contains(ItemManager.getItem("ParkourQuitter").createItem(null)))
-			p.getInventory().remove(ItemManager.getItem("ParkourQuitter").createItem(null));
-		if(p.getInventory().contains(ItemManager.getItem("ParkourCheckpoint").createItem(null)))
-			p.getInventory().remove(ItemManager.getItem("ParkourCheckpoint").createItem(null));
+		PlayerInventory inv = p.getInventory();
+		if(inv.contains(ItemManager.getItem("ParkourTeleporter").createItem(null)))
+			inv.remove(ItemManager.getItem("ParkourTeleporter").createItem(null));
+		if(inv.contains(ItemManager.getItem("ParkourResetter").createItem(null)))
+			inv.remove(ItemManager.getItem("ParkourResetter").createItem(null));
+		if(inv.contains(ItemManager.getItem("ParkourQuitter").createItem(null)))
+			inv.remove(ItemManager.getItem("ParkourQuitter").createItem(null));
+		if(inv.contains(ItemManager.getItem("ParkourCheckpoint").createItem(null)))
+			inv.remove(ItemManager.getItem("ParkourCheckpoint").createItem(null));
 	}
 	
 	private void endParkour(Player p) {

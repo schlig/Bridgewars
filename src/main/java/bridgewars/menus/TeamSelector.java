@@ -8,12 +8,12 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import bridgewars.game.CustomScoreboard;
+import bridgewars.game.CSManager;
+import bridgewars.utils.ItemBuilder;
 
 public class TeamSelector {
 	
 	private static GUI menu = new GUI();
-	private static CustomScoreboard cs = new CustomScoreboard();
 	
 	public static void sendInput(Player p, Inventory inv, ItemStack button) {
 		if(inv.getType().equals(InventoryType.PLAYER))
@@ -32,46 +32,39 @@ public class TeamSelector {
 		
 		else if(button.getType() == Material.WOOL) {
 			String team;
-			if(cs.hasTeam(p))
-				team = cs.getTeam(p);
+			if(CSManager.hasTeam(p))
+				team = CSManager.getTeam(p);
 			else
 				team = "none";
 			
 			switch(button.getDurability()) {
 			case (short)0:
-				if(cs.hasTeam(p)) {
+				if(CSManager.hasTeam(p)) {
 					p.playSound(p.getLocation(), Sound.CLICK, 0.8F, 1F);
-					cs.resetTeam(p, true);
+					CSManager.resetTeam(p, true);
 				}
 				break;
 			case (short)14:
-				if(!button.getItemMeta().getDisplayName().toLowerCase().contains(team)) {
-					p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
-					button.addUnsafeEnchantment(Enchantment.LURE, 1);
-					cs.setTeam(p, "red");
-				}
+				selectButton(p, team, "red", button);
 				break;
 			case (short)3:
-				if(!button.getItemMeta().getDisplayName().toLowerCase().contains(team)) {
-					p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
-					button.addUnsafeEnchantment(Enchantment.LURE, 1);
-					cs.setTeam(p, "blue");
-				}
+				selectButton(p, team, "blue", button);
 				break;
 			case (short)5:
-				if(!button.getItemMeta().getDisplayName().toLowerCase().contains(team)) {
-					p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
-					button.addUnsafeEnchantment(Enchantment.LURE, 1);
-					cs.setTeam(p, "green");
-				}
+				selectButton(p, team, "green", button);
 				break;
 			case (short)4:
-				if(!button.getItemMeta().getDisplayName().toLowerCase().contains(team)) {
-					p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
-					button.addUnsafeEnchantment(Enchantment.LURE, 1);
-					cs.setTeam(p, "yellow");
-				}
+				selectButton(p, team, "yellow", button);
 			}
+		}
+	}
+	
+	private static void selectButton(Player p, String team, String newTeam, ItemStack button) {
+		if(!button.getItemMeta().getDisplayName().toLowerCase().contains(team)) {
+			p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1f, 1f);
+			ItemBuilder.hideFlags(button);
+			button.addUnsafeEnchantment(Enchantment.LURE, 1);
+			CSManager.setTeam(p, newTeam);
 		}
 	}
 }

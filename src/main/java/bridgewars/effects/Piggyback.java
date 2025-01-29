@@ -20,7 +20,7 @@ public class Piggyback implements Listener {
 	@EventHandler
 	public void onClick(PlayerInteractAtEntityEvent e) {
 		if(e.getRightClicked() instanceof Player 
-				&& bridgewars.settings.Piggyback.getState().isEnabled()) {
+				&& bridgewars.settings.enums.Piggyback.getState().isEnabled()) {
 			Player p = e.getPlayer();
 			Player t = (Player) e.getRightClicked();
 			if(cs.matchTeam(p, t))

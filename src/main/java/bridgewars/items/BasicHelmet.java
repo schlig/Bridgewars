@@ -16,10 +16,10 @@ public class BasicHelmet implements ICustomItem {
     public ItemStack createItem(Player p) {
         ItemStack item = new ItemStack(Material.LEATHER_HELMET, 1);
         String team = ItemBuilder.getTeamName(p);
-        ItemBuilder.setUnbreakable(item, true);
-        ItemBuilder.setLeatherColor(p, item, team);
         ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
         ItemBuilder.setName(item, "&r" + team.substring(0, 1).toUpperCase() + team.substring(1) + " Helmet");
+        ItemBuilder.setUnbreakable(item, true);
+        ItemBuilder.setLeatherColor(p, item, team);
         return item;
     }
 }

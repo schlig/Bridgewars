@@ -22,6 +22,7 @@ import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
 import bridgewars.utils.Utils;
+import bridgewars.utils.World;
 
 public class PortableDoinkHut implements ICustomItem, Listener {
 	
@@ -91,6 +92,8 @@ public class PortableDoinkHut implements ICustomItem, Listener {
 						&& origin.getRelative(x, y, z).getY() <= mapHeight
 						|| user.getGameMode() == GameMode.CREATIVE) {
 							success = true;
+							if(World.indestructibleBlockList.contains(origin.getRelative(x, y, z)))
+								 continue;
 							origin.getRelative(x, y, z).setType(Material.WOOL);
 							origin.getRelative(x, y, z).setData(ItemBuilder.getColorID(user));
 						}
@@ -100,7 +103,7 @@ public class PortableDoinkHut implements ICustomItem, Listener {
 		for(int x = -1; x <= 1; x++)
 			for(int z = -1; z <= 1; z++)
 				for(int y = 1; y <= 2; y++)
-					if(origin.getRelative(x, y, z).getType() == Material.WOOL)
+					if(origin.getRelative(x, y, z).getType() == Material.WOOL && !World.blockIsIndestructible(origin.getRelative(x, y, z)))
 						origin.getRelative(x, y, z).setType(Material.AIR);
 		
 		if(success || user.getGameMode() == GameMode.CREATIVE) {

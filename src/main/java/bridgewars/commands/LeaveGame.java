@@ -6,18 +6,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import bridgewars.Main;
-import bridgewars.game.CustomScoreboard;
+import bridgewars.game.CSManager;
 import bridgewars.game.Game;
 import bridgewars.game.GameState;
 import bridgewars.messages.Chat;
 
 public class LeaveGame implements CommandExecutor {
 	
-	private CustomScoreboard cs;
-	
 	public LeaveGame(Main plugin) {
 		plugin.getCommand("leave").setExecutor(this);
-		cs = new CustomScoreboard();
 	}
 
 	
@@ -30,17 +27,17 @@ public class LeaveGame implements CommandExecutor {
 		
 		if(!GameState.isState(GameState.ACTIVE)) {
 			p.sendMessage(Chat.color("&cThere is no game in progress."));
-			return false;
+			return true;
 		}
 		
-		if(!cs.hasTeam(p)) {
+		if(!CSManager.hasTeam(p)) {
 			p.sendMessage(Chat.color("&cYou are not in a game."));
-			return false;
+			return true;
 		}
 			
 		Game.leaveGame(p);
 		p.sendMessage(Chat.color("&cYou left the game."));
 		
-		return false;
+		return true;
 	}
 }

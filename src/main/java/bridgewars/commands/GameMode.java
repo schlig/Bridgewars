@@ -24,12 +24,12 @@ public class GameMode implements CommandExecutor {
 		Player p = (Player) sender;
 		if(!p.hasPermission("trusted.gamemode")) {
 			p.sendMessage(Chat.color("&cYou do not have permission to do this."));
-			return false;
+			return true;
 		}
 		
 		if(GameState.isState(GameState.ACTIVE) && !p.isOp()) {
 			p.sendMessage(Chat.color("&cYou can't do this while a game is active."));
-			return false;
+			return true;
 		}
 		
 		switch(label) {
@@ -54,6 +54,6 @@ public class GameMode implements CommandExecutor {
 			break;
 		}
 		
-		return false;
+		return true;
 	}
 }

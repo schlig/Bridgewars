@@ -1,4 +1,4 @@
-package bridgewars.settings;
+package bridgewars.settings.enums;
 
 public enum DigWars {
 	ENABLED(true), DISABLED(false);
@@ -14,12 +14,12 @@ public enum DigWars {
 		return isEnabled;
 	}
 	
-	public static void setState(DigWars state) {
-		DigWars.currentState = state;
+	public static void toggle() {
+		setState(getState().isEnabled() ? DISABLED : ENABLED);
 	}
 	
-	public static boolean isState(DigWars state) {
-		return DigWars.currentState == state;
+	public static void setState(DigWars state) {
+		DigWars.currentState = state;
 	}
 	
 	public static DigWars getState() {

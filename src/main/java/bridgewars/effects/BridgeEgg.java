@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import bridgewars.game.GameState;
 import bridgewars.utils.Utils;
+import bridgewars.utils.World;
 
 public class BridgeEgg extends BukkitRunnable {
 
@@ -49,7 +50,7 @@ public class BridgeEgg extends BukkitRunnable {
 		for(int x = 0; x != xDir * 2; x += xDir)
 			for(int z = 0; z != zDir * 2; z += zDir) {
 				blockR = block.getRelative(x, 0, z);
-				if(blockR.getType() == Material.AIR && !Utils.isOutOfBounds(blockR.getLocation(), 22, 24, 22) || override) {
+				if(blockR.getType() == Material.AIR && !Utils.isOutOfBounds(blockR.getLocation(), 22, 24, 22) && !World.blockIsIndestructible(blockR) || override) {
 					blockR.setType(Material.WOOL);
 					blockR.setData((byte)Utils.rand(16));
 				}

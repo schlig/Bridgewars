@@ -20,6 +20,7 @@ import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
 import bridgewars.utils.Utils;
+import bridgewars.utils.World;
 
 public class Eraser implements ICustomItem, Listener {
 
@@ -71,7 +72,7 @@ public class Eraser implements ICustomItem, Listener {
 								&& Math.abs(origin.getRelative(x, y, z).getZ()) <= mapRadius
 								&& origin.getRelative(x, y, z).getY() <= mapHeight
 								|| p.getGameMode() == GameMode.CREATIVE) {
-									if(origin.getRelative(x, y, z).getType() == Material.WOOL)
+									if(origin.getRelative(x, y, z).getType() == Material.WOOL && !World.blockIsIndestructible(origin.getRelative(x, y, z)))
 										origin.getRelative(x, y, z).setData((byte) 0);
 								}
 							}

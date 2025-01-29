@@ -139,6 +139,28 @@ public class GUI {
 				Chat.color("&7Always randomize teams"),
 				Chat.color("&7on game start"))));
 		
+		settings.setItem(29, item(Material.RABBIT_HIDE, 1, 0, "&r&6Hide Players", false, Arrays.asList(
+				Chat.color("&r&cDisabled"),
+				Chat.color("&7Players are all randomly disguised"),
+				Chat.color("&7as the same Bedwar user"))));
+		
+		settings.setItem(30, item(Material.BEDROCK, 1, 0, "&r&6Indestructible Map", false, Arrays.asList(
+				Chat.color("&r&cDisabled"),
+				Chat.color("&7The map that generates cannot be"),
+				Chat.color("&7broken by normal means"))));
+		
+		settings.setItem(31, item(Material.GLASS, 1, 0, "&r&6Wool Decay", false, Arrays.asList(
+				Chat.color("&r&cDisabled"),
+				Chat.color("&7All wool blocks placed"),
+				Chat.color("&7disappear after 90 seconds"))));
+		
+		settings.setItem(32, item(Material.WORKBENCH, 1, 0, "&r&6Unlocked Inventory", false, Arrays.asList(
+				Chat.color("&r&cDisabled"),
+				Chat.color("&7Unlocks all options"),
+				Chat.color("&7Armor can be taken off"),
+				Chat.color("&7Crafting is enabled"),
+				Chat.color("&7All items can be dropped"))));
+		
 		settings.setItem(40, button(0));
 		
 		//build the timer menu

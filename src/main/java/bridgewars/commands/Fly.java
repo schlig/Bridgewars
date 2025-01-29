@@ -30,7 +30,7 @@ public class Fly implements CommandExecutor {
 		
 		if(!p.hasPermission("trusted.fly")) {
 			p.sendMessage(Chat.color("&cYou do not have permission to do this."));
-			return false;
+			return true;
 		}
 		
 		if(GameState.isState(GameState.ACTIVE)
@@ -45,7 +45,7 @@ public class Fly implements CommandExecutor {
 		else
 			setFlight(p, !allowFlight.get(p), true);
 		
-		return false;
+		return true;
 	}
 	
 	public static void setFlight(Player p, boolean state, boolean showMessage) {

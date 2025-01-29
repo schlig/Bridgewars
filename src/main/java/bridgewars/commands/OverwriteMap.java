@@ -36,7 +36,7 @@ public class OverwriteMap implements CommandExecutor {
 		if(p.isOp()) {
 			if(args.length == 0) {
 				p.sendMessage(Chat.color("&cYou must specify a map name."));
-				return false;
+				return true;
 			}
 			
 			String mapName = "";
@@ -49,7 +49,7 @@ public class OverwriteMap implements CommandExecutor {
 			File file = new File(filepath + mapName + ".map");
 			if(!file.exists()) {
 				p.sendMessage(Chat.color("&cThat map does not exist."));
-				return false;
+				return true;
 			}
 			try {
 				Block block;
@@ -80,6 +80,6 @@ public class OverwriteMap implements CommandExecutor {
 		else
 			p.sendMessage(Chat.color("&cYou do not have permission to do this."));
 		
-		return false;
+		return true;
 	}
 }

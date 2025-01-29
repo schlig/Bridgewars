@@ -33,6 +33,23 @@ public class Railgun implements ICustomItem, Listener {
     public Railgun(Main plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
+    
+    @Override
+    public Rarity getRarity() {
+        return Rarity.GREEN;
+    }
+
+    @Override
+    public ItemStack createItem(Player p) {
+        ItemStack item = new ItemStack(Material.BLAZE_ROD, 1);
+		ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
+        ItemBuilder.setName(item, "Railgun");
+        ItemBuilder.setLore(item, Arrays.asList(
+                Chat.color("&r&7Shoots a beam that destroys blocks,"),
+                Chat.color("&r&7dealing 3.5 hearts of damage")));
+        ItemBuilder.disableStacking(item);
+        return item;
+    }
 
     @EventHandler
     public void onUse(PlayerInteractEvent e) {
@@ -62,7 +79,11 @@ public class Railgun implements ICustomItem, Listener {
                                 100, 100, 100, 1, 1);
                         
                         if(block.getType() == Material.WOOL && World.inGameArea(block.getLocation()))
-                        	block.breakNaturally(e.getItem());
+                        	if(!World.blockIsIndestructible(block))
+                        		block.breakNaturally(e.getItem());
+                        
+                        if(block.getType() != Material.WOOL && block.getType() != Material.AIR)
+                        	break;
                 }
                 if(hitPlayers.size() > 0)
 					p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 0F);
@@ -70,22 +91,5 @@ public class Railgun implements ICustomItem, Listener {
                 p.playSound(p.getLocation(), Sound.FIREWORK_LARGE_BLAST2, 0.9F, 0.7F);
             }
         }
-    }
-    
-    @Override
-    public Rarity getRarity() {
-        return Rarity.GREEN;
-    }
-
-    @Override
-    public ItemStack createItem(Player p) {
-        ItemStack item = new ItemStack(Material.BLAZE_ROD, 1);
-		ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
-        ItemBuilder.setName(item, "Railgun");
-        ItemBuilder.setLore(item, Arrays.asList(
-                Chat.color("&r&7Shoots a beam that destroys blocks,"),
-                Chat.color("&r&7dealing 3.5 hearts of damage")));
-        ItemBuilder.disableStacking(item);
-        return item;
     }
 }

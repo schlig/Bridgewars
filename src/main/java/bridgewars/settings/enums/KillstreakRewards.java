@@ -1,4 +1,4 @@
-package bridgewars.settings;
+package bridgewars.settings.enums;
 
 public enum KillstreakRewards {
 	ENABLED(true), DISABLED(false);
@@ -15,12 +15,12 @@ public enum KillstreakRewards {
 		return isEnabled;
 	}
 	
-	public static void setState(KillstreakRewards state) {
-		KillstreakRewards.currentState = state;
+	public static void toggle() {
+		setState(getState().isEnabled() ? DISABLED : ENABLED);
 	}
 	
-	public static boolean isState(KillstreakRewards state) {
-		return KillstreakRewards.currentState == state;
+	public static void setState(KillstreakRewards state) {
+		KillstreakRewards.currentState = state;
 	}
 	
 	public static KillstreakRewards getState() {

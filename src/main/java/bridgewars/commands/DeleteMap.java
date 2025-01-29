@@ -28,7 +28,7 @@ public class DeleteMap implements CommandExecutor {
 		if(p.getUniqueId() == Bukkit.getPlayer("Schlog").getUniqueId()) {
 			if(args.length == 0) {
 				p.sendMessage(Chat.color("&cYou must specify a map name."));
-				return false;
+				return true;
 			}
 			
 			String mapName = "";
@@ -50,6 +50,6 @@ public class DeleteMap implements CommandExecutor {
 		else
 			p.sendMessage(Chat.color("&cYou do not have permission to do this."));
 		
-		return false;
+		return true;
 	}
 }

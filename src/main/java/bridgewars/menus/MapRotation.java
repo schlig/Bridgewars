@@ -22,7 +22,9 @@ import bridgewars.messages.Chat;
 public class MapRotation {
 	
 	private static GUI menu = new GUI();
-	private static String filepath = "./plugins/bridgewars/maps/";
+	private final static String filepath = "./plugins/bridgewars/maps/";
+	
+	private final static int mapsPerPage = 21;
 	
 	public static void sendInput(Player p, Inventory inv, ItemStack button) throws IOException {
 		if(inv.getType().equals(InventoryType.PLAYER))
@@ -82,23 +84,27 @@ public class MapRotation {
 		File file = new File(filepath);
 		List<String> mapList = new ArrayList<>(Arrays.asList(file.list()));
 		Collections.sort(mapList);
-		int index = page * 21;
+		int index = page * mapsPerPage;
 		
-		for(int y = 10; y <= 28; y+=9)
-			for(int x = 0; x < 7; x++) {
+		for(int x = 0; x < 7; x++)
+			for(int y = 0; y < 3; y++) {
 				if(index >= mapList.size())
 					break;
+				int slot = (x + 1) + ((y + 1) * 9);
+				//top left slot of an inventory is id 0 and bottom right is id 53
+				//+ 1 to x to shift maps to the right one slot
+				//* 9 to y to shift maps down one row
 				RandomAccessFile f = new RandomAccessFile(filepath + mapList.get(index), "rw");
 				f.seek(0);
 				if(f.readLine().contains("1"))
-					p.getOpenInventory().setItem(y + x, updateMap(p.getOpenInventory().getItem(y + x), true));
+					p.getOpenInventory().setItem(slot, updateMap(p.getOpenInventory().getItem(slot), true));
 				f.close();
 				index++;
 			}
 	}
 	
-	private static ItemStack updateMap(ItemStack map, boolean value) {
-		if(value) {
+	private static ItemStack updateMap(ItemStack map, boolean enabled) {
+		if(enabled) {
 			map.setType(Material.BARRIER);
 			map.removeEnchantment(Enchantment.LURE);
 		}

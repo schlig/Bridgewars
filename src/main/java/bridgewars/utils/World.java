@@ -22,12 +22,13 @@ import org.bukkit.scheduler.BukkitTask;
 
 import bridgewars.effects.ParticleTrail;
 import bridgewars.messages.Chat;
+import bridgewars.settings.enums.IndestructibleMap;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 
 public class World {
 	
 	private final static String mapPath = "./plugins/bridgewars/maps/";
-	private final static String objectPath = "/plugins/bridgewars/objects";
+	private final static String objectPath = "./plugins/bridgewars/objects/";
 	
 	private static int x = 0, y = 0, z = 0;
 	private static final int gameXSize = 22, gameYSize = 24, gameZSize = 22;
@@ -39,14 +40,25 @@ public class World {
 	private static final float worldSpawnPitch = 10;
 	
 	private static final  int maximumSpawnAttempts = 500;
-	
+
+	public static ArrayList<Block> indestructibleBlockList = new ArrayList<>();
 	private static ArrayList<BukkitTask> itemMarkers = new ArrayList<BukkitTask>();
 	
-	public static void fill(Location origin, int x, int y, int z, int x2, int y2, int z2, Material material) {
-		for(x+=0; x < x2; x++)
-			for(y+=0; y < y2; y++)
-				for(z+=0; z < z2; z++)
-					Bukkit.getWorld("world").getBlockAt(x, y, z).setType(material);
+	public static void fill(int x, int y, int z, int x2, int y2, int z2, Material material) {
+		for(int X = x; X <= x2; X++)
+			for(int Y = y; Y <= y2; Y++)
+				for(int Z = z; Z <= z2; Z++)
+					Bukkit.getWorld("world").getBlockAt(X, Y, Z).setType(material);
+	}
+	
+	public static Boolean blockIsIndestructible(Block block) {
+		if(indestructibleBlockList.contains(block) && IndestructibleMap.getState().isEnabled())
+			return true;
+		else return false;
+	}
+	
+	public static void deleteItemMarkers() {
+		itemMarkers.clear();
 	}
 
 	public static boolean inGameArea(Location loc){
@@ -77,45 +89,18 @@ public class World {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public static void removeObject(String object, int xtrans, int ytrans, int ztrans) {
-		File file = new File(objectPath + object + ".bwobj");
-		
-		try {
-			if(!(file.exists()))
-				return;
-			
-			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-			String line;
-			int x, y, z, t;
-			br.readLine();
-			while((line = br.readLine()) != null) {
-				String[] block = line.split("[,]");
-				x = Integer.parseInt(block[1].replaceAll(",", ""));
-				y = Integer.parseInt(block[2].replaceAll(",", ""));
-				z = Integer.parseInt(block[3].replaceAll(",", ""));
-				t = Integer.parseInt(block[4].replaceAll(",", ""));
-				Block build = Bukkit.getWorld("world").getBlockAt(new Location(Bukkit.getWorld("world"), x + xtrans, y + ytrans, z + ztrans));
-				build.setType(Material.AIR);
-				build.setData((byte) t);
-			}
-			br.close();
-		} catch (IOException e) {
-			
-		}
-	}
-	
-	@SuppressWarnings("deprecation")
 	public static void loadObject(String object, int xtrans, int ytrans, int ztrans) {
 		File file = new File(objectPath + object + ".bwobj");
 		
 		try {
-			if(!(file.exists()))
+			if(!(file.exists())) {
+				Bukkit.broadcastMessage("L, didn't work dipshit");
 				return;
+			}
 			
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 			String line;
 			int x, y, z, t;
-			br.readLine();
 			while((line = br.readLine()) != null) {
 				String[] block = line.split("[,]");
 				x = Integer.parseInt(block[1].replaceAll(",", ""));
@@ -128,7 +113,7 @@ public class World {
 			}
 			br.close();
 		} catch (IOException e) {
-			
+			e.printStackTrace();
 		}
 	}
 	
@@ -146,11 +131,7 @@ public class World {
 				e.remove();
 		deleteItemMarkers();
 	}
-	
-	public static void deleteItemMarkers() {
-		itemMarkers.clear();
-	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static boolean loadMap(String map, Player p, boolean override) {
 		File file;
@@ -203,15 +184,19 @@ public class World {
 			String line;
 			int x, y, z, t;
 			br.readLine();
+			indestructibleBlockList.clear();
 			while((line = br.readLine()) != null) {
-				String[] block = line.split("[,]");
-				x = Integer.parseInt(block[1].replaceAll(",", ""));
-				y = Integer.parseInt(block[2].replaceAll(",", ""));
-				z = Integer.parseInt(block[3].replaceAll(",", ""));
-				t = Integer.parseInt(block[4].replaceAll(",", ""));
-				Block build = Bukkit.getWorld("world").getBlockAt(new Location(Bukkit.getWorld("world"), x, y, z));
-				build.setType(Material.getMaterial(block[0].replaceAll(",", "")));
-				build.setData((byte) t);
+				String[] blockData = line.split("[,]");
+				Material material = Material.getMaterial(blockData[0].replaceAll(",", ""));
+				x = Integer.parseInt(blockData[1].replaceAll(",", ""));
+				y = Integer.parseInt(blockData[2].replaceAll(",", ""));
+				z = Integer.parseInt(blockData[3].replaceAll(",", ""));
+				t = Integer.parseInt(blockData[4].replaceAll(",", ""));
+				Block block = Bukkit.getWorld("world").getBlockAt(new Location(Bukkit.getWorld("world"), x, y, z));
+				if(IndestructibleMap.getState().isEnabled())
+					indestructibleBlockList.add(block);
+				block.setType(material);
+				block.setData((byte) t);
 			}
 			br.close();
 		} catch (IOException e) {

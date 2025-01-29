@@ -15,6 +15,7 @@ import org.bukkit.util.StringUtil;
 
 import bridgewars.Main;
 import bridgewars.messages.Chat;
+import bridgewars.utils.ICustomItem.Rarity;
 import bridgewars.utils.ItemManager;
 
 public class GiveItem implements CommandExecutor, TabCompleter {
@@ -29,39 +30,43 @@ public class GiveItem implements CommandExecutor, TabCompleter {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if(!(sender instanceof Player)) {
+		if(!(sender instanceof Player) || !sender.isOp() || args.length == 0) {
+			if(!sender.isOp())
+				sender.sendMessage(Chat.color("&cYou do not have permission to do this."));
 			return true;
 		}
 		
 		Player p = (Player) sender;
+			
+		String item = args[0];
+		int amount;
+		try { amount = Integer.parseInt(args[1]); }
+		catch (Exception e) { amount = 1; }
+		Rarity rarity;
+		try { rarity = getRarity(args[2]); }
+		catch (Exception e) { rarity = null; }
 		
-		if(p.isOp()) {
-			
-			if(args.length == 0)
-				return false;
-			
-			int amount;
-			try {
-				amount = Integer.parseInt(args[1]);
+		ItemStack itemstack = null;
+		
+		for(String entry : allItems) {
+			if(entry.equalsIgnoreCase(item)) {
+				itemstack = ItemManager.getItem(entry).createItem(p);
+				break;
 			}
-			catch (Exception e) { amount = 1; }
-
-			for(int i = 0; i < allItems.size(); i++){
-				if(args[0].equals(allItems.get(i))){
-					ItemStack itemStack = ItemManager.getItem(i).createItem(p);
-					itemStack.setAmount(amount);
-					p.getInventory().addItem(itemStack);
-					p.playSound(p.getLocation(), Sound.ITEM_PICKUP, 0.6F, 1.8F);
-					return false;
-				}
+			else if(item.equals("random")) {
+				itemstack = ItemManager.getRandomItem(rarity).createItem(null);
+				break;
 			}
-			p.sendMessage(Chat.color("&cThis item does not exist!"));
+		}
+		if(itemstack == null) {
+			p.sendMessage(Chat.color("&cThis item does not exist."));
+			return true;
 		}
 		
-		else
-			p.sendMessage(Chat.color("&cYou do not have permission to do this."));
-		
-		return false;
+		itemstack.setAmount(amount);
+		p.getInventory().addItem(itemstack);
+		p.playSound(p.getLocation(), Sound.ITEM_PICKUP, 0.6F, 1.8F);
+		return true;
 	}
 
 	@Override
@@ -78,7 +83,17 @@ public class GiveItem implements CommandExecutor, TabCompleter {
 			Collections.sort(completeArgument);
 			return completeArgument;
 		}
-		
 		return null;
+	}
+	
+	private Rarity getRarity(String rarity) {
+		switch(rarity) {
+		default: return null;
+		case "none": return Rarity.NONE;
+		case "white": return Rarity.WHITE;
+		case "green": return Rarity.GREEN;
+		case "red": return Rarity.RED;
+		case "blue": return Rarity.BLUE;
+		}
 	}
 }

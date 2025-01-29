@@ -1,4 +1,4 @@
-package bridgewars.settings;
+package bridgewars.settings.enums;
 
 public enum DoubleJump {
 	ENABLED(true), DISABLED(false);
@@ -15,12 +15,12 @@ public enum DoubleJump {
 		return isEnabled;
 	}
 	
-	public static void setState(DoubleJump state) {
-		DoubleJump.currentState = state;
+	public static void toggle() {
+		setState(getState().isEnabled() ? DISABLED : ENABLED);
 	}
 	
-	public static boolean isState(DoubleJump state) {
-		return DoubleJump.currentState == state;
+	public static void setState(DoubleJump state) {
+		DoubleJump.currentState = state;
 	}
 	
 	public static DoubleJump getState() {

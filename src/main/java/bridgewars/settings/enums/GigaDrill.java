@@ -1,4 +1,4 @@
-package bridgewars.settings;
+package bridgewars.settings.enums;
 
 public enum GigaDrill {
 	ENABLED(true), DISABLED(false);
@@ -14,12 +14,12 @@ public enum GigaDrill {
 		return isEnabled;
 	}
 	
-	public static void setState(GigaDrill state) {
-		GigaDrill.currentState = state;
+	public static void toggle() {
+		setState(getState().isEnabled() ? DISABLED : ENABLED);
 	}
 	
-	public static boolean isState(GigaDrill state) {
-		return GigaDrill.currentState == state;
+	public static void setState(GigaDrill state) {
+		GigaDrill.currentState = state;
 	}
 	
 	public static GigaDrill getState() {

@@ -1,4 +1,4 @@
-package bridgewars.game;
+package bridgewars.behavior;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -13,25 +13,23 @@ import org.bukkit.util.Vector;
 
 import bridgewars.Main;
 import bridgewars.effects.PlotArmor;
-import bridgewars.settings.Blocks;
-import bridgewars.settings.Bows;
-import bridgewars.settings.DigWars;
-import bridgewars.settings.GigaDrill;
-import bridgewars.settings.HotbarLayout;
-import bridgewars.settings.Shears;
-import bridgewars.settings.Swords;
+import bridgewars.game.CSManager;
+import bridgewars.game.Game;
+import bridgewars.game.GameState;
+import bridgewars.game.Leaderboards;
+import bridgewars.settings.enums.Blocks;
+import bridgewars.settings.enums.Bows;
+import bridgewars.settings.enums.DigWars;
+import bridgewars.settings.enums.GigaDrill;
+import bridgewars.settings.enums.Shears;
+import bridgewars.settings.enums.Swords;
 import bridgewars.utils.ItemManager;
 import bridgewars.utils.World;
 
-public class InstantRespawn implements Listener {
+public class ImmediateRespawn implements Listener {
 	
-	private CustomScoreboard cs;
-	private HotbarLayout hotbar;
-	
-	public InstantRespawn(Main plugin) {
+	public ImmediateRespawn(Main plugin) {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
-		cs = new CustomScoreboard();
-		hotbar = new HotbarLayout();
 	}
 
 	@EventHandler
@@ -50,9 +48,10 @@ public class InstantRespawn implements Listener {
 		p.setLevel(0);
 		
 		if(GameState.isState(GameState.ACTIVE)) {
-			if(cs.hasTeam(p)) {
+			if(CSManager.hasTeam(p)) {
 				Game.placeSpawns();
 				Game.spawnPlayer(p);
+				Leaderboards.addPoint(p, "lifetimeDeaths");
 				p.playSound(p.getLocation(), Sound.HURT_FLESH, 1F, 1F);
 				//base equipment
 				if(!p.getInventory().contains(Material.GOLD_SWORD) && Swords.getState().isEnabled())
@@ -75,10 +74,7 @@ public class InstantRespawn implements Listener {
 				//digwars stuff
 				if(DigWars.getState().isEnabled()) {
 					p.getInventory().remove(Material.WOOD);
-					if(p.getInventory().getItem(hotbar.getSlot(p, "woodSlot")) == null)
-						p.getInventory().setItem(hotbar.getSlot(p, "woodSlot"), new ItemStack(Material.WOOD, 64));
-					else
-						p.getInventory().addItem(new ItemStack(Material.WOOD, 64));
+					p.getInventory().addItem(new ItemStack(Material.WOOD, 64));
 				}
 				if(!p.getInventory().contains(Material.STONE_AXE) && DigWars.getState().isEnabled())
 					p.getInventory().addItem(ItemManager.getItem("Axe").createItem(p));

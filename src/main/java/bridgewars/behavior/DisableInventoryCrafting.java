@@ -7,7 +7,8 @@ import org.bukkit.event.inventory.CraftItemEvent;
 
 import bridgewars.Main;
 import bridgewars.game.GameState;
-import bridgewars.settings.DigWars;
+import bridgewars.settings.enums.DigWars;
+import bridgewars.settings.enums.UnlockedInventory;
 
 public class DisableInventoryCrafting implements Listener {
 	
@@ -18,7 +19,8 @@ public class DisableInventoryCrafting implements Listener {
 	@EventHandler
 	public void onCraft(CraftItemEvent e) { //disable crafting, mainly for carpets lol
 		if(GameState.isState(GameState.ACTIVE)
-		&& !DigWars.getState().isEnabled())
+		&& !DigWars.getState().isEnabled()
+		&& !UnlockedInventory.getState().isEnabled())
 			e.setCancelled(true);
 	}
 }

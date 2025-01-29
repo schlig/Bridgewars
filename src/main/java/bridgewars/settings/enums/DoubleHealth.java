@@ -1,4 +1,4 @@
-package bridgewars.settings;
+package bridgewars.settings.enums;
 
 public enum DoubleHealth {
 	ENABLED(true), DISABLED(false);
@@ -15,12 +15,12 @@ public enum DoubleHealth {
 		return isEnabled;
 	}
 	
-	public static void setState(DoubleHealth state) {
-		DoubleHealth.currentState = state;
+	public static void toggle() {
+		setState(getState().isEnabled() ? DISABLED : ENABLED);
 	}
 	
-	public static boolean isState(DoubleHealth state) {
-		return DoubleHealth.currentState == state;
+	public static void setState(DoubleHealth state) {
+		DoubleHealth.currentState = state;
 	}
 	
 	public static DoubleHealth getState() {

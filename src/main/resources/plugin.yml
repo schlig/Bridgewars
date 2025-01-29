@@ -6,71 +6,101 @@ description: Bridgewars - The Plugin
 
 commands:
   startgame:
-    aliases: [sg]
+    aliases: [sg, start]
+    usage: /startgame /start /sg
     description: Begins a game of Bridgewars.
   endgame:
-    aliases: [eg]
+    aliases: [eg, end]
+    usage: /endgame /end /eg
     description: Manually ends a game of Bridgewars.
   joingame:
-    aliases: [join]
+    aliases: [join, j]
+    usage: /joingame /join /j
     description: Join a currently active game of Bridgewars.
   menu:
-    aliases: [bw]
+    aliases: [bridgewars, bw, m]
+    usage: /menu /bridgewars /bw /m
     description: Open up the settings menu.
   jointeam:
     aliases: [team]
+    usage: /team <red | blue | green | yellow>
     description: Manually join a team.
   giveitem:
-    aliases: [gi]
+    aliases: [gi, i]
+    usage: /giveitem <item> [amount]
     description: Give yourself a Bridgewars item.
   savemap:
     aliases: [save]
+    usage: /save <map name>
     description: Saves the current Bridgewars map to a file.
   loadmap:
     aliases: [load]
+    usage: /load <map name>
     description: Loads a desired Bridgewars map, if it exists.
   clearmap:
-    aliases: [cm]
+    aliases: [c]
+    usage: /clearmap /c
     description: Clears the Bridgewars map.
   maplist:
     aliases: [maps]
+    usage: /maplist /maps
     description: Lists all existing Bridgewars maps.
   deletemap:
     aliases: [delete]
+    usage: /delete <map name>
     description: Deletes an existing map file.
   overwritemap:
     aliases: [overwrite]
+    usage: /overwrite <map name>
     description: Overwrites an existing map file.
   warp:
-    aliases: [hub]
+    aliases: [hub, l]
+    usage: /warp <location>
     description: Warp to a location.
   editmode:
     aliases: [edit]
+    usage: /editmode /edit
     description: Toggles Edit Mode.
   leave:
-    aliases: [l]
+    aliases: [quit, q]
+    usage: /leave /quit /q
     description: Leave the Bridgewars game.
   fly:
-    description: Toggle flight.
+    aliases: [f]
+    usage: /fly /f
+    description: Toggle flight in the main lobby.
   debug:
-    description: debug
+    aliases: []
+    usage: /debug
+    description: Debug command solely for testing new features.
   label:
-    description: Places floating text at your feet.
+    aliases: [text]
+    usage: /label [vertical offset | undo] <text>
+    description: Places floating text at your location.
   transform:
-    aliases: [d]
-    description: become another player
+    aliases: []
+    usage: /transform <player name>
+    description: Changes your skin and name to match the target player.
   permission:
     aliases: [perm]
-    description: grants a player a permission
+    usage: /perm <give | take | get | clear> <player name> <permission>
+    description: Alter a player's bridgewars permissions. (trusted, trusted.fly, trusted.worldedit, trusted. gamemode, trusted.label, trusted.endgame, trusted.settings)
   gm:
     aliases: [gmc, gms, gma, gmsp]
-    description: faster gamemode change
+    usage: /gmc /gms /gma /gmsp
+    description: Shorthand for quickly switching gamemodes.
   chat:
     aliases: [tc, ac]
-    description: set your chat settings
+    usage: /tc /ac
+    description: Switch between team chat and all chat
   whisper:
-    aliases: [w, msg]
-    description: /tell but better lmao
+    aliases: [w, msg, pm, dm]
+    usage: /whisper /msg /w /pm /dm
+    description: Alternatives for /tell, cannot be spied on
+  playersetting:
+    aliases: [ps]
+    usage: /playersetting <player> <setting> <value>
+    description: Manually edit a hotbar, killstreak, or other setting to be any value.
 
 permissions:
   trusted:
