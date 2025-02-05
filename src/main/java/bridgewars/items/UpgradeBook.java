@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import bridgewars.Main;
+import bridgewars.game.Leaderboards;
 import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
@@ -20,7 +21,7 @@ import bridgewars.utils.Utils;
 
 public class UpgradeBook implements ICustomItem, Listener {
 	
-	private final double procChance = 0.25; //25% chance of actually doing anything
+	private final double procChance = 0.25;
 	
 	public UpgradeBook(Main plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -28,7 +29,7 @@ public class UpgradeBook implements ICustomItem, Listener {
 
 	@Override
 	public Rarity getRarity() {
-		return Rarity.GREEN;
+		return Rarity.WHITE;
 	}
 
 	@Override
@@ -38,7 +39,7 @@ public class UpgradeBook implements ICustomItem, Listener {
         ItemBuilder.setName(item, "Upgrade Book");
         ItemBuilder.setLore(item, Arrays.asList(
                 Chat.color("&r&71/4 chance to upgrade one"),
-                Chat.color("&r&7of your items")));
+                Chat.color("&r&7of your items with a random enchantment")));
         return item;
 	}
 	
@@ -52,7 +53,7 @@ public class UpgradeBook implements ICustomItem, Listener {
 				
 				if(rng < 1 - procChance) {
 					user.sendMessage("Nope!");
-					user.damage(1);
+					user.damage(0.25);
 					Utils.subtractItem(user);
 					return;
 				}
@@ -87,6 +88,7 @@ public class UpgradeBook implements ICustomItem, Listener {
 					enchantItem(user, targetItem, slot, Enchantment.FIRE_ASPECT, 1);
 				
 				Utils.subtractItem(user);
+			    Leaderboards.addPoint(user, "items");
 			}
 		}
 	}

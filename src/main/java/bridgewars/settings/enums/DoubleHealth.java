@@ -10,7 +10,6 @@ public enum DoubleHealth {
 		this.isEnabled = isEnabled;
 	}
 	
-	
 	public Boolean isEnabled() {
 		return isEnabled;
 	}
@@ -21,6 +20,10 @@ public enum DoubleHealth {
 	
 	public static void setState(DoubleHealth state) {
 		DoubleHealth.currentState = state;
+	}
+	
+	public static void setState(boolean state) {
+		setState(state ? ENABLED : DISABLED);
 	}
 	
 	public static DoubleHealth getState() {

@@ -10,7 +10,6 @@ public enum IndestructibleMap {
 		this.isEnabled = isEnabled;
 	}
 	
-	
 	public Boolean isEnabled() {
 		return isEnabled;
 	}
@@ -21,6 +20,10 @@ public enum IndestructibleMap {
 	
 	public static void setState(IndestructibleMap state) {
 		IndestructibleMap.currentState = state;
+	}
+	
+	public static void setState(boolean state) {
+		setState(state ? ENABLED : DISABLED);
 	}
 	
 	public static IndestructibleMap getState() {

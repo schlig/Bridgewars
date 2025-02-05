@@ -1,5 +1,6 @@
 package bridgewars.items;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.bukkit.Bukkit;
@@ -12,12 +13,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import bridgewars.Main;
+import bridgewars.effects.CooldownTimer;
+import bridgewars.game.Leaderboards;
 import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
@@ -26,14 +28,20 @@ import bridgewars.utils.World;
 
 public class PortableDoinkHut implements ICustomItem, Listener {
 	
+	private Main plugin;
+	
 	private final static int radius = 2;
 	private final static int height = 3;
 	
 	private final static int mapRadius = 22;
 	private final static int mapHeight = 24;
 	
+	private static ArrayList<Player> cooldownList = new ArrayList<>();
+	private final static int cooldown = 5;
+	
 	public PortableDoinkHut (Main plugin) {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
+		this.plugin = plugin;
 	}
 
 	@Override
@@ -58,16 +66,17 @@ public class PortableDoinkHut implements ICustomItem, Listener {
 		ItemStack item = user.getItemInHand();
 		if(e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			if(item.getType() == Material.MOB_SPAWNER) {
+				if(cooldownList.contains(user)) {
+					user.sendMessage(Chat.color("This item is currently on cooldown."));
+					return;
+				}
+				cooldownList.add(user);
+				new CooldownTimer(user, cooldown, cooldownList, null).runTaskTimer(plugin, 0, 20);
 				activateEffect(user);
 				Utils.subtractItem(user);
+			    Leaderboards.addPoint(user, "items");
 			}
 		}
-	}
-	
-	@EventHandler
-	public void blockPlacement(BlockPlaceEvent e) {
-		if(Utils.getID(e.getItemInHand()).equals(getClass().getSimpleName().toLowerCase()))
-			e.setCancelled(true);
 	}
 	
 	public static void activateEffect(Player user) {
@@ -116,8 +125,11 @@ public class PortableDoinkHut implements ICustomItem, Listener {
 			user.teleport(loc);
 		}
 		else {
-			if(failmessage)
+			if(failmessage) {
 				user.sendMessage(Chat.color("&cYou can't place this here!"));
+				if(cooldownList.contains(user))
+					cooldownList.remove(user);
+			}
 		}
 	}
 }

@@ -10,6 +10,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import bridgewars.Main;
 import bridgewars.game.CSManager;
+import bridgewars.game.GameState;
 import bridgewars.utils.Utils;
 
 public class ScoreboardJam extends BukkitRunnable {
@@ -39,7 +40,7 @@ public class ScoreboardJam extends BukkitRunnable {
     @Override
     public void run(){
     	timer--;
-    	if(timer <= 0 || forceCancel) {
+    	if(timer <= 0 || forceCancel || GameState.isState(GameState.ENDING)) {
     		timer = 0;
     		forceCancel = false;
     		blacklist.clear();

@@ -1,5 +1,6 @@
 package bridgewars.items;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.bukkit.Bukkit;
@@ -13,7 +14,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import bridgewars.Main;
+import bridgewars.effects.CooldownTimer;
 import bridgewars.game.GameState;
+import bridgewars.game.Leaderboards;
 import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
@@ -21,8 +24,12 @@ import bridgewars.utils.Utils;
 
 public class UnoReverse implements ICustomItem, Listener {
 	
+	private Main plugin;
+	private ArrayList<Player> cooldownList = new ArrayList<>();
+	
     public UnoReverse(Main plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
     }
 
     @Override
@@ -55,6 +62,8 @@ public class UnoReverse implements ICustomItem, Listener {
 				if(Utils.matchTeam(user, target))
 					return;
 				
+				new CooldownTimer(user, 1, cooldownList, null).runTaskTimer(plugin, 0, 5L);
+				
 				Location loc = target.getLocation();
 				
 				double x = loc.getX();
@@ -75,6 +84,7 @@ public class UnoReverse implements ICustomItem, Listener {
 				target.playSound(user.getLocation(), Sound.IRONGOLEM_HIT, 0.8F, 2F);
 				
 				Utils.subtractItem(user);
+			    Leaderboards.addPoint(user, "items");
 			}
 		}
     }

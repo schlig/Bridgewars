@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -22,9 +21,9 @@ import bridgewars.messages.Chat;
 public class MapRotation {
 	
 	private static GUI menu = new GUI();
-	private final static String filepath = "./plugins/bridgewars/maps/";
+	private static String filepath = "./plugins/bridgewars/maps/";
 	
-	private final static int mapsPerPage = 21;
+	private static int mapsPerPage = 21;
 	
 	public static void sendInput(Player p, Inventory inv, ItemStack button) throws IOException {
 		if(inv.getType().equals(InventoryType.PLAYER))
@@ -52,26 +51,14 @@ public class MapRotation {
 			
 		case MAP:
 		case BARRIER:
+			File file = new File(filepath);
 			String mapName = button.getItemMeta().getDisplayName().substring(4, button.getItemMeta().getDisplayName().length());
-			File file = new File(filepath + mapName + ".map");
+			
+			file = new File(filepath + mapName + ".map");
 			RandomAccessFile f = new RandomAccessFile(file, "rw");
-				
-			String value = f.readLine();
 			f.seek(0);
-					
-			if(value.contains("0")) {
-				button = updateMap(button, true);
-				f.write("1".getBytes());
-				Bukkit.broadcastMessage(Chat.color("&6&l" + mapName + "&r has been " + "&cremoved" + " &rfrom the map rotation."));
-				p.playSound(p.getLocation(), Sound.CLICK, 0.8F, 1F);
-			}
-			else {
-				button = updateMap(button, false);
-				f.write("0".getBytes());
-				Bukkit.broadcastMessage(Chat.color("&6&l" + mapName + "&r has been " + "&aadded" + " &rto the map rotation."));
-				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
-			}
-				
+			String value = f.readLine();
+			mapToggle(p, button, value.contains("0"), mapName, f);
 			f.close();
 			
 		default:
@@ -83,35 +70,46 @@ public class MapRotation {
 		
 		File file = new File(filepath);
 		List<String> mapList = new ArrayList<>(Arrays.asList(file.list()));
-		Collections.sort(mapList);
 		int index = page * mapsPerPage;
-		
-		for(int x = 0; x < 7; x++)
-			for(int y = 0; y < 3; y++) {
+
+		for(int x = 10; x <= 28; x += 9) {
+			for(int y = 0; y < 7; y++) {
 				if(index >= mapList.size())
-					break;
-				int slot = (x + 1) + ((y + 1) * 9);
-				//top left slot of an inventory is id 0 and bottom right is id 53
-				//+ 1 to x to shift maps to the right one slot
-				//* 9 to y to shift maps down one row
+					return;
+				int slot = x + y;
+				
+				//these for loops are ass but im not touching them because it broke everything
+				
 				RandomAccessFile f = new RandomAccessFile(filepath + mapList.get(index), "rw");
 				f.seek(0);
-				if(f.readLine().contains("1"))
-					p.getOpenInventory().setItem(slot, updateMap(p.getOpenInventory().getItem(slot), true));
+				p.getOpenInventory().setItem(slot, updateMap(p.getOpenInventory().getItem(slot), !f.readLine().contains("1")));
+				
 				f.close();
 				index++;
 			}
+		}
 	}
 	
-	private static ItemStack updateMap(ItemStack map, boolean enabled) {
-		if(enabled) {
-			map.setType(Material.BARRIER);
-			map.removeEnchantment(Enchantment.LURE);
-		}
-		else {
-			map.setType(Material.MAP);
-			map.addUnsafeEnchantment(Enchantment.LURE, 1);
-		}
+	private static void mapToggle(Player p, ItemStack button, Boolean state, String mapName, RandomAccessFile f) {
+		try {
+			state = !state;
+			button = updateMap(button, state);
+			String mapstate = state ? "0" : "1";
+			f.seek(0);
+			f.write(mapstate.getBytes());
+			
+			mapstate = state ? "&aadded&r to" : "&cremoved&r from";
+			Bukkit.broadcastMessage(Chat.color("&6&l" + mapName + "&r has been " + mapstate + " the map rotation."));
+			
+			if(state) p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+			else p.playSound(p.getLocation(), Sound.CLICK, 1f, 1f);
+		} catch (Exception e) { e.printStackTrace(); }
+	}
+	
+	private static ItemStack updateMap(ItemStack map, boolean state) {
+		map.setType(state ? Material.MAP : Material.BARRIER);
+		if(state) map.addUnsafeEnchantment(Enchantment.LURE, 1);
+		else map.removeEnchantment(Enchantment.LURE);
 		return map;
 	}
 }

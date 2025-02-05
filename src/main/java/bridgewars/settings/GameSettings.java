@@ -12,7 +12,6 @@ import bridgewars.settings.enums.Blocks;
 import bridgewars.settings.enums.Bows;
 import bridgewars.settings.enums.DigWars;
 import bridgewars.settings.enums.DoubleHealth;
-import bridgewars.settings.enums.DoubleJump;
 import bridgewars.settings.enums.FriendlyFire;
 import bridgewars.settings.enums.GigaDrill;
 import bridgewars.settings.enums.HidePlayers;
@@ -20,7 +19,9 @@ import bridgewars.settings.enums.IndestructibleMap;
 import bridgewars.settings.enums.KillstreakRewards;
 import bridgewars.settings.enums.NaturalItemSpawning;
 import bridgewars.settings.enums.Piggyback;
+import bridgewars.settings.enums.Quake;
 import bridgewars.settings.enums.RandomTeams;
+import bridgewars.settings.enums.RevealWinner;
 import bridgewars.settings.enums.Shears;
 import bridgewars.settings.enums.Swords;
 import bridgewars.settings.enums.UnlockedInventory;
@@ -28,6 +29,9 @@ import bridgewars.settings.enums.WoolDecay;
 
 public class GameSettings {
 	
+	private static Integer TimeLimit, KillBonus;
+	private static Integer GameRadius, GameHeight;
+	private static final Integer RevealTime = 30;
 	private static String filepath = "./plugins/bridgewars/options.ini";
 
 	public static void load() {
@@ -35,28 +39,34 @@ public class GameSettings {
 		
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-
-			swords(Boolean.parseBoolean(br.readLine()));
-			blocks(Boolean.parseBoolean(br.readLine()));
-			shears(Boolean.parseBoolean(br.readLine()));
-			killstreakRewards(Boolean.parseBoolean(br.readLine()));
-			bows(Boolean.parseBoolean(br.readLine()));
 			
-			doubleHealth(Boolean.parseBoolean(br.readLine()));
-			doubleJump(Boolean.parseBoolean(br.readLine()));
-			gigaDrill(Boolean.parseBoolean(br.readLine()));
-			digWars(Boolean.parseBoolean(br.readLine()));
-			naturalItemSpawns(Boolean.parseBoolean(br.readLine()));
-			friendlyFire(Boolean.parseBoolean(br.readLine()));
-			piggyback(Boolean.parseBoolean(br.readLine()));
-			chosenTeams(Boolean.parseBoolean(br.readLine()));
-			hidePlayers(Boolean.parseBoolean(br.readLine()));
-			indestructibleMap(Boolean.parseBoolean(br.readLine()));
-			woolDecay(Boolean.parseBoolean(br.readLine()));
-			unlockedInventory(Boolean.parseBoolean(br.readLine()));
+			TimeLimit = Integer.parseInt(br.readLine());
+			KillBonus = Integer.parseInt(br.readLine());
+			GameRadius = Integer.parseInt(br.readLine());
+			GameHeight = Integer.parseInt(br.readLine());
+			
+			Swords.setState(Boolean.parseBoolean(br.readLine()));
+			Blocks.setState(Boolean.parseBoolean(br.readLine()));
+			Shears.setState(Boolean.parseBoolean(br.readLine()));
+			KillstreakRewards.setState(Boolean.parseBoolean(br.readLine()));
+			Bows.setState(Boolean.parseBoolean(br.readLine()));
+			
+			DoubleHealth.setState(Boolean.parseBoolean(br.readLine()));
+			RevealWinner.setState(Boolean.parseBoolean(br.readLine()));
+			GigaDrill.setState(Boolean.parseBoolean(br.readLine()));
+			DigWars.setState(Boolean.parseBoolean(br.readLine()));
+			NaturalItemSpawning.setState(Boolean.parseBoolean(br.readLine()));
+			FriendlyFire.setState(Boolean.parseBoolean(br.readLine()));
+			Piggyback.setState(Boolean.parseBoolean(br.readLine()));
+			RandomTeams.setState(Boolean.parseBoolean(br.readLine()));
+			HidePlayers.setState(Boolean.parseBoolean(br.readLine()));
+			IndestructibleMap.setState(Boolean.parseBoolean(br.readLine()));
+			WoolDecay.setState(Boolean.parseBoolean(br.readLine()));
+			UnlockedInventory.setState(Boolean.parseBoolean(br.readLine()));
+			Quake.setState(Boolean.parseBoolean(br.readLine()));
 			
 			br.close();
-		} catch (IOException e) { }
+		} catch (IOException e) { e.printStackTrace(); }
 	}
 	
 	public static void save() {
@@ -65,6 +75,15 @@ public class GameSettings {
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 			
+			bw.write(TimeLimit.toString());
+			bw.newLine();
+			bw.write(KillBonus.toString());
+			bw.newLine();
+			bw.write(GameRadius.toString());
+			bw.newLine();
+			bw.write(GameHeight.toString());
+			bw.newLine();
+
 			bw.write(Swords.getState().isEnabled().toString());
 			bw.newLine();
 			bw.write(Blocks.getState().isEnabled().toString());
@@ -78,7 +97,7 @@ public class GameSettings {
 			
 			bw.write(DoubleHealth.getState().isEnabled().toString());
 			bw.newLine();
-			bw.write(DoubleJump.getState().isEnabled().toString());
+			bw.write(RevealWinner.getState().isEnabled().toString());
 			bw.newLine();
 			bw.write(GigaDrill.getState().isEnabled().toString());
 			bw.newLine();
@@ -100,128 +119,55 @@ public class GameSettings {
 			bw.newLine();
 			bw.write(UnlockedInventory.getState().isEnabled().toString());
 			bw.newLine();
+			bw.write(Quake.getState().isEnabled().toString());
+			bw.newLine();
 			
 			bw.flush();
 			bw.close();
-		} catch (IOException e) { }
+		} catch (IOException e) { e.printStackTrace(); }
 	}
 	
-	private static void swords(boolean value) {
-		if(value)
-			Swords.setState(Swords.ENABLED);
-		else
-			Swords.setState(Swords.DISABLED);
+	//get/set the x/z limits of the map
+	public static void setGameRadius(int value) {
+		GameRadius = value;
+		save();
 	}
 	
-	private static void blocks(boolean value) {
-		if(value)
-			Blocks.setState(Blocks.ENABLED);
-		else
-			Blocks.setState(Blocks.DISABLED);
+	public static Integer getGameRadius() {
+		return GameRadius;
 	}
 	
-	private static void shears(boolean value) {
-		if(value)
-			Shears.setState(Shears.ENABLED);
-		else
-			Shears.setState(Shears.DISABLED);
+	//get/set the y limit of the map
+	public static void setGameHeight(int value) {
+		GameHeight = value;
+		save();
 	}
 	
-	private static void killstreakRewards(boolean value) {
-		if(value)
-			KillstreakRewards.setState(KillstreakRewards.ENABLED);
-		else
-			KillstreakRewards.setState(KillstreakRewards.DISABLED);
+	public static Integer getGameHeight() {
+		return GameHeight;
 	}
 	
-	private static void bows(boolean value) {
-		if(value)
-			Bows.setState(Bows.ENABLED);
-		else
-			Bows.setState(Bows.DISABLED);
+	//get/set the game's time limit
+	public static void setTimeLimit(int value) {
+		TimeLimit = value;
+		save();
 	}
 	
-	private static void doubleHealth(boolean value) {
-		if(value)
-			DoubleHealth.setState(DoubleHealth.ENABLED);
-		else
-			DoubleHealth.setState(DoubleHealth.DISABLED);
+	public static Integer getTimeLimit() {
+		return TimeLimit;
 	}
 	
-	private static void doubleJump(boolean value) {
-		if(value)
-			DoubleJump.setState(DoubleJump.ENABLED);
-		else
-			DoubleJump.setState(DoubleJump.DISABLED);
+	public static Integer getRevealTime() {
+		return TimeLimit - RevealTime;
 	}
 	
-	private static void gigaDrill(boolean value) {
-		if(value)
-			GigaDrill.setState(GigaDrill.ENABLED);
-		else
-			GigaDrill.setState(GigaDrill.DISABLED);
+	//get/set time bonus on kill
+	public static void setKillBonus(int value) {
+		KillBonus = value;
+		save();
 	}
 	
-	private static void digWars(boolean value) {
-		if(value)
-			DigWars.setState(DigWars.ENABLED);
-		else
-			DigWars.setState(DigWars.DISABLED);
-	}
-	
-	private static void naturalItemSpawns(boolean value) {
-		if(value)
-			NaturalItemSpawning.setState(NaturalItemSpawning.ENABLED);
-		else
-			NaturalItemSpawning.setState(NaturalItemSpawning.DISABLED);
-	}
-	
-	private static void friendlyFire(boolean value) {
-		if(value)
-			FriendlyFire.setState(FriendlyFire.ENABLED);
-		else
-			FriendlyFire.setState(FriendlyFire.DISABLED);
-	}
-	
-	private static void piggyback(boolean value) {
-		if(value)
-			Piggyback.setState(Piggyback.ENABLED);
-		else
-			Piggyback.setState(Piggyback.DISABLED);
-	}
-	
-	private static void chosenTeams(boolean value) {
-		if(value)
-			RandomTeams.setState(RandomTeams.ENABLED);
-		else
-			RandomTeams.setState(RandomTeams.DISABLED);
-	}
-	
-	private static void hidePlayers(boolean value) {
-		if(value)
-			HidePlayers.setState(HidePlayers.ENABLED);
-		else
-			HidePlayers.setState(HidePlayers.DISABLED);
-	}
-	
-	private static void indestructibleMap(boolean value) {
-		if(value)
-			IndestructibleMap.setState(IndestructibleMap.ENABLED);
-		else
-			IndestructibleMap.setState(IndestructibleMap.DISABLED);
-	}
-	
-	private static void woolDecay(boolean value) {
-		if(value)
-			WoolDecay.setState(WoolDecay.ENABLED);
-		else
-			WoolDecay.setState(WoolDecay.DISABLED);
-	}
-	
-	private static void unlockedInventory(boolean value) {
-		if(value)
-			UnlockedInventory.setState(UnlockedInventory.ENABLED);
-		else
-			UnlockedInventory.setState(UnlockedInventory.DISABLED);
+	public static Integer getKillBonus() {
+		return KillBonus;
 	}
 }

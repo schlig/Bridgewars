@@ -97,10 +97,18 @@ commands:
     aliases: [w, msg, pm, dm]
     usage: /whisper /msg /w /pm /dm
     description: Alternatives for /tell, cannot be spied on
+  gamesetting:
+    aliases: [gs]
+    usage: /gamesetting <setting> <value>
+    description: Manually edit the time limit, kill bonus, or build limits.
   playersetting:
     aliases: [ps]
     usage: /playersetting <player> <setting> <value>
     description: Manually edit a hotbar, killstreak, or other setting to be any value.
+  leaderboards:
+    aliases: [lb]
+    usage: /leaderboards <args>
+    description: Modify the server leaderboards.
 
 permissions:
   trusted:
@@ -113,21 +121,25 @@ permissions:
       trusted.label: true
       trusted.endgame: true
       trusted.settings: true
+      trusted.items: true
   trusted.worldedit:
-    description: allows usage of worldedit
+    description: Grands permissions to use WorldEdit.
     default: op
   trusted.gamemode:
-    description: allows setting of own gamemode outside of a game
+    description: Allows usage of /gm while a game is inactive.
     default: op
   trusted.fly:
-    description: allows /fly in lobby
+    description: Allows usage of /fly while a game is inactive
     default: op
   trusted.label:
-    description: allows use of /label outside of a game
+    description: Allows usage of /label while a game is inactive.
     default: op
   trusted.endgame:
-    description: allows player to end game manually
+    description: Allows the player to forcibly end an active game.
     default: op
   trusted.settings:
-    description: allows player to edit game settings
+    description: Allows the player to modify the game's custom settings.
+    default: op
+  trusted.items:
+    description: Allows usage of /giveitem while a game is inactive.
     default: op

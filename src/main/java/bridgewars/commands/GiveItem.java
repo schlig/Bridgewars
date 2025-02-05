@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.StringUtil;
 
 import bridgewars.Main;
+import bridgewars.game.GameState;
 import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem.Rarity;
 import bridgewars.utils.ItemManager;
@@ -31,12 +32,17 @@ public class GiveItem implements CommandExecutor, TabCompleter {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(!(sender instanceof Player) || !sender.isOp() || args.length == 0) {
-			if(!sender.isOp())
+			if(!sender.hasPermission("trusted.items"))
 				sender.sendMessage(Chat.color("&cYou do not have permission to do this."));
 			return true;
 		}
 		
-		Player p = (Player) sender;
+		if(!sender.isOp() && !GameState.isState(GameState.INACTIVE)) {
+			sender.sendMessage(Chat.color("&cYou can't do this while a game is active."));
+			return true;
+		}
+		
+		Player user = (Player) sender;
 			
 		String item = args[0];
 		int amount;
@@ -50,7 +56,7 @@ public class GiveItem implements CommandExecutor, TabCompleter {
 		
 		for(String entry : allItems) {
 			if(entry.equalsIgnoreCase(item)) {
-				itemstack = ItemManager.getItem(entry).createItem(p);
+				itemstack = ItemManager.getItem(entry).createItem(user);
 				break;
 			}
 			else if(item.equals("random")) {
@@ -59,13 +65,13 @@ public class GiveItem implements CommandExecutor, TabCompleter {
 			}
 		}
 		if(itemstack == null) {
-			p.sendMessage(Chat.color("&cThis item does not exist."));
+			user.sendMessage(Chat.color("&cThis item does not exist."));
 			return true;
 		}
 		
 		itemstack.setAmount(amount);
-		p.getInventory().addItem(itemstack);
-		p.playSound(p.getLocation(), Sound.ITEM_PICKUP, 0.6F, 1.8F);
+		user.getInventory().addItem(itemstack);
+		user.playSound(user.getLocation(), Sound.ITEM_PICKUP, 0.6F, 1.8F);
 		return true;
 	}
 

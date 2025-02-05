@@ -26,8 +26,8 @@ public class Eraser implements ICustomItem, Listener {
 
 	private final int radius = 3;
 	
-	private final int mapRadius = 22;
-	private final int mapHeight = 24;
+	private int mapRadius = 22;
+	private int mapHeight = 24;
 	
     public Eraser(Main plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -46,10 +46,6 @@ public class Eraser implements ICustomItem, Listener {
     @Override
     public Rarity getRarity() {
         return Rarity.WHITE;
-    }
-    
-    public ItemStack createItem() {
-    	return createItem(null);
     }
 	
 	@SuppressWarnings("deprecation")

@@ -22,6 +22,10 @@ public enum Piggyback {
 		Piggyback.currentState = state;
 	}
 	
+	public static void setState(boolean state) {
+		setState(state ? ENABLED : DISABLED);
+	}
+	
 	public static Piggyback getState() {
 		return currentState;
 	}

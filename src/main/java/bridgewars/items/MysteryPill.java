@@ -17,6 +17,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import bridgewars.Main;
 import bridgewars.game.GameState;
+import bridgewars.game.Leaderboards;
 import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
@@ -111,5 +112,6 @@ public class MysteryPill implements ICustomItem, Listener{
     	}
     	
     	user.playSound(user.getLocation(), Sound.EAT, 1F, 1F);
+	    Leaderboards.addPoint(user, "items");
     }
 }

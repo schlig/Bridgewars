@@ -10,7 +10,6 @@ public enum WoolDecay {
 		this.isEnabled = isEnabled;
 	}
 	
-	
 	public Boolean isEnabled() {
 		return isEnabled;
 	}
@@ -21,6 +20,10 @@ public enum WoolDecay {
 	
 	public static void setState(WoolDecay state) {
 		WoolDecay.currentState = state;
+	}
+	
+	public static void setState(boolean state) {
+		setState(state ? ENABLED : DISABLED);
 	}
 	
 	public static WoolDecay getState() {

@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import bridgewars.Main;
 import bridgewars.effects.ScoreboardJam;
 import bridgewars.game.GameState;
+import bridgewars.game.Leaderboards;
 import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
@@ -33,7 +34,7 @@ public class SignalJammer implements ICustomItem, Listener {
 
     @Override
     public Rarity getRarity() {
-        return Rarity.NONE;
+        return Rarity.WHITE;
     }
 
     @Override
@@ -56,6 +57,7 @@ public class SignalJammer implements ICustomItem, Listener {
 			&& GameState.isState(GameState.ACTIVE)) {
 				activateEffect(user);
                 Utils.subtractItem(user);
+    		    Leaderboards.addPoint(user, "items");
 			}
 		}
     }

@@ -25,7 +25,9 @@ public class SadRoom extends BukkitRunnable {
     	if(timer <= 0 
     	|| !SadTear.sadRoomed.contains(player)
     	|| !CSManager.hasTeam(player)
-    	|| !(player.getGameMode() != GameMode.CREATIVE)) {
+    	|| player.getGameMode() == GameMode.CREATIVE
+    	|| !player.isOnline()
+    	|| GameState.isState(GameState.ENDING)) {
     		SadTear.removePlayerFromSadRoom(player);
     		if(GameState.isState(GameState.ACTIVE)
     		&& player.getGameMode() != GameMode.CREATIVE)

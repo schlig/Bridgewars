@@ -5,65 +5,41 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import bridgewars.game.CSManager;
+import bridgewars.game.GameState;
 import bridgewars.messages.Chat;
-import bridgewars.utils.Disguise;
-import bridgewars.utils.ItemManager;
-import bridgewars.utils.Utils;
+import bridgewars.utils.Packet;
 
 public class Cloak extends BukkitRunnable {
 	
 	public static ArrayList<UUID> cloakedPlayers = new ArrayList<>();
 	
-	private Player p;
-	private ItemStack[] prevArmor;
-	private int d;    //duration
+	private final Player player;
+	private int duration; 
 	
-	public Cloak(Player p, UUID t, int d) {
-		this.p = p;
-		this.d = d;
-		this.prevArmor = p.getInventory().getArmorContents();
-		if(Bukkit.getPlayer(t) != null)
-			setArmor(Bukkit.getPlayer(t));
-		Disguise.setDisguise(p, t);
-		cloakedPlayers.add(p.getUniqueId());
-		p.sendMessage(Chat.color("&lYou have disguised yourself as " + Bukkit.getPlayer(t).getDisplayName() + "&r&l!"));
-		for(Player players : Bukkit.getOnlinePlayers()) {
-			if(CSManager.matchTeam(p, players)) {
-				players.sendMessage(Chat.color(p.getName() + " has disguised as " + Utils.getName(t)));
-			}
-		}
+	public Cloak(Player player, UUID target, int duration) {
+		this.player = player;
+		this.duration = duration;
+		Packet.setDisguise(player, target);
+		cloakedPlayers.add(player.getUniqueId());
+		player.sendMessage(Chat.color("&lYou have disguised yourself as " + Bukkit.getPlayer(target).getDisplayName() + "&r&l!"));
 	}
 	
 	@Override
 	public void run() {
-		if(d == 0 || !cloakedPlayers.contains(p.getUniqueId())) {
-			if(cloakedPlayers.contains(p.getUniqueId()))
-				cloakedPlayers.remove(p.getUniqueId());
-			Disguise.setDisguise(p, p.getUniqueId());
-			setArmor(p, prevArmor);
-			p.sendMessage(Chat.color("&c&lYou are no longer disguised!"));
+		if(duration == 0 || !cloakedPlayers.contains(player.getUniqueId()) || GameState.isState(GameState.ENDING)) {
+			if(cloakedPlayers.contains(player.getUniqueId()))
+				cloakedPlayers.remove(player.getUniqueId());
+			Packet.setDisguise(player, player.getUniqueId());
+			player.sendMessage(Chat.color("&c&lYou are no longer disguised!"));
 			this.cancel();
 		}
-		d--;
+		duration--;
 	}
 	
-	private void setArmor(Player u) {
-		p.getInventory().setHelmet(ItemManager.getItem("BasicHelmet").createItem(u));
-		p.getInventory().setChestplate(ItemManager.getItem("BasicChestplate").createItem(u));
-		p.getInventory().setLeggings(ItemManager.getItem("BasicLeggings").createItem(u));
-		p.getInventory().setBoots(ItemManager.getItem("BasicBoots").createItem(u));
-	}
-	
-	private void setArmor(Player u, ItemStack[] armor) {
-		u.getInventory().setArmorContents(armor);
-	}
-	
-	public static void remove(Player p) {
-		if(cloakedPlayers.contains(p.getUniqueId()))
-			cloakedPlayers.remove(p.getUniqueId());
+	public static void remove(Player player) {
+		if(cloakedPlayers.contains(player.getUniqueId()))
+			cloakedPlayers.remove(player.getUniqueId());
 	}
 }

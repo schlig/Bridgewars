@@ -22,6 +22,10 @@ public enum Blocks {
 		Blocks.currentState = state;
 	}
 	
+	public static void setState(boolean state) {
+		setState(state ? ENABLED : DISABLED);
+	}
+	
 	public static Blocks getState() {
 		return currentState;
 	}

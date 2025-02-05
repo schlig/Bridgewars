@@ -44,7 +44,8 @@ public class InputHandler implements Listener {
 				|| title == menu.getClock().getName()
 				|| title == menu.getHotbar().getName()
 				|| title == menu.getSettings().getName()
-				|| title == menu.getTeam().getName()) {
+				|| title == menu.getTeam().getName()
+				|| title == menu.getBonusClock().getName()) {
 			
 			e.setCancelled(true);
 			
@@ -66,6 +67,9 @@ public class InputHandler implements Listener {
 				break;
 			case "Time Limit":
 				TimeLimitEditor.sendInput(p, inv, button);
+				break;
+			case "Kill Bonus":
+				KillBonusEditor.sendInput(p, inv, button);
 				break;
 			case "Map Rotation":
 				MapRotation.sendInput(p, inv, button);

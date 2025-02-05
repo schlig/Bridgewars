@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 import bridgewars.Main;
 import bridgewars.game.GameState;
+import bridgewars.game.Leaderboards;
 import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
@@ -70,6 +71,7 @@ public class PitfallTrap implements ICustomItem, Listener {
             	
             	p.playSound(p.getLocation(), Sound.FIZZ, 1F, 2F);
             	Utils.subtractItem(p);
+    		    Leaderboards.addPoint(p, "items");
             }
         }
     }

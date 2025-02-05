@@ -22,6 +22,10 @@ public enum GigaDrill {
 		GigaDrill.currentState = state;
 	}
 	
+	public static void setState(boolean state) {
+		setState(state ? ENABLED : DISABLED);
+	}
+	
 	public static GigaDrill getState() {
 		return currentState;
 	}

@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import bridgewars.Main;
 import bridgewars.messages.Chat;
-import bridgewars.utils.Disguise;
+import bridgewars.utils.Packet;
 import bridgewars.utils.Utils;
 
 public class Transform implements CommandExecutor {
@@ -38,9 +38,9 @@ public class Transform implements CommandExecutor {
 		players.remove(p);
 		
 		if(args.length == 0)
-			Disguise.setDisguise(p, p.getUniqueId());
+			Packet.setDisguise(p, p.getUniqueId());
 		else
-			Disguise.setDisguise(p, Utils.getUUID(args[0]));
+			Packet.setDisguise(p, Utils.getUUID(args[0]));
 		
 		return true;
 	}

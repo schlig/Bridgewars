@@ -9,13 +9,14 @@ import bridgewars.behavior.DisableChickenSpawns;
 import bridgewars.behavior.DisableFallDamage;
 import bridgewars.behavior.DisableInventoryCrafting;
 import bridgewars.behavior.DisableWeather;
+import bridgewars.behavior.Explosions;
 import bridgewars.behavior.HitDetection;
 import bridgewars.behavior.ImmediateRespawn;
 import bridgewars.behavior.IndestructibleBlocks;
 import bridgewars.behavior.InfiniteBlocks;
 import bridgewars.behavior.InstantVoidKill;
 import bridgewars.behavior.PreventAnnoyingBowUse;
-import bridgewars.behavior.PreventItemFrameChanges;
+import bridgewars.behavior.PreventDecorationChanges;
 import bridgewars.behavior.Saturation;
 import bridgewars.commands.ChatSetting;
 import bridgewars.commands.ClearMap;
@@ -25,6 +26,7 @@ import bridgewars.commands.EditMode;
 import bridgewars.commands.EndGame;
 import bridgewars.commands.Fly;
 import bridgewars.commands.GameMode;
+import bridgewars.commands.GameSetting;
 import bridgewars.commands.GiveItem;
 import bridgewars.commands.JoinGame;
 import bridgewars.commands.JoinTeam;
@@ -41,13 +43,12 @@ import bridgewars.commands.StartGame;
 import bridgewars.commands.Transform;
 import bridgewars.commands.Warp;
 import bridgewars.commands.Whisper;
-import bridgewars.effects.DoubleJumpEffect;
 import bridgewars.effects.Piggyback;
 import bridgewars.effects.PlotArmor;
 import bridgewars.game.CustomScoreboard;
 import bridgewars.game.GameState;
-import bridgewars.game.Kills;
 import bridgewars.game.Leaderboards;
+import bridgewars.game.PlayerKills;
 import bridgewars.game.Timer;
 import bridgewars.menus.InputHandler;
 import bridgewars.messages.Chat;
@@ -85,7 +86,9 @@ public class Main extends JavaPlugin {
 		new Saturation(this);
 		new HitDetection(this);
 		new PreventAnnoyingBowUse(this);
-		new PreventItemFrameChanges(this);
+		new PreventDecorationChanges(this);
+		new InstantVoidKill(this);
+		new Explosions(this);
 		
 		//commands
 		new Menu(this);
@@ -112,6 +115,7 @@ public class Main extends JavaPlugin {
 		new Whisper(this);
 		new ChatSetting(this);
 		new PlayerSetting(this);
+		new GameSetting(this);
 		
 		//messages
 		new DeathMessages(this);
@@ -122,15 +126,11 @@ public class Main extends JavaPlugin {
 		//game
 		new Leaderboards();
 		new CustomScoreboard().resetBoard();
-		new Kills(this);
+		new PlayerKills(this);
 		new Timer(this);
 		new ImmediateRespawn(this);
 		
-		//this is actually a behavior class, it's just here so the code runs after the game.Kills class (makes things register properly on void kill)
-		new InstantVoidKill(this);
-		
 		//effects
-		new DoubleJumpEffect(this);
 		new PlotArmor(this);
 		new Piggyback(this);
 		

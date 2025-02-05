@@ -22,6 +22,10 @@ public enum Shears {
 		Shears.currentState = state;
 	}
 	
+	public static void setState(boolean state) {
+		setState(state ? ENABLED : DISABLED);
+	}
+	
 	public static Shears getState() {
 		return currentState;
 	}

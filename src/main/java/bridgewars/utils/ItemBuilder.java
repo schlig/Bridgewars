@@ -74,10 +74,18 @@ public class ItemBuilder {
 		return item;
 	}
 	
-	public static ItemStack setLeatherColor(Player p, ItemStack item, String s) { //sets the color of leather armor
+	public static ItemStack setLeatherColor(ItemStack item, Player p) {
+		return setLeatherColor(item, getColor(CSManager.getTeam(p)));
+	}
+	
+	public static ItemStack setLeatherColor(ItemStack item, String color) {
+		return setLeatherColor(item, getColor(color));
+	}
+	
+	public static ItemStack setLeatherColor(ItemStack item, Color color) { //sets the color of leather armor
 		ItemStack armorPiece = item;
 		LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
-		meta.setColor(getColor(CSManager.getTeam(p)));
+		meta.setColor(color);
 		armorPiece.setItemMeta(meta);
 		return armorPiece;
 	}
@@ -124,6 +132,12 @@ public class ItemBuilder {
 			return Color.fromRGB(255, 255, 255);
 		
 		switch(s) {
+		default:
+		case "white":
+			return Color.fromRGB(255, 255, 255);
+		case "black":
+			return Color.fromRGB(60, 60, 60);
+			
 		case "red":
 			return Color.fromRGB(255, 0, 0);
 		case "blue":
@@ -132,15 +146,13 @@ public class ItemBuilder {
 			return Color.fromRGB(0, 255, 0);
 		case "yellow":
 			return Color.fromRGB(255, 255, 0);
-		default:
-			return Color.fromRGB(255, 255, 255);
 		}
 	}
 	
 	public static String getTeamName(Player p){
 		String out = CSManager.getTeam(p);
-		if(out == null)
-			return "Blank";
+		if(out == null || p == null)
+			return "White";
 		else return out;
 	}
 	

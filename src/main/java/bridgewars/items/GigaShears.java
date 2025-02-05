@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
 import bridgewars.Main;
+import bridgewars.game.Leaderboards;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
 import bridgewars.utils.Utils;
@@ -40,7 +41,9 @@ public class GigaShears implements ICustomItem, Listener {
 
     @EventHandler
     public void onHit(PlayerItemDamageEvent e) {
-        if(Utils.getID(e.getItem()).equals(getClass().getSimpleName().toLowerCase()))
+        if(Utils.getID(e.getItem()).equals(getClass().getSimpleName().toLowerCase())) {
             e.setDamage(7);
+		    Leaderboards.addPoint(e.getPlayer(), "items");
+        }
     }
 }

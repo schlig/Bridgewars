@@ -12,9 +12,9 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import bridgewars.commands.Fly;
 import bridgewars.effects.Cloak;
@@ -22,18 +22,17 @@ import bridgewars.effects.Fireworks;
 import bridgewars.items.MagicStopwatch;
 import bridgewars.items.SadTear;
 import bridgewars.messages.Chat;
+import bridgewars.settings.GameSettings;
 import bridgewars.settings.PlayerSettings;
 import bridgewars.settings.enums.Blocks;
 import bridgewars.settings.enums.Bows;
 import bridgewars.settings.enums.DigWars;
 import bridgewars.settings.enums.DoubleHealth;
-import bridgewars.settings.enums.DoubleJump;
-import bridgewars.settings.enums.GigaDrill;
 import bridgewars.settings.enums.HidePlayers;
+import bridgewars.settings.enums.Quake;
 import bridgewars.settings.enums.RandomTeams;
 import bridgewars.settings.enums.Shears;
 import bridgewars.settings.enums.Swords;
-import bridgewars.utils.Disguise;
 import bridgewars.utils.ItemManager;
 import bridgewars.utils.Packet;
 import bridgewars.utils.Utils;
@@ -82,7 +81,6 @@ public class Game {
 		
 		if(RandomTeams.getState().isEnabled())
 			CSManager.clearTeams();
-		String hidePlayers = Disguise.randomDisguiseList.get(Utils.rand(Disguise.randomDisguiseList.size()));
 		
 		for(Player player : Bukkit.getOnlinePlayers()) {
 			CSManager.removePlayerFromTimer(player);
@@ -92,18 +90,21 @@ public class Game {
 			player.getInventory().clear();
 			Fly.allowFlight.put(player, false);
 			player.setFlying(false);
-			if(!DoubleJump.getState().isEnabled())
-				player.setAllowFlight(false);
+			player.setAllowFlight(false);
 			if(HidePlayers.getState().isEnabled())
-				Disguise.setDisguise(player, Utils.getUUID(hidePlayers));
+				Packet.setDisguise(player, Utils.getUUID("turewjyg"));
 			Game.spawnPlayer(player);
 			Game.grantItems(player, false);
 		}
+
 		if(debugMessages) {
 			p.sendMessage(Chat.color("&7Randomized teams"));
 			p.sendMessage(Chat.color("&7Teleported players"));
 			p.sendMessage(Chat.color("&7Granted starting items"));
 		}
+		
+//		if(debugMessages)
+//			p.sendMessage(Chat.color("&7Corrected colorblindness"));
 		
 		GameState.setState(GameState.ACTIVE);
 	}
@@ -155,7 +156,7 @@ public class Game {
 	public static void spawnPlayer(Player p) {
 		if(!CSManager.hasTeam(p))
 			Game.randomizeTeam(p, true);
-		String s = CSManager.getTeam(p);
+		String s = CSManager.getTeam(p).toLowerCase();
 		
 		switch(s) {
 		case "red":
@@ -174,9 +175,11 @@ public class Game {
 	}
 	
 	public static void endGame(Player winner, Boolean forced) {
-		World.loadObject("observatory", 0, 41, 0);
+		GameState.setState(GameState.ENDING);
+		World.loadObject("observatory", 0, GameSettings.getGameHeight() + 17, 0); //y=41
 		Cloak.cloakedPlayers.clear();
 		Leaderboards.buildInstanceLeaderboards();
+		
 		if(winner != null) {
 			List<Player> winners = new ArrayList<>();
 			for(Player p : Bukkit.getOnlinePlayers()) {
@@ -185,22 +188,22 @@ public class Game {
 					if(CSManager.getTeam(p) == CSManager.getTeam(winner))
 						winners.add(p);
 					if(forced)
-						p.teleport(new Location(Bukkit.getWorld("world"), 0.5, 44.5, 0.5, 0, 10));
+						p.teleport(new Location(Bukkit.getWorld("world"), 0.5, GameSettings.getGameHeight() + 20.5, 0.5, 0, 10));
 					else
 						if(Utils.matchTeam(p, winner))
-							p.teleport(new Location(Bukkit.getWorld("world"), 0.5, 48.0, -5.5, 0, 10));
+							p.teleport(new Location(Bukkit.getWorld("world"), 0.5, GameSettings.getGameHeight() + 24, -5.5, 0, 10));
 						else {
-							p.teleport(new Location(Bukkit.getWorld("world"), 0.5, 45.0, 6.5, 180, 10));
+							p.teleport(new Location(Bukkit.getWorld("world"), 0.5, GameSettings.getGameHeight() + 30, 6.5, 180, 10));
 							Leaderboards.addPoint(p, "lifetimeLosses");
 						}
 					
 					SadTear.removePlayerFromSadRoom(p);
-					if(HidePlayers.getState().isEnabled())
-						Disguise.setDisguise(p, p.getUniqueId());
+					Packet.setDisguise(p, p.getUniqueId());
 					p.setLevel(0);
 					p.getInventory().clear();
 					p.getInventory().setArmorContents(null);
 					p.setGameMode(GameMode.ADVENTURE);
+					p.setNoDamageTicks(300);
 					
 					if(DoubleHealth.getState().isEnabled()) {
 						p.setMaxHealth(40);
@@ -211,10 +214,10 @@ public class Game {
 						p.setMaxHealth(20);
 					}
 					if(!forced) {
-						Packet.sendTitle(p, Chat.color("&6&lGAME OVER"), 
+						Packet.sendTitle(Chat.color("&6&lGAME OVER"), 
 								Chat.color("&l" + CSManager.getTeam(winner).substring(0, 1).toUpperCase()
 										          + CSManager.getTeam(winner).substring(1, CSManager.getTeam(winner).length()) 
-										          + " team wins!"), 5, 20, 5);
+										          + " team wins!"), 5, 20, 5, p);
 						if(CSManager.getTeam(p) == CSManager.getTeam(winner))
 							p.playSound(p.getLocation(), Sound.LEVEL_UP, 1F, 1F);
 						else
@@ -247,96 +250,89 @@ public class Game {
 		if(!forced)
 			new Fireworks(7).runTaskTimer(Bukkit.getPluginManager().getPlugin("bridgewars"), 0L, 10L);
 		
-		GameState.setState(GameState.INACTIVE);
 		CSManager.resetBoard();
 		Leaderboards.clearInstanceLeaderboards();
 		Leaderboards.refreshLifetimeLeaderboards();
 		deleteSpawns();
+		Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("bridgewars"), () -> GameState.setState(GameState.INACTIVE), 5L);
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static void placeSpawns() {
+		int r = GameSettings.getGameRadius();
+		int h = GameSettings.getGameHeight();
 		//red spawn platform
-		for(int x = -1; x <= 1; x++)
-			for(int z = -23; z <= -21; z++) {
-				Block block = Bukkit.getWorld("world").getBlockAt(new Location(Bukkit.getWorld("world"), x, 33, z));
-				block.setType(Material.STAINED_GLASS);
-				block.setData((byte) 14);
-			}
+		World.fill(-1, h + 9, -r - 1,
+				    1, h + 9, -r + 1, Material.STAINED_GLASS, (byte) 14);
 		
 		//blue spawn platform
-		for(int x = -1; x <= 1; x++)
-			for(int z = 21; z <= 23; z++) {
-				Block block = Bukkit.getWorld("world").getBlockAt(new Location(Bukkit.getWorld("world"), x, 33, z));
-				block.setType(Material.STAINED_GLASS);
-				block.setData((byte) 3);
-			}
+		World.fill(-1, h + 9, r - 1, 
+				    1, h + 9, r + 1, Material.STAINED_GLASS, (byte) 3);
 		
 		//green spawn platform
-		for(int x = -23; x <= -21; x++)
-			for(int z = -1; z <= 1; z++) {
-				Block block = Bukkit.getWorld("world").getBlockAt(new Location(Bukkit.getWorld("world"), x, 33, z));
-				block.setType(Material.STAINED_GLASS);
-				block.setData((byte) 5);
-			}
+		World.fill(-r - 1, h + 9, -1,
+				   -r + 1, h + 9,  1, Material.STAINED_GLASS, (byte) 5);
 			
 		//yellow spawn platform
-		for(int x = 21; x <= 23; x++)
-			for(int z = -1; z <= 1; z++) {
-				Block block = Bukkit.getWorld("world").getBlockAt(new Location(Bukkit.getWorld("world"), x, 33, z));
-				block.setType(Material.STAINED_GLASS);
-				block.setData((byte) 4);
-			}
+		World.fill(r - 1, h + 9, -1,
+				   r + 1, h + 9,  1, Material.STAINED_GLASS, (byte) 4);
 	}
 	
 	public static void deleteSpawns() {
+		int r = GameSettings.getGameRadius();
+		int h = GameSettings.getGameHeight();
+		
 		//red spawn platform
-		World.fill(-1, 33, -23,
-				    1, 33, -21, Material.AIR);
+		World.fill(-1, h + 9, -r - 1,
+				    1, h + 9, -r + 1, Material.AIR);
 		
 		//blue spawn platform
-		World.fill(-1, 33, 21, 
-				    1, 33, 23, Material.AIR);
+		World.fill(-1, h + 9, r - 1, 
+				    1, h + 9, r + 1, Material.AIR);
 		
 		//green spawn platform
-		World.fill(-23, 33, -1,
-				   -21, 33,  1, Material.AIR);
+		World.fill(-r - 1, h + 9, -1,
+				   -r + 1, h + 9,  1, Material.AIR);
 			
 		//yellow spawn platform
-		World.fill(21, 33, -1,
-				   23, 33,  1, Material.AIR);
+		World.fill(r - 1, h + 9, -1,
+				   r + 1, h + 9,  1, Material.AIR);
 	}
 	
 	public static void grantItems(Player p, boolean override) {
+		Player hidden = p;
+		
+		PlayerInventory inv = p.getInventory();
 		if(override)
-			p.getInventory().clear();
+			inv.clear();
+		if(HidePlayers.getState().isEnabled())
+			hidden = null;
+		inv.setHelmet(ItemManager.getItem("BasicHelmet").createItem(hidden));
+		inv.setChestplate(ItemManager.getItem("BasicChestplate").createItem(hidden));
+		inv.setLeggings(ItemManager.getItem("BasicLeggings").createItem(hidden));
+		inv.setBoots(ItemManager.getItem("BasicBoots").createItem(hidden));
 		
-		p.getInventory().setHelmet(ItemManager.getItem("BasicHelmet").createItem(p));
-		p.getInventory().setChestplate(ItemManager.getItem("BasicChestplate").createItem(p));
-		p.getInventory().setLeggings(ItemManager.getItem("BasicLeggings").createItem(p));
-		p.getInventory().setBoots(ItemManager.getItem("BasicBoots").createItem(p));
 		if(Swords.getState().isEnabled())
-			p.getInventory().setItem(Integer.parseInt(PlayerSettings.getSetting(p, "SwordSlot")), ItemManager.getItem("BasicSword").createItem(p));
+			inv.setItem(Integer.parseInt(PlayerSettings.getSetting(p, "SwordSlot")), ItemManager.getItem("BasicSword").createItem(hidden));
 		if(Shears.getState().isEnabled())
-			p.getInventory().setItem(Integer.parseInt(PlayerSettings.getSetting(p, "ShearsSlot")), ItemManager.getItem("Shears").createItem(p));
+			inv.setItem(Integer.parseInt(PlayerSettings.getSetting(p, "ShearsSlot")), ItemManager.getItem("Shears").createItem(p));
 		if(Blocks.getState().isEnabled())
-			p.getInventory().setItem(Integer.parseInt(PlayerSettings.getSetting(p, "WoolSlot")), ItemManager.getItem("WoolBlocks").createItem(p));
-		
-		if(GigaDrill.getState().isEnabled())
-			p.getInventory().addItem(ItemManager.getItem("GigaShears").createItem(p));
+			inv.setItem(Integer.parseInt(PlayerSettings.getSetting(p, "WoolSlot")), ItemManager.getItem("WoolBlocks").createItem(hidden));
 		
 		if(Bows.getState().isEnabled()) {
-			p.getInventory().addItem(ItemManager.getItem("Bow").createItem(p));
-			p.getInventory().setItem(9, new ItemStack(Material.ARROW, 1));;
+			inv.addItem(ItemManager.getItem("Bow").createItem(p));
+			inv.setItem(9, new ItemStack(Material.ARROW, 1));;
 		}
 		if(DigWars.getState().isEnabled()) {
-			p.getInventory().addItem(ItemManager.getItem("Axe").createItem(p));
-			p.getInventory().addItem(new ItemStack(Material.WOOD, 64));
-			p.getInventory().addItem(ItemManager.getItem("BottomlessWaterBucket").createItem(null));
-			p.getInventory().addItem(ItemManager.getItem("BottomlessLavaBucket").createItem(null));
+			inv.addItem(ItemManager.getItem("Axe").createItem(p));
+			inv.addItem(new ItemStack(Material.WOOD, 64));
+			inv.addItem(ItemManager.getItem("BottomlessWaterBucket").createItem(null));
+			inv.addItem(ItemManager.getItem("BottomlessLavaBucket").createItem(null));
+		}
+		if(Quake.getState().isEnabled()) {
+			inv.addItem(ItemManager.getItem("Railgun").createItem(null));
 		}
 		if(p.getName().equals("nicktoot"))
-			p.getInventory().addItem(ItemManager.getItem("SadRoom").createItem(p));
+			inv.addItem(ItemManager.getItem("SadRoom").createItem(p));
 		p.setGameMode(GameMode.SURVIVAL);
 	}
 }

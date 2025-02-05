@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 
 import bridgewars.Main;
 import bridgewars.game.GameState;
+import bridgewars.game.Leaderboards;
 import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
@@ -49,7 +50,6 @@ public class MagicStopwatch implements ICustomItem, Listener {
         ItemBuilder.setName(item, "Magic Stopwatch");
         ItemBuilder.setLore(item, Arrays.asList(
                 Chat.color("&r&7Increases movement speed"),
-                Chat.color("&r&7Disabled while disguised"),
                 Chat.color("&r&7Permanent upgrade")));
         return item;
     }
@@ -74,6 +74,7 @@ public class MagicStopwatch implements ICustomItem, Listener {
             	p.getInventory().setBoots(boots);
             	
             	Utils.subtractItem(p);
+    		    Leaderboards.addPoint(e.getPlayer(), "items");
             }
         }
     }

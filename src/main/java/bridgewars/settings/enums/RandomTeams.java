@@ -22,6 +22,10 @@ public enum RandomTeams {
 		RandomTeams.currentState = state;
 	}
 	
+	public static void setState(boolean state) {
+		setState(state ? ENABLED : DISABLED);
+	}
+	
 	public static RandomTeams getState() {
 		return currentState;
 	}

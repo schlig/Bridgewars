@@ -12,6 +12,7 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import bridgewars.Main;
 import bridgewars.game.GameState;
 import bridgewars.messages.Chat;
+import bridgewars.settings.GameSettings;
 
 public class PreventAnnoyingBowUse implements Listener {
 
@@ -25,9 +26,9 @@ public class PreventAnnoyingBowUse implements Listener {
 		&& GameState.isState(GameState.ACTIVE)) {
 			Player p = (Player) e.getEntity();
 			if(p.getGameMode() != GameMode.CREATIVE) {
-				if(p.getLocation().getY() > 30) {
+				if(p.getLocation().getY() > GameSettings.getGameHeight() + 6) {
 					e.setCancelled(true);
-					p.sendMessage(Chat.color("&cYou can't shoot arrows from spawn!"));
+					p.sendMessage(Chat.color("&cYou can't shoot arrows from here!"));
 				}
 			}
 		}
@@ -39,7 +40,7 @@ public class PreventAnnoyingBowUse implements Listener {
 		&& e.getDamager() instanceof Arrow
 		&& GameState.isState(GameState.ACTIVE)) {
 			Player p = (Player) e.getEntity();
-			if(p.getGameMode() != GameMode.CREATIVE && p.getLocation().getY() > 30)
+			if(p.getGameMode() != GameMode.CREATIVE && p.getLocation().getY() > GameSettings.getGameHeight() + 6)
 				e.setCancelled(true);
 		}
 	}

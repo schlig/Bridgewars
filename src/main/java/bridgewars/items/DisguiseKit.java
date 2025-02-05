@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -20,7 +19,6 @@ import org.bukkit.potion.PotionEffectType;
 
 import bridgewars.Main;
 import bridgewars.effects.Cloak;
-import bridgewars.game.GameState;
 import bridgewars.messages.Chat;
 import bridgewars.settings.enums.HidePlayers;
 import bridgewars.utils.ICustomItem;
@@ -62,12 +60,6 @@ public class DisguiseKit implements ICustomItem, Listener {
     }
 	
 	@EventHandler
-	public void onPlace(BlockPlaceEvent e) {
-		if(e.getBlock().getType() == Material.SKULL && GameState.isState(GameState.ACTIVE))
-			e.setCancelled(true);
-	}
-	
-	@EventHandler
 	public void onUse(PlayerInteractEvent e) {
 		if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if(!Utils.getID(e.getItem()).equals(getClass().getSimpleName().toLowerCase()))
@@ -76,9 +68,9 @@ public class DisguiseKit implements ICustomItem, Listener {
 			Player p = e.getPlayer();
 			
 			if(HidePlayers.getState().isEnabled()) {
-				p.sendMessage(Chat.color("i was too lazy to disable this for hideplayers, so it's just a ghead now"));
-				p.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 2400, 1), true);
-				p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 2), true);
+				p.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 120 * 20, 1), true);
+				p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 5 * 20, 2), true);
+				p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 15 * 20, 2), true);
 				p.playSound(p.getLocation(), Sound.EAT, 1f, 1f);
 				Utils.subtractItem(p);
 				return;

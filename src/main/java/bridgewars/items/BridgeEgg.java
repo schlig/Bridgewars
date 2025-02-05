@@ -7,6 +7,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -41,11 +42,12 @@ public class BridgeEgg implements ICustomItem, Listener {
     @EventHandler
     public void onThrow(ProjectileLaunchEvent e) {
         if(e.getEntity() instanceof Egg && e.getEntity().getShooter() instanceof Player) {
-            if( ((Player)e.getEntity().getShooter()).getGameMode() == GameMode.CREATIVE)
-                new bridgewars.effects.BridgeEgg(e.getEntity(), true).runTaskTimer(Bukkit.getPluginManager().getPlugin("bridgewars"), 3L, 0L);
-            else
-                new bridgewars.effects.BridgeEgg(e.getEntity(), false).runTaskTimer(Bukkit.getPluginManager().getPlugin("bridgewars"), 3L, 0L);
-			Leaderboards.addPoint( (Player) e.getEntity().getShooter(), "items");
+        	Projectile egg = (Projectile) e.getEntity();
+        	Player user = (Player) egg.getShooter();
+        	
+            new bridgewars.effects.BridgeEgg(e.getEntity(), (user.getGameMode() == GameMode.CREATIVE)).runTaskTimer(Bukkit.getPluginManager().getPlugin("bridgewars"), 3L, 0L);
+            
+			Leaderboards.addPoint(user, "items");
         }
     }
 }

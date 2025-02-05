@@ -24,8 +24,8 @@ public class TemporaryIron implements ICustomItem, Listener {
 	
 	private Main plugin;
 	
-	private final int duration = 15;
-	private final int amount = 2;
+	private final int duration = 30;
+	private final int amount = 16;
 	
 	private List<BukkitTask> decayingIronBlocks = new ArrayList<>();
 	
@@ -41,13 +41,12 @@ public class TemporaryIron implements ICustomItem, Listener {
     
     @Override
     public ItemStack createItem(Player p) {
-        ItemStack item = new ItemStack(Material.IRON_BLOCK, 1);
+        ItemStack item = new ItemStack(Material.IRON_BLOCK, amount);
         ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
         ItemBuilder.setName(item, "Temporary Iron Block");
         ItemBuilder.setLore(item, Arrays.asList(
-                Chat.color("&r&7Decays after 15 seconds"),
+                Chat.color("&r&7Decays after " + duration + " seconds"),
                 Chat.color("&r&7Can be placed out of bounds")));
-        item.setAmount(amount);
         return item;
     }
     

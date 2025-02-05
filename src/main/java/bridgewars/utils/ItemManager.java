@@ -23,7 +23,10 @@ import bridgewars.items.BottomlessLavaBucket;
 import bridgewars.items.BottomlessWaterBucket;
 import bridgewars.items.Bow;
 import bridgewars.items.BridgeEgg;
+import bridgewars.items.ButterflyKnife;
 import bridgewars.items.ChanceTime;
+import bridgewars.items.ClosetHacks;
+import bridgewars.items.DebugItem;
 import bridgewars.items.DisguiseKit;
 import bridgewars.items.EnderPearl;
 import bridgewars.items.Eraser;
@@ -34,6 +37,8 @@ import bridgewars.items.HeartContainer;
 import bridgewars.items.HomeRunBat;
 import bridgewars.items.LifeforcePotion;
 import bridgewars.items.MagicStopwatch;
+import bridgewars.items.MetalBox;
+import bridgewars.items.MetalChestplate;
 import bridgewars.items.MysteryPill;
 import bridgewars.items.ParkourCheckpoint;
 import bridgewars.items.ParkourQuitter;
@@ -45,7 +50,9 @@ import bridgewars.items.Railgun;
 import bridgewars.items.SadTear;
 import bridgewars.items.Shears;
 import bridgewars.items.SignalJammer;
+import bridgewars.items.SuperStar;
 import bridgewars.items.TemporaryIron;
+import bridgewars.items.TemporaryStone;
 import bridgewars.items.TemporaryWood;
 import bridgewars.items.UltimastPortal;
 import bridgewars.items.UnoReverse;
@@ -92,12 +99,18 @@ public class ItemManager {
         allItems.add(new ChanceTime(plugin));
         allItems.add(new SignalJammer(plugin));
         allItems.add(new TemporaryWood(plugin));
+        allItems.add(new TemporaryStone(plugin));
         allItems.add(new TemporaryIron(plugin));
         allItems.add(new GigaShears(plugin));
         allItems.add(new UpgradeBook(plugin));
         allItems.add(new EnderPearl(plugin));
+        allItems.add(new SuperStar(plugin));
+        allItems.add(new ClosetHacks(plugin));
+        allItems.add(new MetalBox(plugin));
+        allItems.add(new ButterflyKnife(plugin));
 
-        allItems.add(new WoolBlocks(plugin)); //this is a listener solely for leaderboards purposes
+        allItems.add(new WoolBlocks(plugin)); //this is a listener for leaderboards and block decay mod
+        allItems.add(new MetalChestplate());
         allItems.add(new Axe());
         allItems.add(new BasicBoots());
         allItems.add(new BasicChestplate());
@@ -110,12 +123,12 @@ public class ItemManager {
         allItems.add(new ParkourResetter());
         allItems.add(new ParkourQuitter());
         allItems.add(new ParkourCheckpoint());
+        allItems.add(new DebugItem(plugin));
         allItems.sort(Comparator.comparing(ICustomItem::getRarity).thenComparing(o -> o.getClass().getSimpleName()));
-        try {
-            validateConfig();
-        }catch (IOException ioe){
-            Bukkit.getLogger().severe(ioe.getMessage());
-        }
+        
+        try { validateConfig(); }
+        catch (IOException ioe){ Bukkit.getLogger().severe(ioe.getMessage()); }
+        
         generateItemPool(greenPercent, redPercent, bluePercent);
     }
 

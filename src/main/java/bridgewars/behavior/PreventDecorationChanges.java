@@ -7,19 +7,26 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 import bridgewars.Main;
 
-public class PreventItemFrameChanges implements Listener {
+public class PreventDecorationChanges implements Listener {
 
-	public PreventItemFrameChanges(Main plugin) {
+	public PreventDecorationChanges(Main plugin) {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
 	public void onRightClick(PlayerInteractEntityEvent e) {
 		if(e.getRightClicked() instanceof ItemFrame && e.getPlayer().getGameMode() != GameMode.CREATIVE)
+			e.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onRightClick(PlayerArmorStandManipulateEvent e) {
+		if(e.getPlayer().getGameMode() != GameMode.CREATIVE)
 			e.setCancelled(true);
 	}
 	

@@ -16,9 +16,11 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import bridgewars.Main;
+import bridgewars.effects.CooldownTimer;
 import bridgewars.effects.SadRoom;
 import bridgewars.game.CSManager;
 import bridgewars.game.GameState;
+import bridgewars.game.Leaderboards;
 import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
@@ -30,19 +32,22 @@ public class SadTear implements ICustomItem, Listener {
 	public static List<Player> sadRoomed = new ArrayList<>();
 	private static List<BukkitTask> sadRoomTimers = new ArrayList<>();
 	
+	private ArrayList<Player> cooldownList = new ArrayList<>();
+	private final int cooldown = 1;
+	
 	private static final int sadRoomX = 0;
 	private static final int sadRoomY = 36;
 	private static final int sadRoomZ = 0;
 	
 	private static final int radius = 3;
 	
-	private int duration = 15;
+	private static final int duration = 15;
 	
-	private Main plugin;
+	private static Main plugin;
 	
 	public SadTear(Main plugin) {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
-		this.plugin = plugin;
+		SadTear.plugin = plugin;
 	}
 
 	@Override
@@ -70,28 +75,35 @@ public class SadTear implements ICustomItem, Listener {
 			Player target = (Player) e.getEntity();
 			if(Utils.getID(user.getItemInHand()).equals(getClass().getSimpleName().toLowerCase())
 			&& GameState.isState(GameState.ACTIVE)) {
-				
 				if(CSManager.matchTeam(user, target))
 					return;
-
-				if(sadRoomed.size() == 0)
-					World.loadObject("sad room", sadRoomX, sadRoomY - 1, sadRoomZ);
-				
+				if(cooldownList.contains(user)) {
+					user.sendMessage(Chat.color("&cThis item is currently on cooldown."));
+					return;
+				}
 				if(sadRoomed.contains(target)) {
 					user.sendMessage(Chat.color("&cThat player is already in the Sad Room, and so are you. L, idiot."));
 					return;
 				}
-				
-				target.teleport(new Location(Bukkit.getWorld("world"), sadRoomX + 0.5, sadRoomY, sadRoomZ + 0.5));
-				final Vector v = new Vector();
-				Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("bridgewars"), () -> target.setVelocity(v), 1L);
-				sadRoomed.add(target);
-				sadRoomTimers.add(new SadRoom(target, duration * 20).runTaskTimer(plugin, 0, 1L));
-				
+				cooldownList.add(user);
+				new CooldownTimer(user, cooldown, cooldownList, null).runTaskTimer(plugin, 0, 10);
+				activateEffect(target, duration);
 				Utils.subtractItem(user);
-				Bukkit.broadcastMessage(Chat.color(target.getDisplayName() + Chat.color(" &chas been sent to the Sad Room")));
+			    Leaderboards.addPoint(user, "items");
 			}
 		}
+	}
+	
+	public static void activateEffect(Player target, int duration) {
+		if(sadRoomed.size() == 0)
+			World.loadObject("sad room", sadRoomX, sadRoomY - 1, sadRoomZ);
+		
+		target.teleport(new Location(Bukkit.getWorld("world"), sadRoomX + 0.5, sadRoomY, sadRoomZ + 0.5));
+		final Vector v = new Vector();
+		Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("bridgewars"), () -> target.setVelocity(v), 1L);
+		sadRoomed.add(target);
+		sadRoomTimers.add(new SadRoom(target, duration * 20).runTaskTimer(plugin, 0, 1L));
+		Bukkit.broadcastMessage(Chat.color(target.getDisplayName() + Chat.color(" &chas been sent to the Sad Room")));
 	}
 	
 	public static void clearSadRoom() {

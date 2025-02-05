@@ -5,13 +5,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import bridgewars.game.CSManager;
-import bridgewars.settings.TimeLimit;
+import bridgewars.game.GameState;
+import bridgewars.settings.GameSettings;
 import bridgewars.utils.Packet;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 
 public class ParticleTrail extends BukkitRunnable {
 	
-	private TimeLimit tl = new TimeLimit();
+	//this class is solely used for spawning the particle beam above players when they're near the time limit
+	//use packet.sendparticle with some math for your own effects
 	
 	private Entity target;
 	private EnumParticle effect;
@@ -53,10 +55,10 @@ public class ParticleTrail extends BukkitRunnable {
 	@Override
 	public void run() {
 		if(checkTimeLimit && target instanceof Player)
-			if(CSManager.getTime((Player) target) < tl.revealTime())
+			if(CSManager.getTime((Player) target) < GameSettings.getRevealTime())
 				this.cancel();
 		
-		if(target.isDead() || duration == 0) {
+		if(target.isDead() || duration == 0 || GameState.isState(GameState.ENDING)) {
 			this.cancel();
 			return;
 		}

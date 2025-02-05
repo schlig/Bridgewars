@@ -43,7 +43,7 @@ public class MainMenu {
 			p.playSound(p.getLocation(), Sound.CLICK, 0.8F, 1F);
 			menu.buildMapPages();
 			p.openInventory(menu.getMapPage(0));
-
+			
 			MapRotation.loadMapSettings(p, 0);
 			break;
 			

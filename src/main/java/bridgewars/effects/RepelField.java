@@ -11,33 +11,33 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import bridgewars.Main;
-import bridgewars.game.CustomScoreboard;
+import bridgewars.game.CSManager;
+import bridgewars.game.GameState;
+import bridgewars.utils.Packet;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 
 public class RepelField extends BukkitRunnable {
 	
-	private CustomScoreboard cs;
-	
-    private Player u; //user
-    private double d; //distance
-    private double p; //this dictates the maximum power of the field's epicenter (y-intercept on a graph)
-    private int t;    //duration
+    private final Player user; //user
+    private final double radius; //radius
+    private final double power; //this dictates the maximum power of the field's epicenter (y-intercept on a graph)
+    private final int particleDensity;
     
-    private Main plugin;
+    private int duration;    //duration
     
-    public RepelField(Player u, double d, double p, int t, Main plugin){
-        cs = new CustomScoreboard();
-        this.u = u;
-        this.d = d;
-        this.t = t;
-        this.p = p;
-        this.plugin = plugin;
+    public RepelField(Player user, double radius, double power, int duration, Main plugin){
+        this.user = user;
+        this.radius = radius;
+        this.power = power;
+        this.particleDensity = (int) (power * 10);
+        
+        this.duration = duration;
     }
     
     @Override
     public void run(){
-        Location pLoc = u.getLocation();
-        List<Entity> entities = u.getNearbyEntities(d,d,d);
+        Location pLoc = user.getLocation();
+        List<Entity> entities = user.getNearbyEntities(radius, radius, radius);
         for (Entity e : entities) {
         	if(entities.size() <= 0)
         		break;
@@ -47,32 +47,34 @@ public class RepelField extends BukkitRunnable {
             
             if(e instanceof Projectile) { //prevent repulsion of projectiles thrown by teammates (or yourself)
             	if( ((Projectile)e).getShooter() instanceof Player )
-            		if(cs.matchTeam(u, (Player)((Projectile)e).getShooter() ))
+            		if(CSManager.matchTeam(user, (Player)((Projectile)e).getShooter() ))
             			continue;
             }
             
             if(e instanceof Player) //prevent repulsion of teammates or creative mode players
-            	if(cs.matchTeam(u, (Player)e) || ((Player)e).getGameMode() == GameMode.CREATIVE)
+            	if(CSManager.matchTeam(user, (Player)e) || ((Player)e).getGameMode() == GameMode.CREATIVE)
             		continue;
             
-            if(magnitude > d) //if magnitude is less than d it will start pulling entities inward
+            if(magnitude > radius) //if magnitude is less than d it will start pulling entities inward
             	continue;
             
             e.setVelocity(e.getVelocity().add(directionVector.multiply //hugely increases pushback the closer you are to target
-            		( (p / (Math.pow(d, 4))) * Math.pow(d - magnitude, 4) )));
+            		( (power / (Math.pow(radius, 4))) * Math.pow(radius - magnitude, 4) )));
         }
 
         Vector particlePos;
-        for(int i = 0; i < 5; i++) {
+        
+        for(int i = 0; i < particleDensity; i++) {
             particlePos = new Vector(Math.random() - .5f, Math.random() - .5f, Math.random() - .5f).normalize();
-            new ParticleTrail(u, EnumParticle.CRIT_MAGIC,
-                    (float) (particlePos.getX() * d), (float) (particlePos.getY() * d), (float) (particlePos.getZ() * d),
-                    0, 0, 0,
-                    0.05f, 5, 1000, false).runTask(plugin);
+	        Packet.sendParticle(EnumParticle.CRIT_MAGIC,  
+	            	(float) user.getLocation().getX() + (float) (particlePos.getX() * radius), 
+	            	(float) user.getLocation().getY() + 0.5f + (float) (particlePos.getY() * radius), 
+	            	(float) user.getLocation().getZ() + (float) (particlePos.getZ() * radius),
+	            	0, 0, 0, 0.05f, 5);
         }
         
-        t--;
-        if(t <= 0)
+        duration--;
+        if(duration <= 0 || GameState.isState(GameState.ENDING))
             this.cancel();
     }
 }

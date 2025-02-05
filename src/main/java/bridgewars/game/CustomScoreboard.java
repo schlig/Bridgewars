@@ -15,9 +15,10 @@ import org.bukkit.scoreboard.Team;
 
 import bridgewars.effects.Cloak;
 import bridgewars.effects.ScoreboardJam;
+import bridgewars.items.SuperStar;
 import bridgewars.messages.Chat;
-import bridgewars.settings.TimeLimit;
 import bridgewars.utils.Utils;
+import bridgewars.utils.World;
 
 public class CustomScoreboard {
 	
@@ -25,16 +26,12 @@ public class CustomScoreboard {
 	private Objective time;
 	private Team team;
 	private Score score;
-	
-	private TimeLimit limit = new TimeLimit();
+
 	private HashMap<UUID, String> display = new HashMap<>();
 	
 	private final int firstWarning = 60;
 	private final int secondWarning = 30; //time remaining to notify players
 	private final int finalWarning = 15;
-	
-	private final int boundingRadius = 25; // max X and Z before timer starts ticking downwards
-	private final int boundingHeight = 30; // max y elevation for timer to tick down
 	
 	public CustomScoreboard() {
 		scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
@@ -50,8 +47,8 @@ public class CustomScoreboard {
 		teamSetup("green", "&a", "&r");
 		teamSetup("yellow", "&e", "&r");
 		
-		teamSetup("redC", "&c", "&r");
-		teamSetup("blueC", "&b", "&r");
+		teamSetup("redC", "&c", "&r");   //i think this team uses uuids to match players being on the same team in case of disguise kits
+		teamSetup("blueC", "&b", "&r");  //but this is a dumb and confusing way to handle it so it's gonna get recoded
 		teamSetup("greenC", "&a", "&r");
 		teamSetup("yellowC", "&e", "&r");
 		
@@ -82,40 +79,36 @@ public class CustomScoreboard {
 			score = time.getScore(display.get(p.getUniqueId()));
 			int points = score.getScore();
 			
-			if(p.getLocation().getY() <= boundingHeight //increase time by 1 if within bounds
-			&& Math.abs(p.getLocation().getX()) <= boundingRadius
-			&& Math.abs(p.getLocation().getZ()) <= boundingRadius
-			&& !p.getGameMode().equals(GameMode.CREATIVE)
-			&& points < TimeLimit)
+			if(World.inTimerZone(p.getLocation()) //increase time by 1 if within bounds
+			&& points < TimeLimit 
+			&& p.getGameMode() != GameMode.CREATIVE
+			&& !SuperStar.playerIsInvincible(p))
 				score.setScore(points + 1);
 			
-			if(p.getLocation().getY() > boundingHeight  //decrease time by 1 if out of bounds
-			|| Math.abs(p.getLocation().getX()) > boundingRadius
-			|| Math.abs(p.getLocation().getZ()) > boundingRadius) {
-				if(p.getGameMode() != GameMode.CREATIVE
-				&& points > 0) {
+			else {  //decrease time by 1 if out of bounds
+				if(points > 0 && p.getGameMode() != GameMode.CREATIVE && !SuperStar.playerIsInvincible(p)) {
 					score.setScore(points - 1);
 					return;
 				}
 			}
 			
-			if(points == TimeLimit - firstWarning) {
-				Bukkit.broadcastMessage(Chat.color("&l" + p.getDisplayName() + " &rhas &l&e60&r seconds remaining!"));
+			if(points == TimeLimit - firstWarning - 1) {
+				Bukkit.broadcastMessage(Chat.color("&l" + p.getDisplayName() + " &rhas &l&e" + firstWarning + "&r seconds remaining!"));
 				for(Player player : Bukkit.getOnlinePlayers())
 					player.playSound(player.getLocation(), Sound.NOTE_PLING, 1F, 1F);
 			}
 			
-			else if(points == TimeLimit - secondWarning) {
-				Bukkit.broadcastMessage(Chat.color("&l" + p.getDisplayName() + " &rhas &l&630&r seconds remaining! Their location has been revealed!"));
+			else if(points == TimeLimit - secondWarning - 1) {
+				Bukkit.broadcastMessage(Chat.color("&l" + p.getDisplayName() + " &rhas &l&6" + secondWarning + "&r seconds remaining! Their location has been revealed!"));
 				for(Player player : Bukkit.getOnlinePlayers())
 					player.playSound(player.getLocation(), Sound.NOTE_PLING, 1F, 1F);
 				if(Cloak.cloakedPlayers.contains(p.getUniqueId()))
 					Cloak.cloakedPlayers.remove(p.getUniqueId());
 			}
 			
-			else if(points >= TimeLimit - finalWarning) {
+			else if(points >= TimeLimit - finalWarning - 1) {
 				if(points == TimeLimit - finalWarning)
-					Bukkit.broadcastMessage(Chat.color("&l" + p.getDisplayName() + " &rhas &l&c15&r seconds remaining!"));
+					Bukkit.broadcastMessage(Chat.color("&l" + p.getDisplayName() + " &rhas &l&c" + finalWarning + "&r seconds remaining!"));
 				if(points == TimeLimit - finalWarning || points >= TimeLimit - 9 && TimeLimit - finalWarning > 0)
 					for(Player player : Bukkit.getOnlinePlayers())
 						player.playSound(player.getLocation(), Sound.NOTE_PLING, 1F, 1F);
@@ -150,9 +143,7 @@ public class CustomScoreboard {
 	}
 	
 	public void resetAllTimes() {
-		int timelimit = limit.getLimit();
 		Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "scoreboard players reset * time");
-		Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("bridgewars"), () -> limit.setLimit(timelimit), 1L);
 	}
 	
 	public void setTeam(Player p, String team) {
@@ -169,8 +160,9 @@ public class CustomScoreboard {
 	}
 	
 	public String getTeam(Player p) {
-		if(scoreboard.getEntryTeam(p.getUniqueId().toString()) == null)
-			return null;
+		if(p == null)
+			return "Blank";
+		if(scoreboard.getEntryTeam(p.getUniqueId().toString()) == null) return null;
 		return scoreboard.getEntryTeam(p.getUniqueId().toString()).getName();
 	}
 	
@@ -185,10 +177,7 @@ public class CustomScoreboard {
 	}
 	
 	public Boolean hasTeam(Player p) {
-		if(getTeam(p) != null)
-			return true;
-		else
-			return false;
+		return (getTeam(p) != null) ? true : false;
 	}
 	
 	public void clearTeams() {

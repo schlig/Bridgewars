@@ -6,12 +6,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import bridgewars.Main;
-import bridgewars.game.Leaderboards;
+import bridgewars.effects.DebugEffect;
 
 public class Debug implements CommandExecutor {
 	
+	private Main plugin;
+	
 	public Debug(Main plugin) {
 		plugin.getCommand("debug").setExecutor(this);
+		this.plugin = plugin;
 	}
 	
 	@Override
@@ -20,15 +23,16 @@ public class Debug implements CommandExecutor {
 		if(!(sender instanceof Player))
 			return true;;
 		
-		Player p = (Player) sender;
+		Player user = (Player) sender;
 		
-		if(!p.isOp()) {
-			p.sendMessage("u aint using this command chief gtfo");
-			return true;
-		}
+        if(!user.isOp()) {
+        	user.sendMessage("A severe unhandled error has occurred. Error: You're not Schlog.");
+        	return true;
+        }
+        
+//		public DebugEffect(Player p, double pitchChange, double yawChange, double radius, int duration) {
 		
-		Leaderboards.refreshLifetimeLeaderboards();
-		Leaderboards.refreshInstanceLeaderboards();
+		new DebugEffect(user, Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]), Integer.parseInt(args[3])).runTaskTimer(plugin, 0, 1);
 		
 		return true;
 	}

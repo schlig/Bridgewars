@@ -22,6 +22,7 @@ public class GUI {
 	private Inventory ks = Bukkit.createInventory(null, 45, "Killstreak Bonuses");
 	private Inventory emptyPage = Bukkit.createInventory(null, 45, "Map Rotation");
 	private Inventory clock = Bukkit.createInventory(null, 45, "Time Limit");
+	private Inventory killBonus = Bukkit.createInventory(null, 45, "Kill Bonus");
 	private Inventory hotbar = Bukkit.createInventory(null, 45, "Hotbar Layout");
 	private Inventory settings = Bukkit.createInventory(null, 45, "Game Settings");
 	private Inventory teams = Bukkit.createInventory(null, 45, "Team Selector");
@@ -41,6 +42,8 @@ public class GUI {
 				emptyPage.setItem(i, s);
 			if(i < clock.getSize())
 				clock.setItem(i, s);
+			if(i < killBonus.getSize())
+				killBonus.setItem(i, s);
 			if(i < settings.getSize())
 				settings.setItem(i, s);
 			if(i < hotbar.getSize())
@@ -71,8 +74,7 @@ public class GUI {
 		
 		//build the settings menu
 		settings.setItem(10, item(Material.WATCH, 1, 0, "&r&6Time Limit: ?", false, null));
-		settings.setItem(11, item(Material.COMPASS, 1, 0, "&r&6Timer Acceleration", false, Arrays.asList(
-				Chat.color("&r0%"))));
+		settings.setItem(11, item(Material.DIAMOND_SWORD, 1, 0, "&r&6Kill Bonus: ?", false, null));
 		
 		settings.setItem(12, item(Material.GOLD_SWORD, 1, 0, "&r&6Swords", false, Arrays.asList(
 				Chat.color("&r&cDisabled"),
@@ -105,9 +107,10 @@ public class GUI {
 				Chat.color("&7Increase maximum health from"),
 				Chat.color("&710 hearts to 20"))));
 		
-		settings.setItem(20, item(Material.RABBIT_FOOT, 1, 0, "&r&6Double Jump", false, Arrays.asList(
+		settings.setItem(20, item(Material.RABBIT_FOOT, 1, 0, "&r&6Reveal Winner", false, Arrays.asList(
 				Chat.color("&r&cDisabled"),
-				Chat.color("&7Players can jump midair once"))));
+				Chat.color("&7The player in the lead is revealed"),
+				Chat.color("&7when they're close to winning"))));
 		
 		settings.setItem(21, item(Material.DIAMOND_PICKAXE, 1, 0, "&r&6Giga Drill", false, Arrays.asList(
 				Chat.color("&r&cDisabled"),
@@ -141,8 +144,8 @@ public class GUI {
 		
 		settings.setItem(29, item(Material.RABBIT_HIDE, 1, 0, "&r&6Hide Players", false, Arrays.asList(
 				Chat.color("&r&cDisabled"),
-				Chat.color("&7Players are all randomly disguised"),
-				Chat.color("&7as the same Bedwar user"))));
+				Chat.color("&7Turns all players into"),
+				Chat.color("&7followers of turewjyg"))));
 		
 		settings.setItem(30, item(Material.BEDROCK, 1, 0, "&r&6Indestructible Map", false, Arrays.asList(
 				Chat.color("&r&cDisabled"),
@@ -161,10 +164,16 @@ public class GUI {
 				Chat.color("&7Crafting is enabled"),
 				Chat.color("&7All items can be dropped"))));
 		
+		settings.setItem(33, item(Material.BLAZE_ROD, 1, 0, "&r&6Quake", false, Arrays.asList(
+				Chat.color("&r&cDisabled"),
+				Chat.color("&7All players have a permanent Railgun"))));
+		
 		settings.setItem(40, button(0));
 		
 		//build the timer menu
-		clock.setItem(13, item(Material.WATCH, 1, 0, "&6&lTime Limit: " + "-", false, null));
+		clock.setItem(13, item(Material.WATCH, 1, 0, "&6&lTime Limit: " + "-", false, Arrays.asList(
+				Chat.color("&r&7The time limit of the game, in seconds"),
+				Chat.color("&r&7The first player to survive this long wins"))));
 		clock.setItem(28, item(Material.WOOL, 30, 14, "&c&l-30 seconds", false, null));
 		clock.setItem(29, item(Material.WOOL, 10, 14, "&c&l-10 seconds", false, null));
 		clock.setItem(30, item(Material.WOOL, 5, 14, "&c&l-5 seconds", false, null));
@@ -172,6 +181,17 @@ public class GUI {
 		clock.setItem(33, item(Material.WOOL, 10, 5, "&a&l+10 seconds ", false, null));
 		clock.setItem(34, item(Material.WOOL, 30, 5, "&a&l+30 seconds ", false, null));
 		clock.setItem(40, button(0));
+		
+		//build the timer menu
+		killBonus.setItem(13, item(Material.DIAMOND_SWORD, 1, 0, "&6&lKill Bonus: " + "-", true, Arrays.asList(
+				Chat.color("&r&7Bonus time given on kill"))));
+		killBonus.setItem(28, item(Material.WOOL, 10, 14, "&c&l-10 seconds", false, null));
+		killBonus.setItem(29, item(Material.WOOL, 5, 14, "&c&l-5 seconds", false, null));
+		killBonus.setItem(30, item(Material.WOOL, 1, 14, "&c&l-1 second", false, null));
+		killBonus.setItem(32, item(Material.WOOL, 1, 5, "&a&l+1 second ", false, null));
+		killBonus.setItem(33, item(Material.WOOL, 5, 5, "&a&l+5 seconds ", false, null));
+		killBonus.setItem(34, item(Material.WOOL, 10, 5, "&a&l+10 seconds ", false, null));
+		killBonus.setItem(40, button(0));
 		
 		//build the hotbar layout menu
 		for(int i = 18; i < 27; i++)
@@ -260,6 +280,10 @@ public class GUI {
 	
 	public Inventory getClock() {
 		return clock;
+	}
+	
+	public Inventory getBonusClock() {
+		return killBonus;
 	}
 	
 	public Inventory getHotbar() {

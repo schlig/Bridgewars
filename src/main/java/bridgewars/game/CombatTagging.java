@@ -2,7 +2,6 @@ package bridgewars.game;
 
 import java.util.HashMap;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
@@ -10,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 public class CombatTagging {
 	
 	private HashMap<Player, Player> lastAttacker;
-	private HashMap<Player, Material> lastWeapon;
+	private HashMap<Player, ItemStack> lastWeapon;
 	private HashMap<Player, DamageCause> lastDamage;
 	
 	public CombatTagging() {
@@ -20,24 +19,15 @@ public class CombatTagging {
 	}
 	
 	public DamageCause getDamageCause(Player p) {
-		if(lastDamage.containsKey(p))
-			return lastDamage.get(p);
-		else
-			return null;
+		return lastDamage.containsKey(p) ? lastDamage.get(p) : null;
 	}
 	
-	public Material getMurderWeapon(Player p) {
-		if(lastWeapon.containsKey(p))
-			return lastWeapon.get(p);
-		else
-			return null;
+	public ItemStack getMurderWeapon(Player p) {
+		return lastWeapon.containsKey(p) ? lastWeapon.get(p) : null;
 	}
 	
 	public Player getAttacker(Player p) {
-		if(lastAttacker.containsKey(p))
-			return lastAttacker.get(p);
-		else
-			return null;
+		return lastAttacker.containsKey(p) ? lastAttacker.get(p) : null;
 	}
 	
 	public void setDamageCause(Player p, DamageCause cause) {
@@ -51,7 +41,7 @@ public class CombatTagging {
 		if(weapon == null)
 			lastWeapon.remove(p);
 		else
-			lastWeapon.put(p, weapon.getType());
+			lastWeapon.put(p, weapon);
 	}
 	
 	public void setAttacker(Player p, Player k) {

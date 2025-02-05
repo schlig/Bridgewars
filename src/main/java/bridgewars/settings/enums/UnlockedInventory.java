@@ -22,6 +22,10 @@ public enum UnlockedInventory {
 		UnlockedInventory.currentState = state;
 	}
 	
+	public static void setState(boolean state) {
+		setState(state ? ENABLED : DISABLED);
+	}
+	
 	public static UnlockedInventory getState() {
 		return currentState;
 	}

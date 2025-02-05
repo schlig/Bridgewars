@@ -1,7 +1,7 @@
 package bridgewars.game;
 
 public enum GameState {
-	INACTIVE, ACTIVE, EDIT;
+	STARTING, ACTIVE, ENDING, INACTIVE, EDIT;
 	
 	private static GameState currentState;
 	

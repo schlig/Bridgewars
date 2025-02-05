@@ -10,7 +10,6 @@ public enum NaturalItemSpawning {
 		this.isEnabled = isEnabled;
 	}
 	
-	
 	public Boolean isEnabled() {
 		return isEnabled;
 	}
@@ -21,6 +20,10 @@ public enum NaturalItemSpawning {
 	
 	public static void setState(NaturalItemSpawning state) {
 		NaturalItemSpawning.currentState = state;
+	}
+	
+	public static void setState(boolean state) {
+		setState(state ? ENABLED : DISABLED);
 	}
 	
 	public static NaturalItemSpawning getState() {

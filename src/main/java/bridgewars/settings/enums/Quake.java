@@ -1,15 +1,14 @@
 package bridgewars.settings.enums;
 
-public enum DoubleJump {
+public enum Quake {
 	ENABLED(true), DISABLED(false);
 	
-	private static DoubleJump currentState;
+	private static Quake currentState;
 	private boolean isEnabled;
 	
-	DoubleJump(boolean isEnabled){
+	Quake(boolean isEnabled){
 		this.isEnabled = isEnabled;
 	}
-	
 	
 	public Boolean isEnabled() {
 		return isEnabled;
@@ -19,11 +18,15 @@ public enum DoubleJump {
 		setState(getState().isEnabled() ? DISABLED : ENABLED);
 	}
 	
-	public static void setState(DoubleJump state) {
-		DoubleJump.currentState = state;
+	public static void setState(Quake state) {
+		Quake.currentState = state;
 	}
 	
-	public static DoubleJump getState() {
+	public static void setState(boolean state) {
+		setState(state ? ENABLED : DISABLED);
+	}
+	
+	public static Quake getState() {
 		return currentState;
 	}
 }

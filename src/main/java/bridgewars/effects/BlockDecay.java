@@ -8,14 +8,28 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import bridgewars.game.GameState;
+import bridgewars.settings.enums.WoolDecay;
+import bridgewars.utils.Packet;
+import bridgewars.utils.Utils;
 
 public class BlockDecay extends BukkitRunnable {
+
+	//runs every tick
+	//probably a bad idea
 	
-	private int timer;
+	private final int duration;
+	private final int blockID;
+	
+	private byte damageTick;
+	private double timer;
 	private Block block;
-	private Material material;
+	private final Material material;
 	
 	public BlockDecay(Block block, int duration) {
+		this.blockID = Utils.rand(2147483647);
+		this.duration = duration;
+		
+		this.damageTick = 0;
 		this.timer = duration;
 		this.block = block;
 		this.material = block.getType();
@@ -24,10 +38,21 @@ public class BlockDecay extends BukkitRunnable {
 	@Override
 	public void run() {
 		timer--;
+		
+		if(timer == duration - ((duration / 10) * (damageTick + 1)) ) {
+			Packet.sendBlockDamageAnimation(blockID, block.getLocation(), damageTick);
+			damageTick += 1;
+		}
+		
+		if(block.getType() == Material.WOOL && !WoolDecay.getState().isEnabled()) {
+			Packet.sendBlockDamageAnimation(blockID, block.getLocation(), (byte) -1);
+			this.cancel();
+		}
+		
 		if(timer <= 0
 		|| block.getType() != material 
-		|| !GameState.isState(GameState.ACTIVE)) {
-			
+		|| GameState.isState(GameState.ACTIVE)) {
+			Packet.sendBlockDamageAnimation(blockID, block.getLocation(), (byte) -1);
 			block.breakNaturally();
 			
 			if(timer <= 0) {

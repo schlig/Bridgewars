@@ -9,8 +9,7 @@ public enum KillstreakRewards {
 	KillstreakRewards(boolean isEnabled){
 		this.isEnabled = isEnabled;
 	}
-	
-	
+
 	public Boolean isEnabled() {
 		return isEnabled;
 	}
@@ -21,6 +20,10 @@ public enum KillstreakRewards {
 	
 	public static void setState(KillstreakRewards state) {
 		KillstreakRewards.currentState = state;
+	}
+	
+	public static void setState(boolean state) {
+		setState(state ? ENABLED : DISABLED);
 	}
 	
 	public static KillstreakRewards getState() {

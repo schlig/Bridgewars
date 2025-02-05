@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import bridgewars.Main;
 import bridgewars.game.CSManager;
 import bridgewars.game.GameState;
+import bridgewars.game.Leaderboards;
 import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
@@ -47,6 +48,7 @@ public class Fireball implements ICustomItem, Listener {
                 fireball.setFireTicks(0);
                 fireball.setShooter(e.getPlayer());
                 Utils.subtractItem(e.getPlayer());
+    		    Leaderboards.addPoint(e.getPlayer(), "items");
             }
         }
     }

@@ -18,10 +18,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
 
 import bridgewars.effects.ParticleTrail;
 import bridgewars.messages.Chat;
+import bridgewars.settings.GameSettings;
 import bridgewars.settings.enums.IndestructibleMap;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 
@@ -31,24 +31,31 @@ public class World {
 	private final static String objectPath = "./plugins/bridgewars/objects/";
 	
 	private static int x = 0, y = 0, z = 0;
-	private static final int gameXSize = 22, gameYSize = 24, gameZSize = 22;
+	private static int buildLimitRadius = 22, buildLimitHeight = 24;
+	private static int timerZoneRadius = buildLimitRadius + 3, timerZoneHeight = buildLimitHeight + 6;
 	
 	private static final double worldSpawnX = 1062.5;
-	private static final double worldSpawnY = 52;
+	private static final double worldSpawnY = 52.5;
 	private static final double worldSpawnZ = 88.5;
 	private static final float worldSpawnYaw = -90;
 	private static final float worldSpawnPitch = 10;
 	
-	private static final  int maximumSpawnAttempts = 500;
+	private static final int maximumSpawnAttempts = 500;
 
 	public static ArrayList<Block> indestructibleBlockList = new ArrayList<>();
-	private static ArrayList<BukkitTask> itemMarkers = new ArrayList<BukkitTask>();
 	
 	public static void fill(int x, int y, int z, int x2, int y2, int z2, Material material) {
+		fill(x, y, z, x2, y2, z2, material, (byte)0);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static void fill(int x, int y, int z, int x2, int y2, int z2, Material material, byte data) {
 		for(int X = x; X <= x2; X++)
 			for(int Y = y; Y <= y2; Y++)
-				for(int Z = z; Z <= z2; Z++)
+				for(int Z = z; Z <= z2; Z++) {
 					Bukkit.getWorld("world").getBlockAt(X, Y, Z).setType(material);
+					Bukkit.getWorld("world").getBlockAt(X, Y, Z).setData(data);
+				}
 	}
 	
 	public static Boolean blockIsIndestructible(Block block) {
@@ -56,13 +63,15 @@ public class World {
 			return true;
 		else return false;
 	}
-	
-	public static void deleteItemMarkers() {
-		itemMarkers.clear();
-	}
 
 	public static boolean inGameArea(Location loc){
-		return !Utils.isOutOfBounds(loc, gameXSize, gameYSize, gameZSize);
+		buildLimitRadius = GameSettings.getGameRadius();
+		buildLimitHeight = GameSettings.getGameHeight();
+		return !Utils.isOutOfBounds(loc, buildLimitRadius, buildLimitHeight, buildLimitRadius);
+	}
+	
+	public static boolean inTimerZone(Location loc) {
+		return !Utils.isOutOfBounds(loc, timerZoneRadius, timerZoneHeight, timerZoneRadius);
 	}
 	
 	public static Location getSpawn() {
@@ -86,6 +95,7 @@ public class World {
 		label.setGravity(false);
 		label.setSmall(true);
 		label.setMarker(true);
+		label.setCanPickupItems(false);
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -121,15 +131,11 @@ public class World {
 		//map bounds
 		//-28 0 -28
 		//28 41 28
-		for(int x = gameXSize * -1; x <= gameXSize; x++)
-			for(int z = gameZSize * -1; z <= gameZSize; z++)
-				for(int y = 0; y <= gameYSize; y++)
-					Bukkit.getWorld("world").getBlockAt(x, y, z).setType(Material.AIR);
+		fill(-buildLimitRadius, 0, -buildLimitRadius, buildLimitRadius, buildLimitHeight, buildLimitRadius, Material.AIR);
 		
 		for(Entity e : Bukkit.getWorld("world").getEntities())
 			if(e instanceof Item)
 				e.remove();
-		deleteItemMarkers();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -259,10 +265,10 @@ public class World {
 			item = Bukkit.getWorld("world").dropItem(new Location(Bukkit.getWorld("world"), x + 0.5, y + 1, z + 0.5), spawnableItem.createItem(null));
 			item.setVelocity(item.getVelocity().setX(0).setY(0).setZ(0));
 			if(showParticles) //if particles are turned on, it will create a colored particle above the item to easily be seen from a distance
-				itemMarkers.add(new ParticleTrail((Entity) item, EnumParticle.REDSTONE, 
+				new ParticleTrail((Entity) item, EnumParticle.REDSTONE, 
 						0, 1, 0, 
 						r, g, b, 
-						1F, 0, 6000, false).runTaskTimer(Bukkit.getPluginManager().getPlugin("bridgewars"), 0L, 1L));
+						1F, 0, 6000, false).runTaskTimer(Bukkit.getPluginManager().getPlugin("bridgewars"), 0L, 1L);
 		}
 	}
 }

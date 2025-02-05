@@ -226,7 +226,7 @@ public class Leaderboards {
 		}
 		
 		else {
-			for(int i = 0; i < 5; i++) {
+			for(int i = 0; i < entries; i++) {
 				if(scores.size() <= 0)
 					break;
 				Integer score = Collections.max(scores);

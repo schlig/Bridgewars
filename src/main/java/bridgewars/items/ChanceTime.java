@@ -13,13 +13,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import bridgewars.Main;
 import bridgewars.game.CSManager;
 import bridgewars.game.GameState;
+import bridgewars.game.Leaderboards;
 import bridgewars.messages.Chat;
 import bridgewars.utils.ICustomItem;
 import bridgewars.utils.ItemBuilder;
@@ -27,11 +27,13 @@ import bridgewars.utils.ItemManager;
 import bridgewars.utils.Utils;
 
 public class ChanceTime implements ICustomItem, Listener {
+	
 	private final UUID id = UUID.fromString("8397c018-4b0f-4b88-b434-c43a9d26c374");
 	private final String texture = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0d"
 			+ "HA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTBhNDQzZTBlY2E"
 			+ "3ZjVkMzA2MjJkZDkzN2YxZTVlYTJjZGYxNWQxMGMyN2ExOTljNjhhN2NlMDljM"
 			+ "zlmNmI2OSJ9fX0=";
+	
 	public ChanceTime(Main plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
@@ -47,17 +49,10 @@ public class ChanceTime implements ICustomItem, Listener {
         item.setDurability((short) 3);
         ItemBuilder.setID(item, getClass().getSimpleName().toLowerCase());
         ItemBuilder.setName(item, "Chance Block");
-        ItemBuilder.setSkullTexture(item, id, texture);
+        ItemBuilder.setSkullTexture(item, this.id, texture);
         ItemBuilder.setLore(item, Arrays.asList(
         		Chat.color("&r&7It's time to gamble")));
-        ItemBuilder.disableStacking(item);
         return item;
-	}
-	
-	@EventHandler
-	public void onPlace(BlockPlaceEvent e) {
-		if(e.getBlock().getType() == Material.SKULL)
-			e.setCancelled(true);
 	}
 	
 	@EventHandler
@@ -104,6 +99,7 @@ public class ChanceTime implements ICustomItem, Listener {
 					break;
 				}
 			}
+		    Leaderboards.addPoint(e.getPlayer(), "items");
 		}
 	}
 	
